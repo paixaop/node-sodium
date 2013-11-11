@@ -1,0 +1,11 @@
+{
+    "name": "sodium",
+    "version": "1.0.0",
+    "author" : "Pedro Paixao <paixaop@gmail.com>",
+    "license" : "MIT",
+    "description" : "Lib Sodium port for node.js",
+    "dependencies": {
+        "should" : "",
+        "mocha"  : ">=0.14.1"
+    }
+}
