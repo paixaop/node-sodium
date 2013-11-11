@@ -13,7 +13,7 @@ if (process.env.COVERAGE) {
 describe("toBuffer", function () {
     it("should generate a buffer from string", function (done) {
         var str = "to buffer is cool";
-        toBuffer(str).toString().should.eql("to buffer is cool");
+        toBuffer(str,'utf8').toString().should.eql("to buffer is cool");
         done();
     });
 
@@ -24,11 +24,10 @@ describe("toBuffer", function () {
     });
 
     it("should return undefined on bad param 1", function (done) {
-        var b = toBuffer(123, 'utf8');
-        if(!b) {
-            done();
-        }
-        should.fail;
+        (function() {
+            var b = toBuffer(123, 'utf8');
+        }).should.throw();
+        done();
     });
 
     it("should throw on bad encoding", function (done) {

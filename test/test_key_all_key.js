@@ -153,17 +153,17 @@ function testKey(modName, sizeBuffer) {
 
         it("key test string encoding base64 should throw", function (done) {
             var key = new Key();
-            (function() {
-                var n = key.toString('base64');
-                key.set(n, 'base64');
-            }).should.throw();
+            var n = key.toString('base64');
+            key.set(n, 'base64');
             done();
         });
 
         it("key test string encoding binary", function (done) {
             var key = new Key();
-            var n = key.toString('binary');
-            key.set(n, 'binary');
+            (function() {
+                var n = key.toString('binary');
+                key.set(n, 'binary');
+            }).should.throw();
             done();
         });
 
