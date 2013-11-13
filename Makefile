@@ -1,6 +1,12 @@
-
+SHELL := /bin/bash
 TESTS = test/*.js
 REPORTER = dot
+
+CHDIR_SHELL := $(SHELL)
+define chdir
+   $(eval _D=$(firstword $(1) $(@D)))
+   $(info $(MAKE): cd $(_D)) $(eval SHELL = cd $(_D); $(CHDIR_SHELL))
+endef
 
 test:
 	@echo Run make test-cov for coverage reports
@@ -30,5 +36,12 @@ clean:
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
+
+sodium:
+	cd libsodium; \
+	./autogen.sh; \
+	./configure;  \
+	make	
+	node-gyp rebuild
 
 .PHONY: test-cov site docs test docclean

@@ -397,7 +397,7 @@ Handle<Value> bind_crypto_onetimeauth(const Arguments& args) {
     unsigned long long mlen = ARG_LENGTH(0);
     LENGTH_NOT_ZERO(mlen);
 
-    ARG_CHECK_LENGTH(1,crypto_onetimeauthx_KEYBYTES, "key");
+    ARG_CHECK_LENGTH(1,crypto_onetimeauth_KEYBYTES, "key");
 
     Buffer* token = Buffer::New(crypto_onetimeauth_BYTES);
     unsigned char* tok = (unsigned char*)Buffer::Data(token);
