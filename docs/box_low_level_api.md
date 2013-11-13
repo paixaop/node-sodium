@@ -78,7 +78,7 @@ Parameters:
 
   * `message` - buffer with message to encrypt
   * `nonce` - buffer with crypto box nonce
-  * `k` - buffer calculated by the `beforenm` function call
+  * `k` - buffer calculated by the [`crypto_box_beforenm`](#crypto_box_beforenm-pk-sk) function call
 
 Returns ciphered text buffer.
 
@@ -90,7 +90,7 @@ Parameters:
 
   * `ctxt` - buffer with cipher text
   * `nonce` - buffer with crypto box nonce
-  * `k` - buffer calculated by the `beforenm` function call
+  * `k` - buffer calculated by the `crypto_box_beforenm` function call
  
 Returns plain text buffer.
 
