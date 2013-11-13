@@ -61,14 +61,19 @@ Tested on Mac and Linux
 node-sodium depends on lib sodium, so if lib sodium does not compile on your platform chances are `npm install sodium` will fail.
 
 # Manual Install
-Clone the git repository, then and change to the local directory where you ran git clone to, then you need to compile Lib Sodium it self.
+Clone the git repository, and change to the local directory where you ran git clone to, 
+
+    make sodium
+    npm install
+
+This compiles Lib Sodium it self, by doing
 
     cd libsodium
     ./autogen
     ./configure
     make
 
-Build node-sodium native module
+followed by
 
     cd ..
     npm build .
