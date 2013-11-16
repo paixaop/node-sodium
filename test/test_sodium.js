@@ -62,6 +62,8 @@ describe("Sign", function () {
     });
 });
 
+
+
 describe("Auth", function () {
     it("Using authentication tokens ", function (done) {
         /**
@@ -178,6 +180,33 @@ describe("OneTimeAuth", function () {
          */
         serverAuth.validate(tBuffer, request, 'utf8').should.be.ok;
 
+        done();
+    });
+});
+
+describe("SecretBox", function () {
+    it("Example of sending an encrypted message ", function (done) {
+
+        // Alice and Bob both agree on a secret key that they have
+        // shared in some secure way
+
+        // Alice's Side
+        var aliceKey  = new Buffer("supersecretkey");
+        var aliceBox = new sodium.SecretBox(aliceKey);
+
+        // Create a signature Alice's side using her secret key and Bob's public key
+        var cipherText = aliceBox.encrypt("super secret message", "utf8");
+
+        // Alice sends message to Bob, and he decrypts it
+
+        // Bob's Side
+        // Bob uses the same scret key as Alice
+        var bobKey  = new Buffer("supersecretkey");
+        var bobBox = new sodium.SecretBox(bobKey);
+
+        var plainText = bobBox.decrypt(cipherText, "utf8");
+
+        plainText.should.eql('super secret message');
         done();
     });
 });

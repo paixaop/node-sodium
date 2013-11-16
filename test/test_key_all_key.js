@@ -11,9 +11,9 @@ testKey('stream-key',sodium.crypto_stream_KEYBYTES);
 testKey('secretbox-key',sodium.crypto_secretbox_KEYBYTES);
 
 function testKey(modName, sizeBuffer) {
-    var Key = require('../lib/keys/auth-key');
+    var Key = require('../lib/keys/' + modName);
     if (process.env.COVERAGE) {
-        Key = require('../lib-cov/keys/auth-key');
+        Key = require('../lib-cov/keys/' + modName);
     }
 
     describe(modName, function () {

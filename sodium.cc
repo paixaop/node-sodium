@@ -26,30 +26,45 @@ using namespace v8;
         return ThrowException(Exception::Error(String::New(oss.str().c_str()))); \
     }
 
-// Check if a function argument has a node Buffer of length len. If not throw V8 exception
-#define ARG_CHECK_LENGTH(i, len, msg) \
-    if( Buffer::Length(args[i]->ToObject()) != len ) { \
+#define NEW_BUFFER_AND_PTR(name, size) \
+    Buffer* name = Buffer::New(size); \
+    unsigned char* name ## _ptr = (unsigned char*)Buffer::Data(name)
+
+#define GET_ARG_AS(i, NAME, TYPE) \
+    ARG_IS_BUFFER(i,#NAME); \
+    TYPE NAME = (TYPE) Buffer::Data(args[i]->ToObject()); \
+    unsigned long long NAME ## _size = Buffer::Length(args[i]->ToObject()); \
+    if( NAME ## _size == 0 ) { \
         std::ostringstream oss; \
-        oss << "argument " << msg << " must be " << len << " long" ; \
+        oss << "argument " << #NAME << " length cannot be zero" ; \
         return ThrowException(Exception::Error(String::New(oss.str().c_str()))); \
     }
 
-// Check if var v is not zero, or throw V8 exception
-#define LENGTH_NOT_ZERO(v) \
-    if( v == 0 ) { \
+#define GET_ARG_AS_LEN(i, NAME, MAXLEN, TYPE) \
+    GET_ARG_AS(i, NAME, TYPE); \
+    if( NAME ## _size != MAXLEN ) { \
         std::ostringstream oss; \
-        oss << "argument " << v << " length cannot be zero" ; \
+        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long" ; \
         return ThrowException(Exception::Error(String::New(oss.str().c_str()))); \
     }
 
-// Get a unsigned char pointer to ARG[i] which must be node Buffer
-#define ARG_TO_UCHAR_PTR(i) (unsigned char*) Buffer::Data(args[i]->ToObject())
+#define GET_ARG_AS_UCHAR(i, NAME) \
+    GET_ARG_AS(i, NAME, unsigned char*)
 
-// Get a void pointer to ARG[i] which must be node Buffer
-#define ARG_TO_VOID_PTR(i)  (void*) Buffer::Data(args[0]->ToObject())
+#define GET_ARG_AS_UCHAR_LEN(i, NAME, MAXLEN) \
+    GET_ARG_AS_LEN(i, NAME, MAXLEN, unsigned char*)
 
-// Get the node Buffer length of function argument i
-#define ARG_LENGTH(i)       Buffer::Length(args[i]->ToObject())
+#define GET_ARG_AS_VOID(i, NAME) \
+    GET_ARG_AS(i, NAME, void*)
+
+#define GET_ARG_AS_VOID_LEN(i, NAME, MAXLEN) \
+    GET_ARG_AS_LEN(i, NAME, MAXLEN, void*)
+
+
+#define NUMBER_OF_MANDATORY_ARGS(n, message) \
+    if (args.Length() < (n)) {                \
+        return V8Exception(message);          \
+    }
 
 //Helper function
 static Handle<Value> V8Exception(const char* msg) {
@@ -82,16 +97,9 @@ Handle<Value> bind_version_major(const Arguments& args) {
 Handle<Value> bind_memzero(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument must be a buffer");
-    }
-
-    ARG_IS_BUFFER(0,"1");
-    void* pnt =  ARG_TO_VOID_PTR(0);
-    size_t size = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(size);
-
-    sodium_memzero(pnt, size);
+    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
+    GET_ARG_AS_VOID(0, buffer);
+    sodium_memzero(buffer, buffer_size);
     return scope.Close(Null());
 }
 
@@ -101,17 +109,10 @@ Handle<Value> bind_memzero(const Arguments& args) {
 Handle<Value> bind_randombytes_buf(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument must be a buffer");
-    }
+    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
 
-    ARG_IS_BUFFER(0,"1");
-
-    void* buf =  ARG_TO_VOID_PTR(0);
-    size_t size = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(size);
-
-    randombytes_buf(buf, size);
+    GET_ARG_AS_VOID(0, buffer);
+    randombytes_buf(buffer, buffer_size);
     return scope.Close(Null());
 }
 
@@ -140,10 +141,8 @@ Handle<Value> bind_randombytes_uniform(const Arguments& args) {
     HandleScope scope;
     uint32_t upper_bound;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument size must be a positive");
-    }
-
+    NUMBER_OF_MANDATORY_ARGS(1,"argument size must be a positive number");
+    
     if (args[0]->IsUint32()) {
         upper_bound = args[0]->Int32Value();
     } else {
@@ -158,21 +157,11 @@ Handle<Value> bind_randombytes_uniform(const Arguments& args) {
 Handle<Value> bind_crypto_verify_16(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 2) {
-        return V8Exception("arguments must be two buffers");
-    }
-
-    ARG_IS_BUFFER(0,"1");
-    ARG_IS_BUFFER(1,"2");
-
-    // Get arguments
-    unsigned char* string1 = ARG_TO_UCHAR_PTR(0);
-    unsigned char* string2 = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    ARG_CHECK_LENGTH(0,crypto_verify_16_BYTES, "1");
-    ARG_CHECK_LENGTH(1,crypto_verify_16_BYTES, "2");
-
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_16_BYTES);
+    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_16_BYTES);
+    
     return scope.Close(Integer::New(crypto_verify_16(string1, string2)));
 }
 
@@ -180,20 +169,10 @@ Handle<Value> bind_crypto_verify_16(const Arguments& args) {
 Handle<Value> bind_crypto_verify_32(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 2) {
-        return V8Exception("arguments must be two buffers");
-    }
-
-    ARG_IS_BUFFER(0,"1");
-    ARG_IS_BUFFER(1,"2");
-
-    // Get arguments
-    unsigned char* string1 = ARG_TO_UCHAR_PTR(0);
-    unsigned char* string2 = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    ARG_CHECK_LENGTH(0,crypto_verify_32_BYTES, "1");
-    ARG_CHECK_LENGTH(1,crypto_verify_32_BYTES, "2");
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_32_BYTES);
+    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_32_BYTES);
 
     return scope.Close(Integer::New(crypto_verify_32(string1, string2)));
 }
@@ -207,20 +186,14 @@ Handle<Value> bind_crypto_verify_32(const Arguments& args) {
 Handle<Value> bind_crypto_hash(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument message must be a buffer");
-    }
-
-    // Get arguments
-    ARG_IS_BUFFER(0,"message");
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
+    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
+    
+    GET_ARG_AS_UCHAR(0,msg);
+    
     Buffer* hashBuf = Buffer::New(crypto_hash_BYTES);
     unsigned char* hbuf = (unsigned char*)Buffer::Data(hashBuf);
 
-    if( crypto_hash(hbuf, msg, mlen) == 0 ) {
+    if( crypto_hash(hbuf, msg, msg_size) == 0 ) {
         return scope.Close(hashBuf->handle_);
     }
     return scope.Close(Null());
@@ -235,21 +208,12 @@ Handle<Value> bind_crypto_hash(const Arguments& args) {
 Handle<Value> bind_crypto_hash_sha256(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument message must be a buffer");
-    }
+    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");    
+    GET_ARG_AS_UCHAR(0, msg);
+    NEW_BUFFER_AND_PTR(hash, 32);
 
-    // Get arguments
-    ARG_IS_BUFFER(0,"message");
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    Buffer* hashBuf = Buffer::New(32); // sha256
-    unsigned char* hbuf = (unsigned char*)Buffer::Data(hashBuf);
-
-    if( crypto_hash_sha256(hbuf, msg, mlen) == 0 ) {
-        return scope.Close(hashBuf->handle_);
+    if( crypto_hash_sha256(hash_ptr, msg, msg_size) == 0 ) {
+        return scope.Close(hash->handle_);
     }
     return scope.Close(Null());
 }
@@ -263,21 +227,14 @@ Handle<Value> bind_crypto_hash_sha256(const Arguments& args) {
 Handle<Value> bind_crypto_hash_sha512(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 1) {
-        return V8Exception("argument message must be a buffer");
-    }
+    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
+    
+    GET_ARG_AS_UCHAR(0, msg);
+    
+    NEW_BUFFER_AND_PTR(hash, 64);
 
-    // Get arguments
-    ARG_IS_BUFFER(0,"message");
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    Buffer* hashBuf = Buffer::New(64);  // sha512
-    unsigned char* hbuf = (unsigned char*)Buffer::Data(hashBuf);
-
-    if( crypto_hash_sha512(hbuf, msg, mlen) == 0 ) {
-        return scope.Close(hashBuf->handle_);
+    if( crypto_hash_sha512(hash_ptr, msg, msg_size) == 0 ) {
+        return scope.Close(hash->handle_);
     }
     return scope.Close(Null());
 }
@@ -299,27 +256,14 @@ Handle<Value> bind_crypto_hash_sha512(const Arguments& args) {
 Handle<Value> bind_crypto_auth(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 2) {
-        return V8Exception("arguments message, and key must be buffers");
-    }
-
-    // Get arguments
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"key");
-
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* key = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_auth_KEYBYTES, "key");
-
-    Buffer* token = Buffer::New(crypto_auth_BYTES);
-    unsigned char* tok = (unsigned char*)Buffer::Data(token);
-
-    if( crypto_auth(tok, msg, mlen, key) == 0 ) {
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, msg);
+    GET_ARG_AS_UCHAR_LEN(1, key, crypto_auth_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(token, crypto_auth_BYTES);
+    
+    if( crypto_auth(token_ptr, msg, msg_size, key) == 0 ) {
         return scope.Close(token->handle_);
     }
     return scope.Close(Null());
@@ -341,28 +285,13 @@ Handle<Value> bind_crypto_auth(const Arguments& args) {
 Handle<Value> bind_crypto_auth_verify(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 3) {
-        return V8Exception("arguments token, message, and key must be buffers");
-    }
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments token, message, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0, token, crypto_auth_BYTES);
+    GET_ARG_AS_UCHAR(1, message);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_auth_KEYBYTES);
 
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"token");
-    ARG_IS_BUFFER(1,"message");
-    ARG_IS_BUFFER(2,"key");
-
-    // Get arguments
-    unsigned char* tok = ARG_TO_UCHAR_PTR(0);
-    unsigned char* msg = ARG_TO_UCHAR_PTR(1);
-    unsigned char* key = ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(1);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(0,crypto_auth_BYTES, "token");
-    ARG_CHECK_LENGTH(2,crypto_auth_KEYBYTES, "key");
-
-    return scope.Close(Integer::New(crypto_auth_verify(tok, msg, mlen, key)));
+    return scope.Close(Integer::New(crypto_auth_verify(token, message, message_size, key)));
 }
 
 /**
@@ -380,29 +309,15 @@ Handle<Value> bind_crypto_auth_verify(const Arguments& args) {
  */
 Handle<Value> bind_crypto_onetimeauth(const Arguments& args) {
     HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, key, crypto_onetimeauth_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(token, crypto_onetimeauth_BYTES);
 
-    if (args.Length() < 2) {
-        return V8Exception("arguments message, and key must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"key");
-
-    // Get arguments
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* key = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_onetimeauth_KEYBYTES, "key");
-
-    Buffer* token = Buffer::New(crypto_onetimeauth_BYTES);
-    unsigned char* tok = (unsigned char*)Buffer::Data(token);
-
-    if( crypto_onetimeauth(tok, msg, mlen, key) == 0 ) {
+    if( crypto_onetimeauth(token_ptr, message, message_size, key) == 0 ) {
         return scope.Close(token->handle_);
     }
     return scope.Close(Null());
@@ -424,28 +339,13 @@ Handle<Value> bind_crypto_onetimeauth(const Arguments& args) {
 Handle<Value> bind_crypto_onetimeauth_verify(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 3) {
-        return V8Exception("arguments token, message, and key must be buffers");
-    }
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments token, message, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0, token, crypto_onetimeauth_BYTES);
+    GET_ARG_AS_UCHAR(1, message);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_onetimeauth_KEYBYTES);
 
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"token");
-    ARG_IS_BUFFER(1,"message");
-    ARG_IS_BUFFER(2,"key");
-
-    // Get arguments
-    unsigned char* tok =  ARG_TO_UCHAR_PTR(0);
-    unsigned char* msg =  ARG_TO_UCHAR_PTR(1);
-    unsigned char* key =  ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(1);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(0,crypto_onetimeauth_BYTES, "token");
-    ARG_CHECK_LENGTH(2,crypto_onetimeauth_KEYBYTES, "key");
-
-    return scope.Close(Integer::New(crypto_onetimeauth_verify(tok, msg, mlen, key)));
+    return scope.Close(Integer::New(crypto_onetimeauth_verify(token, message, message_size, key)));
 }
 
 /**
@@ -468,37 +368,20 @@ Handle<Value> bind_crypto_onetimeauth_verify(const Arguments& args) {
  */
 Handle<Value> bind_crypto_stream(const Arguments& args) {
     HandleScope scope;
-
-    if (args.Length() < 3) {
-        return V8Exception("argument length must be a positive number, arguments nonce, and key must be buffers");
-    }
-
+    
+    NUMBER_OF_MANDATORY_ARGS(3,"argument length must be a positive number, arguments nonce, and key must be buffers");
+    
     if (!args[0]->IsUint32())
         return V8Exception("argument length must be positive number");
-
-    //if (args[0]->ToInt32()->Value() <= 0 )
-    //    return V8Exception("argument length must be positive number");
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"key");
-
-
-    // Get arguments
+    
     unsigned long long slen = args[0]->ToUint32()->Value();
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_stream_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_stream_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(stream, slen);
 
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* key = ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    ARG_CHECK_LENGTH(1,crypto_stream_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_stream_KEYBYTES, "key");
-
-    Buffer* sBuf = Buffer::New(slen);
-    unsigned char* stream = (unsigned char*)Buffer::Data(sBuf);
-
-    if( crypto_stream(stream, slen, nonce, key) == 0) {
-        return scope.Close(sBuf->handle_);
+    if( crypto_stream(stream_ptr, slen, nonce, key) == 0) {
+        return scope.Close(stream->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -528,67 +411,20 @@ Handle<Value> bind_crypto_stream(const Arguments& args) {
  */
 Handle<Value> bind_crypto_stream_xor(const Arguments& args) {
     HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_stream_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_stream_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
 
-    if (args.Length() < 3) {
-        return V8Exception("arguments message, nonce, and key must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"key");
-
-    // Get arguments
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* key = ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_stream_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_stream_KEYBYTES, "key");
-
-    Buffer* sBuf = Buffer::New(mlen);
-    unsigned char* ctx = (unsigned char*)Buffer::Data(sBuf);
-
-    if( crypto_stream_xor(ctx, msg, mlen, nonce, key) == 0) {
-        return scope.Close(sBuf->handle_);
+    if( crypto_stream_xor(ctxt_ptr, message, message_size, nonce, key) == 0) {
+        return scope.Close(ctxt->handle_);
     }
     return scope.Close(Undefined());
 }
-
-/**
- * TODO
- * int crypto_stream_afternm(
- *    unsigned char *outp,
- *    unsigned long long len,
- *    const unsigned char *noncep,
- *    const unsigned char *c)
- *
- */
-
-/**
- * TODO
- * int crypto_stream_beforenm(
- *    unsigned char *outp,
- *    unsigned long long len,
- *    const unsigned char *noncep,
- *    const unsigned char *c)
- *
- */
-
-/**
- * TODO
- * int crypto_stream_xor_afternm(
- *    unsigned char *,
- *    unsigned char *,
- *    unsigned long long,
- *    const unsigned char *,
- *    const unsigned char *)
- *
- */
 
 /**
  * Encrypts and authenticates a message using the given secret key, and nonce.
@@ -619,47 +455,29 @@ Handle<Value> bind_crypto_stream_xor(const Arguments& args) {
  */
 Handle<Value> bind_crypto_secretbox(const Arguments& args) {
     HandleScope scope;
-
-    if (args.Length() < 3) {
-        return V8Exception("arguments message, nonce, and key must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"key");
-
-    // Get arguments
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* key = ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_secretbox_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_secretbox_KEYBYTES, "key");
-
-    // Pad the message with crypto_secretbox_ZEROBYTES zeros
-    Buffer* paddedMessageBuffer = Buffer::New(mlen + crypto_secretbox_ZEROBYTES);
-    unsigned char* pmb = (unsigned char*)Buffer::Data(paddedMessageBuffer);
+    
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(pmb, message_size + crypto_secretbox_ZEROBYTES);
 
     // Fill the first crypto_secretbox_ZEROBYTES with 0
     unsigned int i;
     for(i=0; i < crypto_secretbox_ZEROBYTES; i++) {
-        pmb[i] = 0U;
+        pmb_ptr[i] = 0U;
     }
 
     //Copy the message to the new buffer
-    memcpy((void*) (pmb + crypto_secretbox_ZEROBYTES), (void *) msg, mlen);
-    mlen += crypto_secretbox_ZEROBYTES;
+    memcpy((void*) (pmb_ptr + crypto_secretbox_ZEROBYTES), (void *) message, message_size);
+    message_size += crypto_secretbox_ZEROBYTES;
+    
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
 
-    Buffer* sBuf = Buffer::New(mlen);
-    unsigned char* ctx = (unsigned char*)Buffer::Data(sBuf);
-
-    if( crypto_secretbox(ctx, pmb, mlen, nonce, key) == 0) {
-        return scope.Close(sBuf->handle_);
+    if( crypto_secretbox(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
+        return scope.Close(ctxt->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -697,33 +515,17 @@ Handle<Value> bind_crypto_secretbox(const Arguments& args) {
  */
 Handle<Value> bind_crypto_secretbox_open(const Arguments& args) {
     HandleScope scope;
-
-    if (args.Length() < 3) {
-        return V8Exception("arguments cipherText, nonce, and key must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"cipherText");
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"key");
-
-    // Get arguments
-    unsigned char* ctx = ARG_TO_UCHAR_PTR(0);
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* key = ARG_TO_UCHAR_PTR(2);
-
-    // Get/Check sizes
-    unsigned long long clen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(clen);
-
-    ARG_CHECK_LENGTH(1,crypto_secretbox_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_secretbox_KEYBYTES, "key");
-
-    Buffer* sBuf = Buffer::New(clen);
-    unsigned char* msg = (unsigned char*)Buffer::Data(sBuf);
+    
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments cipherText, nonce, and key must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, cipher_text);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(message, cipher_text_size);
 
     // API requires that the first crypto_secretbox_ZEROBYTES of msg be 0 so lets check
-    if( clen < crypto_secretbox_BOXZEROBYTES ) {
+    if( cipher_text_size < crypto_secretbox_BOXZEROBYTES ) {
         std::ostringstream oss;
         oss << "argument cipherText must have at least " << crypto_secretbox_BOXZEROBYTES << " bytes";
         return V8Exception(oss.str().c_str());
@@ -731,7 +533,7 @@ Handle<Value> bind_crypto_secretbox_open(const Arguments& args) {
 
     unsigned int i;
     for(i=0; i < crypto_secretbox_BOXZEROBYTES; i++) {
-        if( ctx[i] ) break;
+        if( cipher_text[i] ) break;
     }
     if( i < crypto_secretbox_BOXZEROBYTES ) {
         std::ostringstream oss;
@@ -739,14 +541,13 @@ Handle<Value> bind_crypto_secretbox_open(const Arguments& args) {
         return V8Exception(oss.str().c_str());
     }
 
-    if( crypto_secretbox_open(msg, ctx, clen, nonce, key) == 0) {
+    if( crypto_secretbox_open(message_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
 
         // Remove the padding at the beginning of the message
-        Buffer* plainText = Buffer::New(clen - crypto_secretbox_ZEROBYTES);
-        void* pTxt = (void*)Buffer::Data(plainText);
-        memcpy(pTxt,(void*) (msg + crypto_secretbox_ZEROBYTES), clen - crypto_secretbox_ZEROBYTES);
+        NEW_BUFFER_AND_PTR(plain_text, cipher_text_size - crypto_secretbox_ZEROBYTES);
+        memcpy(plain_text_ptr,(void*) (message_ptr + crypto_secretbox_ZEROBYTES), cipher_text_size - crypto_secretbox_ZEROBYTES);
 
-        return scope.Close(plainText->handle_);
+        return scope.Close(plain_text->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -778,30 +579,16 @@ Handle<Value> bind_crypto_secretbox_open(const Arguments& args) {
 Handle<Value> bind_crypto_sign(const Arguments& args) {
     HandleScope scope;
 
-    if (args.Length() < 2) {
-        return V8Exception("arguments message, and secret must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"secretKey");
-
-    // Get arguments
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* sk = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_sign_SECRETKEYBYTES, "secretKey");
-
-    Buffer* sBuf = Buffer::New(mlen + crypto_sign_BYTES);
-    unsigned char* sig = (unsigned char*)Buffer::Data(sBuf);
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_sign_SECRETKEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(sig, message_size + crypto_sign_BYTES);
 
     unsigned long long slen = 0;
-    if( crypto_sign(sig, &slen, msg, mlen, sk) == 0) {
-        return scope.Close(sBuf->handle_);
+    if( crypto_sign(sig_ptr, &slen, message, message_size, secretKey) == 0) {
+        return scope.Close(sig->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -830,17 +617,14 @@ Handle<Value> bind_crypto_sign(const Arguments& args) {
  */
 Handle<Value> bind_crypto_sign_keypair(const Arguments& args) {
     HandleScope scope;
+    
+    NEW_BUFFER_AND_PTR(vk, crypto_sign_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
 
-    Buffer* vkBuf = Buffer::New(crypto_sign_PUBLICKEYBYTES);
-    unsigned char* vk = (unsigned char*)Buffer::Data(vkBuf);
-
-    Buffer* skBuf = Buffer::New(crypto_sign_SECRETKEYBYTES);
-    unsigned char* sk = (unsigned char*)Buffer::Data(skBuf);
-
-    if( crypto_sign_keypair(vk, sk) == 0) {
+    if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = Object::New();
-        result->Set(String::NewSymbol("publicKey"),vkBuf->handle_);
-        result->Set(String::NewSymbol("secretKey"), skBuf->handle_);
+        result->Set(String::NewSymbol("publicKey"),vk->handle_);
+        result->Set(String::NewSymbol("secretKey"), sk->handle_);
         return scope.Close(result);
     }
     return scope.Close(Undefined());
@@ -875,34 +659,19 @@ Handle<Value> bind_crypto_sign_keypair(const Arguments& args) {
  */
 Handle<Value> bind_crypto_sign_open(const Arguments& args) {
     HandleScope scope;
-
-    if (args.Length() < 2) {
-        return V8Exception("arguments signedMessage and verificationKey must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"signedMessage");
-    ARG_IS_BUFFER(1,"publicKey");
-
-    // Get arguments
-    unsigned char* sig = ARG_TO_UCHAR_PTR(0);
-    unsigned char* pk = ARG_TO_UCHAR_PTR(1);
-
-    // Get/Check sizes
-    unsigned long long smlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(smlen);
-
-    ARG_CHECK_LENGTH(1,crypto_sign_PUBLICKEYBYTES, "publicKey");
+    
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments signedMessage and verificationKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, signedMessage);
+    GET_ARG_AS_UCHAR_LEN(1, publicKey, crypto_sign_PUBLICKEYBYTES);
 
     unsigned long long mlen = 0;
-    Buffer* sBuf = Buffer::New(smlen);
-    unsigned char* msg = (unsigned char*)Buffer::Data(sBuf);
-
-    if( crypto_sign_open(msg, &mlen, sig, smlen, pk) == 0) {
-        Buffer*  mBuf = Buffer::New(mlen);
-        unsigned char* m = (unsigned char*)Buffer::Data(mBuf);
-        memcpy(m, msg, mlen);
-        return scope.Close(mBuf->handle_);
+    NEW_BUFFER_AND_PTR(msg, signedMessage_size);
+    
+    if( crypto_sign_open(msg_ptr, &mlen, signedMessage, signedMessage_size, publicKey) == 0) {
+        NEW_BUFFER_AND_PTR(m, mlen);
+        memcpy(m_ptr, msg_ptr, mlen);
+        return scope.Close(m->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -938,49 +707,29 @@ Handle<Value> bind_crypto_sign_open(const Arguments& args) {
  */
 Handle<Value> bind_crypto_box(const Arguments& args) {
     HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
+    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
 
-    if (args.Length() < 4) {
-        return V8Exception("arguments message, nonce, publicKey and privateKey must be buffers");
-    }
-
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"message");
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"publicKey");
-    ARG_IS_BUFFER(3,"privateKey");
-
-    // Get arguments
-    unsigned char* msg = ARG_TO_UCHAR_PTR(0);
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* pk = ARG_TO_UCHAR_PTR(2);
-    unsigned char* sk = ARG_TO_UCHAR_PTR(3);
-
-    // Get/Check sizes
-    unsigned long long mlen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(mlen);
-
-    ARG_CHECK_LENGTH(1,crypto_box_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_box_PUBLICKEYBYTES, "publicKey");
-    ARG_CHECK_LENGTH(3,crypto_box_SECRETKEYBYTES, "privateKey");
-
-    // Pad the message with crypto_box_ZEROBYTES zeros
-    Buffer* paddedMessageBuffer = Buffer::New(mlen + crypto_box_ZEROBYTES);
-    unsigned char* pmsg = (unsigned char*)Buffer::Data(paddedMessageBuffer);
+    NEW_BUFFER_AND_PTR(msg, message_size + crypto_box_ZEROBYTES);
 
     // Fill the first crypto_box_ZEROBYTES with 0
     unsigned int i;
     for(i=0; i < crypto_box_ZEROBYTES; i++) {
-       pmsg[i] = 0U;
+       msg_ptr[i] = 0U;
     }
     //Copy the message to the new buffer
-    memcpy((void*) (pmsg + crypto_box_ZEROBYTES), (void *) msg, mlen);
-    mlen += crypto_box_ZEROBYTES;
+    memcpy((void*) (msg_ptr + crypto_box_ZEROBYTES), (void *) message, message_size);
+    message_size += crypto_box_ZEROBYTES;
 
-    Buffer* sBuf = Buffer::New(mlen);
-    unsigned char* ctxt = (unsigned char*)Buffer::Data(sBuf);
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
 
-    if( crypto_box(ctxt, pmsg, mlen, nonce, pk, sk) == 0) {
-        return scope.Close(sBuf->handle_);
+    if( crypto_box(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
+        return scope.Close(ctxt->handle_);
     }
     return scope.Close(Undefined());
 }
@@ -1010,16 +759,13 @@ Handle<Value> bind_crypto_box(const Arguments& args) {
 Handle<Value> bind_crypto_box_keypair(const Arguments& args) {
     HandleScope scope;
     
-    Buffer* pkBuf = Buffer::New(crypto_box_PUBLICKEYBYTES);
-    unsigned char* pk = (unsigned char*)Buffer::Data(pkBuf);
+    NEW_BUFFER_AND_PTR(pk, crypto_box_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(sk, crypto_box_SECRETKEYBYTES);
     
-    Buffer* skBuf = Buffer::New(crypto_box_SECRETKEYBYTES);
-    unsigned char* sk = (unsigned char*)Buffer::Data(skBuf);
-    
-    if( crypto_box_keypair(pk, sk) == 0) {
+    if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Object::New();
-        result->Set(String::NewSymbol("publicKey"), pkBuf->handle_);
-        result->Set(String::NewSymbol("secretKey"), skBuf->handle_);
+        result->Set(String::NewSymbol("publicKey"), pk->handle_);
+        result->Set(String::NewSymbol("secretKey"), sk->handle_);
         return scope.Close(result);
     }
     return scope.Close(Undefined());
@@ -1058,33 +804,15 @@ Handle<Value> bind_crypto_box_keypair(const Arguments& args) {
 Handle<Value> bind_crypto_box_open(const Arguments& args) {
     HandleScope scope;
     
-    if (args.Length() < 4) {
-        return V8Exception("arguments cipherText, nonce, publicKey and privateKey must be buffers");
-    }
+    NUMBER_OF_MANDATORY_ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
     
-    
-    // Check that we got buffers
-    ARG_IS_BUFFER(0,"cipherText");
-    ARG_IS_BUFFER(1,"nonce");
-    ARG_IS_BUFFER(2,"publicKey");
-    ARG_IS_BUFFER(3,"privateKey");
-    
-    // Get arguments
-    unsigned char* ctxt = ARG_TO_UCHAR_PTR(0);
-    unsigned char* nonce = ARG_TO_UCHAR_PTR(1);
-    unsigned char* pk = ARG_TO_UCHAR_PTR(2);
-    unsigned char* sk = ARG_TO_UCHAR_PTR(3);
-    
-    // Get/Check sizes
-    unsigned long long clen = ARG_LENGTH(0);
-    LENGTH_NOT_ZERO(clen);
-    
-    ARG_CHECK_LENGTH(1,crypto_box_NONCEBYTES, "nonce");
-    ARG_CHECK_LENGTH(2,crypto_box_PUBLICKEYBYTES, "publicKey");
-    ARG_CHECK_LENGTH(3,crypto_box_SECRETKEYBYTES, "privateKey");
+    GET_ARG_AS_UCHAR(0, cipherText);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
+    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);    
     
     // API requires that the first crypto_box_BOXZEROBYTES of msg be 0 so lets check
-    if( clen < crypto_box_BOXZEROBYTES ) {
+    if( cipherText_size < crypto_box_BOXZEROBYTES ) {
         std::ostringstream oss;
         oss << "argument cipherText must have a length of at least " << crypto_box_BOXZEROBYTES << " bytes";
         return V8Exception(oss.str().c_str());
@@ -1092,7 +820,7 @@ Handle<Value> bind_crypto_box_open(const Arguments& args) {
     
     unsigned int i;
     for(i=0; i < crypto_box_BOXZEROBYTES; i++) {
-        if( ctxt[i] ) break;
+        if( cipherText[i] ) break;
     }
     if( i < crypto_box_BOXZEROBYTES ) {
         std::ostringstream oss;
@@ -1100,105 +828,269 @@ Handle<Value> bind_crypto_box_open(const Arguments& args) {
         return V8Exception(oss.str().c_str());
     }
     
-    Buffer* sBuf = Buffer::New(clen);
-    unsigned char* msg = (unsigned char*)Buffer::Data(sBuf);
+    NEW_BUFFER_AND_PTR(msg, cipherText_size);
     
-    if( crypto_box_open(msg, ctxt, clen, nonce, pk, sk) == 0) {
+    if( crypto_box_open(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
 
         // Remove the padding at the beginning of the message
-        Buffer* plainText = Buffer::New(clen - crypto_box_ZEROBYTES);
-        void* pTxt = (void*)Buffer::Data(plainText);
-        memcpy(pTxt,(void*) (msg + crypto_box_ZEROBYTES), clen - crypto_box_ZEROBYTES);
-
-        return scope.Close(plainText->handle_);
+        NEW_BUFFER_AND_PTR(plain_text, cipherText_size - crypto_box_ZEROBYTES);
+        memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
+        return scope.Close(plain_text->handle_);
     }
     return scope.Close(Undefined());
 }
 
+/**
+ * Partially performs the computation required for both encryption and decryption of data.
+ *
+ * int crypto_box_beforenm(
+ *    unsigned char*        k,
+ *    const unsigned char*  pk,
+ *    const unsigned char*  sk)
+ *
+ * Parameters:
+ *    [out] k   the result of the computation.
+ *    [in]  pk  the receivers public key, used for encryption.
+ *    [in]  sk  the senders private key, used for signing.
+ *
+ * The intermediate data computed by crypto_box_beforenm is suitable for both
+ * crypto_box_afternm and crypto_box_open_afternm, and can be reused for any
+ * number of messages.
+ */
+Handle<Value> bind_crypto_box_beforenm(const Arguments& args) {
+    HandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments publicKey, and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0, publicKey, crypto_box_PUBLICKEYBYTES);
+    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_box_SECRETKEYBYTES);
+
+    NEW_BUFFER_AND_PTR(k, crypto_box_BEFORENMBYTES);
+
+    crypto_box_beforenm(k_ptr, publicKey, secretKey);
+    return scope.Close(k->handle_);
+}
+
+/**
+ * Encrypts a given a message m, using partial computed data.
+ *
+ * int crypto_box_afternm(
+ *    unsigned char * ctxt,
+ *       const unsigned char * msg,
+ *       unsigned long long mlen,
+ *       const unsigned char * nonce,
+ *       const unsigned char * k)
+ *
+ * Parameters:
+ *    [out] ctxt   the buffer for the cipher-text.
+ *    [in]  msg    the message to be encrypted.
+ *    [in]  mlen   the length of msg.
+ *    [in]  nonce  a randomly generated nonce.
+ *    [in]  k      the partial computed data.
+ *
+ * Returns:
+ *    0 if operation is successful.
+ */
+Handle<Value> bind_crypto_box_afternm(const Arguments& args) {
+    HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce and k must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, k, crypto_box_BEFORENMBYTES);
+
+    // Pad the message with crypto_box_ZEROBYTES zeros
+    NEW_BUFFER_AND_PTR(msg, message_size + crypto_box_ZEROBYTES);
+    
+    unsigned int i;
+    for(i=0; i < crypto_box_ZEROBYTES; i++) {
+       msg_ptr[i] = 0U;
+    }
+    //Copy the message to the new buffer
+    memcpy((void*) (msg_ptr + crypto_box_ZEROBYTES), (void *) message, message_size);
+    message_size += crypto_box_ZEROBYTES;
+
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
+    
+    if( crypto_box_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
+        return scope.Close(ctxt->handle_);
+    }
+    return scope.Close(Undefined());
+}
+
+/**
+ * Decrypts a ciphertext ctxt given the receivers private key, and senders public key.
+ *
+ * int crypto_box_open_afternm ( unsigned char * msg,
+ *    const unsigned char * ctxt,
+ *    unsigned long long clen,
+ *    const unsigned char * nonce,
+ *    const unsigned char * k)
+ *
+ * Parameters:
+ *    [out] msg    the buffer to place resulting plaintext.
+ *    [in]  ctxt   the ciphertext to be decrypted.
+ *    [in]  clen   the length of the ciphertext.
+ *    [in]  nonce  a randomly generated nonce.
+ *    [in]  k      the partial computed data.
+ *
+ * Returns:
+ *    0 if successful and -1 if verification fails.
+ *
+ * Precondition:
+ *    first crypto_box_BOXZEROBYTES of ctxt be all 0.
+ *    the nonce must have size crypto_box_NONCEBYTES.
+ *
+ * Postcondition:
+ *    first clen bytes of msg will contain the plaintext.
+ *    first crypto_box_ZEROBYTES of msg will be all 0.
+ */
+Handle<Value> bind_crypto_box_open_afternm(const Arguments& args) {
+    HandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments cipherText, nonce, k");
+    
+    GET_ARG_AS_UCHAR(0, cipherText);
+    GET_ARG_AS_UCHAR_LEN(0, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(1, k, crypto_box_BEFORENMBYTES);
+
+    // API requires that the first crypto_box_BOXZEROBYTES of msg be 0 so lets check
+    if( cipherText_size < crypto_box_BOXZEROBYTES ) {
+        std::ostringstream oss;
+        oss << "argument cipherText must have a length of at least " << crypto_box_BOXZEROBYTES << " bytes";
+        return V8Exception(oss.str().c_str());
+    }
+
+    unsigned int i;
+    for(i=0; i < crypto_box_BOXZEROBYTES; i++) {
+        if( cipherText[i] ) break;
+    }
+    if( i < crypto_box_BOXZEROBYTES ) {
+        std::ostringstream oss;
+        oss << "the first " << crypto_box_BOXZEROBYTES << " bytes of argument cipherText must be 0";
+        return V8Exception(oss.str().c_str());
+    }
+
+    NEW_BUFFER_AND_PTR(msg, cipherText_size);
+    
+    if( crypto_box_open_afternm(msg_ptr, cipherText, cipherText_size, nonce, k) == 0) {
+
+        // Remove the padding at the beginning of the message
+        NEW_BUFFER_AND_PTR(plain_text,cipherText_size - crypto_box_ZEROBYTES);
+        memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
+
+        return scope.Close(plain_text->handle_);
+    }
+    return scope.Close(Undefined());
+}
+
+#define NEW_INT_PROP(NAME) \
+    target->Set(String::NewSymbol(#NAME), Integer::New(NAME), ReadOnly)
+
+#define NEW_STRING_PROP(NAME) \
+    target->Set(String::NewSymbol(#NAME), String::New(NAME), ReadOnly)
+
+#define NEW_METHOD(NAME) \
+    NODE_SET_METHOD(target, #NAME, bind_ ## NAME)
 
 void RegisterModule(Handle<Object> target) {
     // init sodium library before we do anything
     sodium_init();
 
     // Register version functions
-    NODE_SET_METHOD(target, "version", bind_version);
-    NODE_SET_METHOD(target, "version_minor", bind_version_minor);
-    NODE_SET_METHOD(target, "version_major", bind_version_major);
+    NEW_METHOD(version);
+    
+    //NEW_METHOD(version);
+    NEW_METHOD(version_minor);
+    NEW_METHOD(version_major);
 
     // register utilities
-    NODE_SET_METHOD(target, "memzero", bind_memzero);
+    NEW_METHOD(memzero);
 
     // register random utilities
-    NODE_SET_METHOD(target, "randombytes_buf", bind_randombytes_buf);
-    NODE_SET_METHOD(target, "randombytes_close", bind_randombytes_close);
-    NODE_SET_METHOD(target, "randombytes_stir", bind_randombytes_stir);
-    NODE_SET_METHOD(target, "randombytes_random", bind_randombytes_random);
-    NODE_SET_METHOD(target, "randombytes_uniform", bind_randombytes_uniform);
+    NEW_METHOD(randombytes_buf);
+    NEW_METHOD(randombytes_close);
+    NEW_METHOD(randombytes_stir);
+    NEW_METHOD(randombytes_random);
+    NEW_METHOD(randombytes_uniform);
 
     // String comparisons
-    NODE_SET_METHOD(target, "crypto_verify_16", bind_crypto_verify_16);
-    NODE_SET_METHOD(target, "crypto_verify_32", bind_crypto_verify_32);
+    NEW_METHOD(crypto_verify_16);
+    NEW_METHOD(crypto_verify_32);
 
     // Hash
-    NODE_SET_METHOD(target, "crypto_hash", bind_crypto_hash);
-    NODE_SET_METHOD(target, "crypto_hash_sha512", bind_crypto_hash_sha512);
-    NODE_SET_METHOD(target, "crypto_hash_sha256", bind_crypto_hash_sha256);
+    NEW_METHOD(crypto_hash);
+    NEW_METHOD(crypto_hash_sha512);
+    NEW_METHOD(crypto_hash_sha256);
+    NEW_INT_PROP(crypto_hash_BYTES);
+    NEW_INT_PROP(crypto_hash_BLOCKBYTES);
+    NEW_STRING_PROP(crypto_hash_PRIMITIVE);
+
 
     // Auth
-    NODE_SET_METHOD(target, "crypto_auth", bind_crypto_auth);
-    NODE_SET_METHOD(target, "crypto_auth_verify", bind_crypto_auth_verify);
+    NEW_METHOD(crypto_auth);
+    NEW_METHOD(crypto_auth_verify);
+    NEW_INT_PROP(crypto_auth_BYTES);
+    NEW_INT_PROP(crypto_auth_KEYBYTES);
+    NEW_STRING_PROP(crypto_auth_PRIMITIVE);
 
     // One Time Auth
-    NODE_SET_METHOD(target, "crypto_onetimeauth", bind_crypto_onetimeauth);
-    NODE_SET_METHOD(target, "crypto_onetimeauth_verify", bind_crypto_onetimeauth_verify);
+    NEW_METHOD(crypto_onetimeauth);
+    NEW_METHOD(crypto_onetimeauth_verify);
+    NEW_INT_PROP(crypto_onetimeauth_BYTES);
+    NEW_INT_PROP(crypto_onetimeauth_KEYBYTES);
+    NEW_STRING_PROP(crypto_onetimeauth_PRIMITIVE);
 
     // Stream
-    NODE_SET_METHOD(target, "crypto_stream", bind_crypto_stream);
-    NODE_SET_METHOD(target, "crypto_stream_xor", bind_crypto_stream_xor);
+    NEW_METHOD(crypto_stream);
+    NEW_METHOD(crypto_stream_xor);
+    NEW_INT_PROP(crypto_stream_KEYBYTES);
+    NEW_INT_PROP(crypto_stream_NONCEBYTES);
+    NEW_STRING_PROP(crypto_stream_PRIMITIVE);
+
+    /*
+     * Not implemented in the default crypto_stream, only in the AES variations which are not
+     * ported yet
+    NEW_METHOD(crypto_stream_beforenm);
+    NEW_METHOD(crypto_stream_afternm);
+    NEW_METHOD(crypto_stream_xor_afternm);
+    */
 
     // Secret Box
-    NODE_SET_METHOD(target, "crypto_secretbox", bind_crypto_secretbox);
-    NODE_SET_METHOD(target, "crypto_secretbox_open", bind_crypto_secretbox_open);
+    NEW_METHOD(crypto_secretbox);
+    NEW_METHOD(crypto_secretbox_open);
+    NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
+    NEW_INT_PROP(crypto_secretbox_KEYBYTES);
+    NEW_INT_PROP(crypto_secretbox_NONCEBYTES);
+    NEW_INT_PROP(crypto_secretbox_ZEROBYTES);
 
     // Sign
-    NODE_SET_METHOD(target, "crypto_sign", bind_crypto_sign);
-    NODE_SET_METHOD(target, "crypto_sign_keypair", bind_crypto_sign_keypair);
-    NODE_SET_METHOD(target, "crypto_sign_open", bind_crypto_sign_open);
+    NEW_METHOD(crypto_sign);
+    NEW_METHOD(crypto_sign_keypair);
+    NEW_METHOD(crypto_sign_open);
+    NEW_INT_PROP(crypto_sign_BYTES);
+    NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
+    NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
     
     // Box
-    NODE_SET_METHOD(target, "crypto_box", bind_crypto_box);
-    NODE_SET_METHOD(target, "crypto_box_keypair", bind_crypto_box_keypair);
-    NODE_SET_METHOD(target, "crypto_box_open", bind_crypto_box_open);
+    NEW_METHOD(crypto_box);
+    NEW_METHOD(crypto_box_keypair);
+    NEW_METHOD(crypto_box_open);
+    NEW_METHOD(crypto_box_beforenm);
+    NEW_METHOD(crypto_box_afternm);
+    NEW_METHOD(crypto_box_open_afternm);
+    NEW_INT_PROP(crypto_box_NONCEBYTES);
+    NEW_INT_PROP(crypto_box_BEFORENMBYTES);
+    NEW_INT_PROP(crypto_box_BOXZEROBYTES);
+    NEW_INT_PROP(crypto_box_PUBLICKEYBYTES);
+    NEW_INT_PROP(crypto_box_SECRETKEYBYTES);
+    NEW_INT_PROP(crypto_box_ZEROBYTES);
+    NEW_STRING_PROP(crypto_box_PRIMITIVE);
 
-
-    // register constants
-    target->Set(String::NewSymbol("crypto_auth_BYTES"), Integer::New(crypto_auth_BYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_auth_KEYBYTES"), Integer::New(crypto_auth_KEYBYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_box_NONCEBYTES"), Integer::New(crypto_box_NONCEBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_box_BEFORENMBYTES"), Integer::New(crypto_box_BEFORENMBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_box_BOXZEROBYTES"), Integer::New(crypto_box_BOXZEROBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_box_PUBLICKEYBYTES"), Integer::New(crypto_box_PUBLICKEYBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_box_SECRETKEYBYTES"), Integer::New(crypto_box_SECRETKEYBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_box_ZEROBYTES"), Integer::New(crypto_box_ZEROBYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_hash_BYTES"), Integer::New(crypto_hash_BYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_onetimeauth_BYTES"), Integer::New(crypto_onetimeauth_BYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_onetimeauth_KEYBYTES"), Integer::New(crypto_onetimeauth_KEYBYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_secretbox_BOXZEROBYTES"), Integer::New(crypto_secretbox_BOXZEROBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_secretbox_KEYBYTES"), Integer::New(crypto_secretbox_KEYBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_secretbox_NONCEBYTES"), Integer::New(crypto_secretbox_NONCEBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_secretbox_ZEROBYTES"), Integer::New(crypto_secretbox_ZEROBYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_sign_BYTES"), Integer::New(crypto_sign_BYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_sign_PUBLICKEYBYTES"), Integer::New(crypto_sign_PUBLICKEYBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_sign_SECRETKEYBYTES"), Integer::New(crypto_sign_SECRETKEYBYTES), ReadOnly);
-
-    target->Set(String::NewSymbol("crypto_stream_KEYBYTES"), Integer::New(crypto_stream_KEYBYTES), ReadOnly);
-    target->Set(String::NewSymbol("crypto_stream_NONCEBYTES"), Integer::New(crypto_stream_NONCEBYTES), ReadOnly);
-
+    NEW_INT_PROP(crypto_shorthash_BYTES);
+    NEW_INT_PROP(crypto_shorthash_KEYBYTES);
+    NEW_STRING_PROP(crypto_shorthash_PRIMITIVE);
 }
 
 NODE_MODULE(sodium, RegisterModule);

@@ -13,7 +13,7 @@ describe("Stream", function () {
     it("encryp/decrypt message", function (done) {
         var stream = new Stream();
 
-        var cTxt = stream.encrypt("This is a test");
+        var cTxt = stream.encrypt("This is a test", "utf8");
         var checkMsg = stream.decrypt(cTxt);
         checkMsg.toString('utf8').should.eql("This is a test");
         done();

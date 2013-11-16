@@ -14,7 +14,7 @@ describe("Sign", function () {
         var sign = new Sign();
         var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
-        var checkMsg = sign.verify(signedMsg);
+        var checkMsg = Sign.verify(signedMsg);
         checkMsg.toString('utf8').should.eql("This is a test");
         done();
     });
