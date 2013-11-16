@@ -1,3 +1,4 @@
 build/Makefile
 build/Release/obj.target/sodium/sodium.o
 build/Release/sodium.node
+.svn
