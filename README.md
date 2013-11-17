@@ -95,7 +95,7 @@ You need to have mocha test suite installs then you can run the node-sodium unit
     
 # Coverage Reports
 	
-	make test-cov
+    make test-cov
 	
 
 
