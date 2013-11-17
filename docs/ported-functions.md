@@ -4,9 +4,9 @@
 List of all functions ported by node-sodium
 
 ## Version
-version
-version_minor
-version_major
+  * version
+  * version_minor
+  * version_major
 
 ## Utilities
   * memzero
