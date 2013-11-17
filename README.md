@@ -8,6 +8,8 @@ Missing are the `generichash` functions, and the alternative primitives, like `c
 
 There's a "low level" native module that gives you access directly to Lib Sodium, and a friendlier high level API that makes the use of the library a bit easier.
 
+Check [`docs/ported-functions.md`](https://github.com/paixaop/node-sodium/tree/master/docs/ported-functions.md) for a list of all lib sodium functions included in node-sodium.
+
 # Usage
 
 Just a quick example that uses the same public/secret key pair to encrypt and then decrypt the message.
