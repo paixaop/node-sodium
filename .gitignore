@@ -4,3 +4,4 @@ build/Release/sodium.node
 .svn
 .idea/
 .DS_Store
+node_modules/should/.idea/workspace.xml
