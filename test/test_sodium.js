@@ -210,3 +210,33 @@ describe("SecretBox", function () {
         done();
     });
 });
+
+describe("ECDH", function () {
+    it("should calculate the same secret", function (done) {
+        var bob = new sodium.Key.ECDH();
+        var alice = new sodium.Key.ECDH();
+        
+        var aliceDH = new sodium.ECDH(bob.pk().get(), alice.sk().get());
+        var bobDH = new sodium.ECDH(alice.pk().get(), bob.sk().get());
+        
+        var bobSecret = bobDH.secret();
+        var aliceSecret = aliceDH.secret();
+        
+        bobSecret.should.eql(aliceSecret);
+        done();
+    });
+    
+    it("should calculate the same session key", function (done) {
+        var bob = new sodium.Key.ECDH();
+        var alice = new sodium.Key.ECDH();
+        
+        var aliceDH = new sodium.ECDH(bob.pk().get(), alice.sk().get());
+        var bobDH = new sodium.ECDH(alice.pk().get(), bob.sk().get()); 
+        
+        var bobSecret = bobDH.sessionKey();
+        var aliceSecret = aliceDH.sessionKey();
+        
+        bobSecret.should.eql(aliceSecret);
+        done();
+    });
+});

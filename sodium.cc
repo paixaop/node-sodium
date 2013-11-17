@@ -103,6 +103,31 @@ Handle<Value> bind_memzero(const Arguments& args) {
     return scope.Close(Null());
 }
 
+/** 
+ * int sodium_memcmp(const void * const b1_, const void * const b2_, size_t size);
+ */
+Handle<Value> bind_memcmp(const Arguments& args) {
+    HandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+
+    GET_ARG_AS_VOID(0, buffer_1);
+    GET_ARG_AS_VOID(1, buffer_2);
+    
+    size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
+    
+    return scope.Close(Integer::New(sodium_memcmp(buffer_1, buffer_2, s)));
+}
+
+/** 
+ * char *sodium_bin2hex(char * const hex, const size_t hexlen,
+ *                    const unsigned char *bin, const size_t binlen);
+ */
+Handle<Value> bind_sodium_memcmp(const Arguments& args) {
+    HandleScope scope;
+    return V8Exception("use node's native Buffer.toString()");
+}
+
 // Lib Sodium Random
 
 // void randombytes_buf(void *const buf, const size_t size)
@@ -178,6 +203,44 @@ Handle<Value> bind_crypto_verify_32(const Arguments& args) {
 }
 
 /**
+ * int crypto_shorthash(
+ *    unsigned char *out,
+ *    const unsigned char *in,
+ *    unsigned long long inlen,
+ *    const unsigned char *key)
+ *
+ * Parameters:
+ *    [out] out    result of hash
+ *    [in]  in     input buffer
+ *    [in]  inlen  size of input buffer
+ *    [in]  key    key buffer
+ *
+ * A lot of applications and programming language implementations have been
+ * recently found to be vulnerable to denial-of-service attacks when a hash
+ * function with weak security guarantees, like Murmurhash 3, was used to
+ * construct a hash table.
+ * In order to address this, Sodium provides the “shorthash” function,
+ * currently implemented using SipHash-2-4. This very fast hash function
+ * outputs short, but unpredictable (without knowing the secret key) values
+ * suitable for picking a list in a hash table for a given key.
+ */
+Handle<Value> bind_crypto_shorthash(const Arguments& args) {
+    HandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
+    
+    GET_ARG_AS_UCHAR(0,message);
+    GET_ARG_AS_UCHAR_LEN(1, key, crypto_shorthash_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(hash, crypto_shorthash_BYTES);
+    
+    if( crypto_shorthash(hash_ptr, message, message_size, key) == 0 ) {
+        return scope.Close(hash->handle_);
+    }
+    return scope.Close(Null());
+}
+
+/**
  * int crypto_hash(
  *    unsigned char * hbuf,
  *    const unsigned char * msg,
@@ -190,11 +253,10 @@ Handle<Value> bind_crypto_hash(const Arguments& args) {
     
     GET_ARG_AS_UCHAR(0,msg);
     
-    Buffer* hashBuf = Buffer::New(crypto_hash_BYTES);
-    unsigned char* hbuf = (unsigned char*)Buffer::Data(hashBuf);
-
-    if( crypto_hash(hbuf, msg, msg_size) == 0 ) {
-        return scope.Close(hashBuf->handle_);
+    NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);
+    
+    if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
+        return scope.Close(hash->handle_);
     }
     return scope.Close(Null());
 }
@@ -985,6 +1047,45 @@ Handle<Value> bind_crypto_box_open_afternm(const Arguments& args) {
     return scope.Close(Undefined());
 }
 
+/**
+ * int crypto_scalarmult_base(unsigned char *q, const unsigned char *n)
+ */
+Handle<Value> bind_crypto_scalarmult_base(const Arguments& args) {
+    HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
+    
+    GET_ARG_AS_UCHAR_LEN(0, n, crypto_scalarmult_SCALARBYTES);
+    NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);    
+
+    if( crypto_scalarmult_base(q_ptr, n) == 0) {
+        return scope.Close(q->handle_);
+    }
+    return scope.Close(Undefined());
+}
+
+
+/**
+ * int crypto_scalarmult(unsigned char *q, const unsigned char *n,
+ *                  const unsigned char *p)
+ */
+Handle<Value> bind_crypto_scalarmult(const Arguments& args) {
+    HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0, n, crypto_scalarmult_SCALARBYTES);
+    GET_ARG_AS_UCHAR_LEN(1, p, crypto_scalarmult_BYTES);
+    
+    NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);    
+
+    if( crypto_scalarmult(q_ptr, n, p) == 0) {
+        return scope.Close(q->handle_);
+    }
+    return scope.Close(Undefined());
+}
+
+
 #define NEW_INT_PROP(NAME) \
     target->Set(String::NewSymbol(#NAME), Integer::New(NAME), ReadOnly)
 
@@ -1007,6 +1108,7 @@ void RegisterModule(Handle<Object> target) {
 
     // register utilities
     NEW_METHOD(memzero);
+    NEW_METHOD(memcmp);
 
     // register random utilities
     NEW_METHOD(randombytes_buf);
@@ -1026,7 +1128,6 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_hash_BYTES);
     NEW_INT_PROP(crypto_hash_BLOCKBYTES);
     NEW_STRING_PROP(crypto_hash_PRIMITIVE);
-
 
     // Auth
     NEW_METHOD(crypto_auth);
@@ -1088,9 +1189,18 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_box_ZEROBYTES);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
 
+    NEW_METHOD(crypto_shorthash);
     NEW_INT_PROP(crypto_shorthash_BYTES);
     NEW_INT_PROP(crypto_shorthash_KEYBYTES);
     NEW_STRING_PROP(crypto_shorthash_PRIMITIVE);
+    
+    // Scalar Mult
+    NEW_METHOD(crypto_scalarmult);
+    NEW_METHOD(crypto_scalarmult_base);
+    NEW_INT_PROP(crypto_scalarmult_SCALARBYTES);
+    NEW_INT_PROP(crypto_scalarmult_BYTES);
+    NEW_STRING_PROP(crypto_scalarmult_PRIMITIVE);
+    
 }
 
 NODE_MODULE(sodium, RegisterModule);
