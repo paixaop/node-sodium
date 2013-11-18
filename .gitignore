@@ -1,14 +1,8 @@
-build/Makefile
-build/Release/obj.target/sodium/sodium.o
-build/Release/sodium.node
 .svn
-.idea/
 .DS_Store
 node_modules/should/.idea/workspace.xml
-build/config.gypi
-build/gyp-mac-tool
-build/Release/.deps/Release/obj.target/sodium/sodium.o.d
-build/Release/.deps/Release/sodium.node.d
-build/sodium.target.mk
 build
 .idea
+build/binding.Makefile
+build/Release
+*.lock
