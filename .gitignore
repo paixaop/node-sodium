@@ -4,3 +4,4 @@ node_modules/should/.idea/workspace.xml
 build/*
 .idea/*
 *.lock
+build
