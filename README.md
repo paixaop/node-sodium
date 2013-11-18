@@ -77,12 +77,23 @@ This compiles Lib Sodium it self, by doing
     ./autogen
     ./configure
     make
-
-followed by
+    
+Followed by
 
     cd ..
     npm build .
     npm install
+    
+If you get an `autogen.sh` error similar to this
+    
+    ./autogen.sh: line 13: libtoolize: command not found
+    
+You'll need to install libtool and automake in your platform. For Mac OSX you can use [Homebrew](http://brew.sh)
+
+    brew install libtool
+    brew install automake
+
+Then repeat the steps from `./autogen.sh`
     
 
 # Code Samples
