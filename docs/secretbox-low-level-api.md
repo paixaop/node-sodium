@@ -1,5 +1,15 @@
 # SecretBox Low Level API
 
+## Usage
+
+    var sodium = require('sodium').api;
+
+    // encrypt
+    var cipherText = sodium.crypto_secretbox(message, nonce, key);
+
+    // decrypt
+    var plainText = sodium.crypto_secretbox_open(cipherText, nonce, key);
+
 ## Functions
 
 ### crypto_secretbox (message, nonce, key)
