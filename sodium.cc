@@ -72,21 +72,21 @@ static Handle<Value> V8Exception(const char* msg) {
 }
 
 // Lib Sodium Version Functions
-Handle<Value> bind_version(const Arguments& args) {
+Handle<Value> bind_sodium_version_string(const Arguments& args) {
     HandleScope scope;
     return scope.Close(
         String::New(sodium_version_string())
     );
 }
 
-Handle<Value> bind_version_minor(const Arguments& args) {
+Handle<Value> bind_sodium_library_version_minor(const Arguments& args) {
     HandleScope scope;
     return scope.Close(
         Integer::New(sodium_library_version_minor())
     );
 }
 
-Handle<Value> bind_version_major(const Arguments& args) {
+Handle<Value> bind_sodium_library_version_major(const Arguments& args) {
     HandleScope scope;
     return scope.Close(
         Integer::New(sodium_library_version_major())
@@ -113,10 +113,21 @@ Handle<Value> bind_memcmp(const Arguments& args) {
 
     GET_ARG_AS_VOID(0, buffer_1);
     GET_ARG_AS_VOID(1, buffer_2);
-    
+
+    size_t size;
+    if (args[2]->IsUint32()) {
+        size = args[2]->Int32Value();
+    } else {
+        return V8Exception("argument size must be a positive number");
+    }
+
     size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
+
+    if( s < size ) {
+        size = s;
+    }
     
-    return scope.Close(Integer::New(sodium_memcmp(buffer_1, buffer_2, s)));
+    return scope.Close(Integer::New(sodium_memcmp(buffer_1, buffer_2, size)));
 }
 
 /**
@@ -1100,11 +1111,11 @@ void RegisterModule(Handle<Object> target) {
     sodium_init();
 
     // Register version functions
-    NEW_METHOD(version);
+    NEW_METHOD(sodium_version_string);
     
     //NEW_METHOD(version);
-    NEW_METHOD(version_minor);
-    NEW_METHOD(version_major);
+    NEW_METHOD(sodium_library_version_minor);
+    NEW_METHOD(sodium_library_version_major);
 
     // register utilities
     NEW_METHOD(memzero);
