@@ -90,7 +90,10 @@ Parameters:
   * `pk` - buffer with sender's public key
   * `sk` - buffer with recipient's secret key
   
-Returns `k` the pre-computation result to be used in the `afternm` function calls, or `undefined` in case of error.
+Returns:
+
+  * `k` the pre-computation result to be used in the `afternm` function calls
+  * `undefined` in case of error.
 
 ### crypto_box_afternm (msg, nonce, k)
 
