@@ -1,8 +1,6 @@
 .svn
 .DS_Store
 node_modules/should/.idea/workspace.xml
-build
-.idea
-build/binding.Makefile
-build/Release
+build/*
+.idea/*
 *.lock
