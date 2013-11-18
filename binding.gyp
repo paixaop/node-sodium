@@ -31,7 +31,7 @@
                         [
                               'OS=="win"', {
                                     'libraries': [
-                                          "../libsodium/src/libsodium/.libs/libsodium.so"
+                                          "../libsodium/src/libsodium/.libs/libsodium.lib"
                                     ],
                               }
                         ],
