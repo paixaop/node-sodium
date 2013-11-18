@@ -119,11 +119,11 @@ Handle<Value> bind_memcmp(const Arguments& args) {
     return scope.Close(Integer::New(sodium_memcmp(buffer_1, buffer_2, s)));
 }
 
-/** 
+/**
  * char *sodium_bin2hex(char * const hex, const size_t hexlen,
  *                    const unsigned char *bin, const size_t binlen);
  */
-Handle<Value> bind_sodium_memcmp(const Arguments& args) {
+Handle<Value> bind_sodium_bin2hex(const Arguments& args) {
     HandleScope scope;
     return V8Exception("use node's native Buffer.toString()");
 }
@@ -219,7 +219,7 @@ Handle<Value> bind_crypto_verify_32(const Arguments& args) {
  * recently found to be vulnerable to denial-of-service attacks when a hash
  * function with weak security guarantees, like Murmurhash 3, was used to
  * construct a hash table.
- * In order to address this, Sodium provides the ÒshorthashÓ function,
+ * In order to address this, Sodium provides the ï¿½shorthashï¿½ function,
  * currently implemented using SipHash-2-4. This very fast hash function
  * outputs short, but unpredictable (without knowing the secret key) values
  * suitable for picking a list in a hash table for a given key.
