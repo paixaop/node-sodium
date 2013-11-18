@@ -38,10 +38,16 @@ Alongside the standard interface there also exists a pre-computation interface. 
 
 ### crypto_box_keypair ( )
 
-Generates a random secret key and a corresponding public key. Returns an object as with two buffers as follows:
+Generates a random secret key and a corresponding public key.
+
+Returns:
+
+  * Object
 
     { secretKey: <secret key buffer>,
       publicKey: <public key buffer> }
+
+  * `undefined` in case or error
 
 ### crypto_box (message, nonce, pk, sk)
 
@@ -53,8 +59,11 @@ Parameters:
   * `nonce` - buffer with crypto box nonce
   * `pk` - buffer with recipient's public key
   * `sk` - buffer with sender's secret key
-  
-Returns ciphered text buffer.
+
+Returns:
+
+  * buffer with encrypted message
+  * `undefined` in case or error
 
 
 ### crypto_box_open (ctxt, nonce, pk, sk)
