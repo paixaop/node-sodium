@@ -1,8 +1,5 @@
 # Box Low Level API
 
-## Credits
-This document is based on [documentation](http://mob5.host.cs.st-andrews.ac.uk/html) written by Jan de Muijnck-Hughes.
-
 ## Detailed Description
 
 Definitions and functions to perform Authenticated Encryption.
@@ -125,4 +122,5 @@ Returns
   * plain text buffer
   * `undefined` in case or error 
 
-
+## Credits
+This document is based on [documentation](http://mob5.host.cs.st-andrews.ac.uk/html) written by Jan de Muijnck-Hughes.
