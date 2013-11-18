@@ -44,8 +44,8 @@ Returns:
 
   * Object
 
-    { secretKey: <secret key buffer>,
-      publicKey: <public key buffer> }
+        { secretKey: <secret key buffer>,
+          publicKey: <public key buffer> }
 
   * `undefined` in case or error
 
@@ -77,7 +77,10 @@ Parameters:
   * `pk` - buffer with sender's public key
   * `sk` - buffer with recipient's secret key
   
-Returns plain text buffer.
+Returns 
+
+  * plain text buffer
+  * `undefined` in case or error  
 
 ### crypto_box_beforenm (pk, sk)
 Partially performs the computation required for both encryption and decryption of data. 
@@ -87,7 +90,7 @@ Parameters:
   * `pk` - buffer with sender's public key
   * `sk` - buffer with recipient's secret key
   
-Returns `k` the pre-computation result to be used in the `afternm` function calls.
+Returns `k` the pre-computation result to be used in the `afternm` function calls, or `undefined` in case of error.
 
 ### crypto_box_afternm (msg, nonce, k)
 
@@ -99,7 +102,10 @@ Parameters:
   * `nonce` - buffer with crypto box nonce
   * `k` - buffer calculated by the [`crypto_box_beforenm`](#crypto_box_beforenm-pk-sk) function call
 
-Returns ciphered text buffer.
+Returns 
+
+  * ciphered text buffer
+  * `undefined` in case or error 
 
 ### crypto_box_open_afternm (ctxt, nonce, k)
 
@@ -111,6 +117,9 @@ Parameters:
   * `nonce` - buffer with crypto box nonce
   * `k` - buffer calculated by the  [`crypto_box_beforenm`](#crypto_box_beforenm-pk-sk) function call
  
-Returns plain text buffer.
+Returns 
+
+  * plain text buffer
+  * `undefined` in case or error 
 
 
