@@ -9,6 +9,13 @@
 
     // decrypt
     var plainText = sodium.crypto_secretbox_open(cipherText, nonce, key);
+    
+## Constants
+
+ * `crypto_secretbox_KEYBYTES`     Size of shared secret key
+ * `crypto_secretbox_NONCEBYTES`   Size of Nonce
+ * `crypto_secretbox_BOXZEROBYTES` No. of leading 0 bytes in the cipher-text
+ * `crypto_secretbox_ZEROBYTES`    No. of leading 0 bytes in the message
 
 ## Functions
 
