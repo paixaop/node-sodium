@@ -1,5 +1,15 @@
 # Utilities and Random Low Level API
 
+## Usage
+
+    var sodium = require('sodium').api;
+
+    // example of calling crypto_box_keypair
+    var version = sodium.sodium_version_string();
+
+    // example of accessing a constant
+    var num = sodium.randombytes_random();
+
 ## Version Functions
 
 ### sodium_version_string ( )
