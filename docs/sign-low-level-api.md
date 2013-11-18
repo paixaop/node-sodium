@@ -1,14 +1,21 @@
 # Sign Low Level API
 
-## Credits
-
-This document is based on [documentation](http://mob5.host.cs.st-andrews.ac.uk/html) written by Jan de Muijnck-Hughes.
-
 ## Detailed Description
 
 Use Sign digitally sign messages.
 
 The crypto_sign function is designed to meet the standard notion of unforgeability for a public-key signature scheme under chosen-message attacks.
+
+# Usage
+
+    var sodium = require('sodium').api;
+
+    // example of calling crypto_sign_keypair
+    var keys = sodium.crypto_sign_keypair();
+
+    // example of accessing a constant
+    var sizePublicKey = sodium.crypto_sign_PUBLICKEYBYTES;
+
 
 ## Constants
 
@@ -18,12 +25,12 @@ The crypto_sign function is designed to meet the standard notion of unforgeabili
 
 ## Functions
 
-### crypto_box_keypair ( )
+### crypto_sign_keypair ( )
 
 Generates a random signing key pair with a secret key and corresponding public key. Returns an object as with two buffers as follows:
 
-    { secretKey: <secret key buffer>,
-      publicKey: <public key buffer> }
+    { secretKey: <secret, or signer's key buffer>,
+      publicKey: <public, or validation, key buffer> }
      
 ### crypto_sign(message, secretKey)
 
@@ -37,6 +44,7 @@ Parameters:
 Returns:
 
   * buffer with signed message
+  * `undefined` in case or error
 
         
 ### crypto_sign_open(signedMsg, publicKey)
@@ -52,3 +60,8 @@ Returns:
 
   * buffer with message
   * `undefined` if signature cannot be verified
+
+## Credits
+
+This document is based on [documentation](http://mob5.host.cs.st-andrews.ac.uk/html) written by Jan de Muijnck-Hughes.
+

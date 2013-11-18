@@ -15,6 +15,16 @@ Authentication encryption provides guarantees towards the:
 
 Alongside the standard interface there also exists a pre-computation interface. In the event that applications are required to send several messages to the same receiver, speed can be gained by splitting the operation into two steps: before and after. Similarly applications that receive several messages from the same sender can gain speed through the use of the: `before`, and `open_after` functions.
 
+# Usage
+
+    var sodium = require('sodium').api;
+
+    // example of calling crypto_box_keypair
+    var keys = sodium.crypto_box_keypair();
+
+    // example of accessing a constant
+    var sizePublicKey = sodium.crypto_box_PUBLICKEYBYTES;
+
 ## Constants
 
   * `crypto_box_PUBLICKEYBYTES` Size of Public Key
