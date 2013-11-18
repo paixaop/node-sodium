@@ -10,3 +10,5 @@ build/gyp-mac-tool
 build/Release/.deps/Release/obj.target/sodium/sodium.o.d
 build/Release/.deps/Release/sodium.node.d
 build/sodium.target.mk
+build
+.idea
