@@ -7,6 +7,7 @@ var sodium = require('../build/Release/sodium');
 // Test all KeyPair classes
 testKey('box-key',sodium.crypto_box_PUBLICKEYBYTES, sodium.crypto_box_SECRETKEYBYTES);
 testKey('sign-key',sodium.crypto_sign_PUBLICKEYBYTES, sodium.crypto_sign_SECRETKEYBYTES);
+testKey('dh-key',sodium.crypto_scalarmult_PUBLICKEYBYTES, sodium.crypto_scalarmult_SECRETKEYBYTES);
 
 function testKey(modName,sizePkBuffer, sizeSkBuffer) {
     var KeyPair = require('../lib/keys/' + modName);
