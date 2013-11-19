@@ -5,3 +5,7 @@ build/*
 .idea/*
 *.lock
 build
+.idea/
+html-report/
+lib-cov/
+node_modules/
