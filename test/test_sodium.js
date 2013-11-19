@@ -216,8 +216,8 @@ describe("ECDH", function () {
         var bob = new sodium.Key.ECDH();
         var alice = new sodium.Key.ECDH();
         
-        var aliceDH = new sodium.ECDH(bob.pk().get(), alice.sk().get());
-        var bobDH = new sodium.ECDH(alice.pk().get(), bob.sk().get());
+        var aliceDH = new sodium.ECDH(bob.pk(), alice.sk());
+        var bobDH = new sodium.ECDH(alice.pk(), bob.sk());
         
         var bobSecret = bobDH.secret();
         var aliceSecret = aliceDH.secret();
