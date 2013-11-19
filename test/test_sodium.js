@@ -191,7 +191,7 @@ describe("SecretBox", function () {
         // shared in some secure way
 
         // Alice's Side
-        var aliceKey  = new Buffer("supersecretkey");
+        var aliceKey  = new Buffer("fcd09812fe556aac311de3faade13afa");
         var aliceBox = new sodium.SecretBox(aliceKey);
 
         // Create a signature Alice's side using her secret key and Bob's public key
@@ -201,7 +201,7 @@ describe("SecretBox", function () {
 
         // Bob's Side
         // Bob uses the same scret key as Alice
-        var bobKey  = new Buffer("supersecretkey");
+        var bobKey  = new Buffer("fcd09812fe556aac311de3faade13afa");
         var bobBox = new sodium.SecretBox(bobKey);
 
         var plainText = bobBox.decrypt(cipherText, "utf8");
