@@ -7,7 +7,7 @@ var sodium = require('../build/Release/sodium');
 // Test all KeyPair classes
 testKey('box-key',sodium.crypto_box_PUBLICKEYBYTES, sodium.crypto_box_SECRETKEYBYTES);
 testKey('sign-key',sodium.crypto_sign_PUBLICKEYBYTES, sodium.crypto_sign_SECRETKEYBYTES);
-testKey('dh-key',sodium.crypto_scalarmult_PUBLICKEYBYTES, sodium.crypto_scalarmult_SECRETKEYBYTES);
+testKey('dh-key',sodium.crypto_scalarmult_BYTES, sodium.crypto_scalarmult_BYTES);
 
 function testKey(modName,sizePkBuffer, sizeSkBuffer) {
     var KeyPair = require('../lib/keys/' + modName);
@@ -15,7 +15,7 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
         KeyPair = require('../lib-cov/keys/' + modName);
     }
 
-    describe("box-key", function () {
+    describe(modName, function () {
         it("generate a valid key", function (done) {
             var key = new KeyPair();
             key.generate();
