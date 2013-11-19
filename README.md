@@ -54,6 +54,9 @@ You can find this code sample in `examples\low-level-api.js`.
 # Documentation
 Please read the work in progress documentation found under [`docs/`](https://github.com/paixaop/node-sodium/tree/master/docs).
 
+You shoudld also review the unit tests as most of the high level API is "documented" there.
+Don't forget to check out the examples as well.
+
 # Lib Sodium Documentation
 Lib Sodium is somewhat documented [here](http://mob5.host.cs.st-andrews.ac.uk/html/). Node-Sodium follows the same structure and I will keep documenting it as fast as possible. 
 
