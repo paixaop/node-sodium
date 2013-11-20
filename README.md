@@ -100,7 +100,7 @@ Then repeat the steps from `./autogen.sh`
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
 
-# Installing Mocha Test Suit
+# Installing Mocha Test Suite
 
 To run the unit tests you need Mocha. If you'd like to run coverage reports you need mocha-istanbul. You can install both globally by doing
 
