@@ -69,12 +69,11 @@ Tested on Mac and Linux
 node-sodium depends on lib sodium, so if lib sodium does not compile on your platform chances are `npm install sodium` will fail.
 
 # Manual Install
-Clone the git repository, and change to the local directory where you ran git clone to, 
+Clone this git repository, and change to the local directory where you ran git clone to, 
 
-    make sodium
     npm install
 
-This compiles Lib Sodium it self, by doing
+This will pull lib sodium from github and compile it by running the following commands
 
     cd libsodium
     ./autogen
@@ -93,8 +92,7 @@ If you get an `autogen.sh` error similar to this
     
 You'll need to install libtool and automake in your platform. For Mac OSX you can use [Homebrew](http://brew.sh)
 
-    brew install libtool
-    brew install automake
+    brew install libtool automake    
 
 Then repeat the steps from `./autogen.sh`
     
@@ -102,12 +100,23 @@ Then repeat the steps from `./autogen.sh`
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
 
+# Installing Mocha Test Suit
+
+To run the unit tests you need Mocha. If you'd like to run coverage reports you need mocha-istanbul. You can install both globally by doing
+
+    npm install -g mocha mocha-istanbul
+
+You may need to run it with `sudo` is only root user has access to Node.js global directories
+
+    sudo npm install -g mocha mocha-istanbul
+
 # Unit Tests
-You need to have mocha test suite installs then you can run the node-sodium unit tests by
+You need to have mocha test suite installed globally then you can run the node-sodium unit tests by
 
     make test
     
 # Coverage Reports
+You need to have mocha test suite installed globally then you can run the node-sodium unit tests by
 	
     make test-cov
 	
