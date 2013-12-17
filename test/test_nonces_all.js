@@ -90,6 +90,12 @@ function testNonce(modName, sizeBuffer) {
             nonce.size().should.eql(sizeBuffer);
             done();
         });
+        
+        it("nonce size should match that of sodium", function (done) {
+            var nonce = new Nonce();
+            nonce.bytes().should.eql(sizeBuffer);
+            done();
+        });
 
         it("isValid should return false on bad nonce", function (done) {
             var nonce = new Nonce();
