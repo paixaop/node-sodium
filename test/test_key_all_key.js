@@ -38,6 +38,12 @@ function testKey(modName, sizeBuffer) {
             key.size().should.eql(sizeBuffer);
             done();
         });
+        
+        it("key bytes should match that of sodium", function (done) {
+            var key = new Key();
+            key.bytes().should.eql(sizeBuffer);
+            done();
+        });
 
         it("isValid should return false on bad key", function (done) {
             var key = new Key();

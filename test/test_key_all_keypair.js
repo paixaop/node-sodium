@@ -30,6 +30,20 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
             key.getSecretKey().size().should.eql(sizeSkBuffer);
             done();
         });
+        
+        it("key bytes should match that of sodium", function (done) {
+            var key = new KeyPair();
+            key.publicKeyBytes().should.eql(sizePkBuffer);
+            key.secretKeyBytes().should.eql(sizeSkBuffer);
+            done();
+        });
+        
+        it("key bytes should match that of sodium", function (done) {
+            var key = new KeyPair();
+            key.pkBytes().should.eql(sizePkBuffer);
+            key.skBytes().should.eql(sizeSkBuffer);
+            done();
+        });
 
         it("isValid should return false on bad key", function (done) {
             var key = new KeyPair();
