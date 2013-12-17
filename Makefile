@@ -43,7 +43,7 @@ clean:
 	-rm -fr coverage
 	-rm -fr coverage.html
 
-sodium: git-pull
+sodium:
 	cd libsodium; \
 	./autogen.sh; \
 	./configure;  \
