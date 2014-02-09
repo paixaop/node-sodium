@@ -1026,8 +1026,8 @@ Handle<Value> bind_crypto_box_open_afternm(const Arguments& args) {
     NUMBER_OF_MANDATORY_ARGS(3,"arguments cipherText, nonce, k");
     
     GET_ARG_AS_UCHAR(0, cipherText);
-    GET_ARG_AS_UCHAR_LEN(0, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(1, k, crypto_box_BEFORENMBYTES);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, k, crypto_box_BEFORENMBYTES);
 
     // API requires that the first crypto_box_BOXZEROBYTES of msg be 0 so lets check
     if( cipherText_size < crypto_box_BOXZEROBYTES ) {
