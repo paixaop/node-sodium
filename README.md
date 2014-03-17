@@ -1,3 +1,7 @@
+#This is a fork of the paixaop version. 
+
+The intention is to integrate with a node.js abstraction provider such as nan and make the build more friendly.
+
 # node-sodium
 
 
