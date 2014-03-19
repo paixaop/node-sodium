@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/paixaop/node-sodium.png)](http://travis-ci.org/paixaop/node-sodium)
+
 # node-sodium
 
 

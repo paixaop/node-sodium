@@ -8,10 +8,12 @@
         "should" : ">=2.1.0"
     },
     "devDependencies": {
-        "mocha"  : ">=0.14.1"
+        "mocha"  : ">=0.14.1",
+        "tap": "~0.4.1",
+        "node-gyp": "~0.12.1"
     },
     "scripts":{
-        "preinstall": "make sodium"
+        "test": "tap test/*-test.js"
     },
     "repository" : {
         "type" : "git",
