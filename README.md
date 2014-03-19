@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/tearmann/node-sodium.png)](http://travis-ci.org/tearmann/node-sodium)
+
 #This is a fork of the paixaop version. 
 
 The intention is to integrate with a node.js abstraction provider such as nan and make the build more friendly.
