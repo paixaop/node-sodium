@@ -1,0 +1,13 @@
+## DNT config file
+## see https://github.com/rvagg/dnt
+
+NODE_VERSIONS="\
+  v0.10.26
+"
+OUTPUT_PREFIX="sodium-"
+TEST_CMD="\
+  cd /dnt/ && \
+  npm install && \
+  node_modules/.bin/node-gyp --nodedir /usr/src/node/ rebuild && \
+  node_modules/.bin/tap test/*-test.js; \
+"
