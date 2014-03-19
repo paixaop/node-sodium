@@ -11,3 +11,4 @@ lib-cov/
 node_modules/
 node-sodium.sublime-project
 node-sodium.sublime-workspace
+*.o
