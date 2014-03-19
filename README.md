@@ -70,34 +70,9 @@ Tested on Mac and Linux
     
 node-sodium depends on lib sodium, so if lib sodium does not compile on your platform chances are `npm install sodium` will fail.
 
-# Manual Install
-Clone this git repository, and change to the local directory where you ran git clone to, 
+# Manual Build
 
-    npm install
-
-This will pull lib sodium from github and compile it by running the following commands
-
-    cd libsodium
-    ./autogen
-    ./configure
-    make
-    
-Followed by
-
-    cd ..
-    npm build .
-    npm install
-    
-If you get an `autogen.sh` error similar to this
-    
-    ./autogen.sh: line 13: libtoolize: command not found
-    
-You'll need to install libtool and automake in your platform. For Mac OSX you can use [Homebrew](http://brew.sh)
-
-    brew install libtool automake    
-
-Then repeat the steps from `./autogen.sh`
-    
+    node-gyp build    
 
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
