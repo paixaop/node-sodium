@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 TESTS = test/*.js
-REPORTER = dot
+REPORTER = tap
 
 CHDIR_SHELL := $(SHELL)
 define chdir
@@ -44,10 +44,11 @@ clean:
 	-rm -fr coverage.html
 
 sodium:
-	cd libsodium; \
-	./autogen.sh; \
-	./configure;  \
-	make	
+	# libsodium is now compiled through node-gyp
+	#cd libsodium; \
+	#./autogen.sh; \
+	#./configure;  \
+	#make	
 	node-gyp rebuild
 
 .PHONY: test-cov site docs test docclean
