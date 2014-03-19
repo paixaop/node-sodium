@@ -95,11 +95,19 @@ var cipherTextA = [
     ,0xe3,0x55,0xa5
 ];
 
+var secretA = [
+     0x1b,0x27,0x55,0x64,0x73,0xe9,0x85,0xd4
+    ,0x62,0xcd,0x51,0x19,0x7a,0x9a,0x46,0xc7
+    ,0x60,0x09,0x54,0x9e,0xac,0x64,0x74,0xf2
+    ,0x06,0xc4,0xee,0x08,0x44,0xf6,0x83,0x89
+];
+
 var nonce = new Buffer(nonceA);
 var plainText = new Buffer(plainTextB);
 var alicesk = new Buffer(aliceskA);
 var bobpk = new Buffer(bobpkA);
 var cipherText = new Buffer(cipherTextA);
+var secret = new Buffer(secretA);
 
 describe('Box', function() {
     it('crypto_box should encrypt to known cipher text', function(done) {
@@ -190,6 +198,116 @@ describe('Box', function() {
         }).should.throw();
         done();
     });
+
+    describe('_BeforeNM', function() {
+        it('crypto_box_beforenm should output known shared secret', function(done) {
+            var computed_secret = sodium.crypto_box_beforenm(bobpk, alicesk);
+            if( !computed_secret ) {
+                should.fail();
+            }
+            computed_secret.toString('hex').should.eql(secret.toString('hex'));
+            done();
+        });
+        it('should fail on bad param 1', function(done) {
+            var pk = "bobpk";
+            var sk = alicesk;
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+
+            pk = new Buffer(10);
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+
+            pk = 10;
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+            done();
+        });
+        it('should fail on bad param 2', function(done) {
+            var pk = bobpk;
+            var sk = "alicesk";
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+
+            sk = new Buffer(10);
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+
+            sk = 10;
+            (function() {
+                var computed_secret = sodium.crypto_box_beforenm(pk, sk);
+            }).should.throw();
+            done();
+        });
+    });
+
+    describe('_AfterNM', function() {
+        it('crypto_box_afternm should encrypt to known cipher text', function(done) {
+            var cipherMsg = sodium.crypto_box_afternm(plainText,nonce, secret);
+            if( !cipherMsg ) {
+                should.fail();
+            }
+            cipherMsg.toString('hex').should.eql(cipherText.toString('hex'));
+            done();
+        });
+        it('should fail on bad param 1', function(done) {
+            var p = "";
+            var n = nonce;
+            var s = secret;
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+
+            p = 10;
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+            done();
+        });
+        it('should fail on bad param 2', function(done) {
+            var p = plainText;
+            var n = "nonce";
+            var s = secret;
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+
+            n = new Buffer(10);
+            (function() {
+               var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+
+            n = 10;
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+            done();
+        });
+        it('should fail on bad param 3', function(done) {
+            var p = plainText;
+            var n = nonce;
+            var s = "secret";
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+
+            s = new Buffer(10);
+            (function() {
+               var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+
+            s = 10;
+            (function() {
+                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
+            }).should.throw();
+            done();
+        });
+    });
 });
 
 describe('BoxOpen', function() {
@@ -198,6 +316,8 @@ describe('BoxOpen', function() {
 
     // Encrypt
     var cipherMsg = sodium.crypto_box(plainText, nonce, receiver.publicKey, sender.secretKey);
+    // Secret
+    var secret = sodium.crypto_box_beforenm(receiver.publicKey, sender.secretKey);
 
     it('crypto_box/crypto_box_open should encrypt/decrypt', function(done) {
         // Decrypt
@@ -301,4 +421,79 @@ describe('BoxOpen', function() {
         done();
     });
 
+    describe('_AfterNM', function() {
+        it('crypto_box_open_afternm should decrypt', function(done) {
+            // Decrypt
+            var plainMsg = sodium.crypto_box_open_afternm(cipherMsg,nonce,secret);
+
+            // We should get the same plainText!
+            plainMsg.should.eql(plainText);
+            done();
+        });
+        it('should fail on bad param 1', function(done) {
+            var ctxt = "cipherMsg";
+            var n = nonce;
+            var s = secret;
+
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            ctxt = new Buffer(10);
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            ctxt = 10;
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            done();
+        });
+        it('should fail on bad param 2', function(done) {
+            var ctxt = cipherMsg;
+            var n = "nonce";
+            var s = secret;
+
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            nonce = new Buffer(10);
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            nonce = 10;
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            done();
+        });
+        it('should fail on bad param 3', function(done) {
+            var ctxt = cipherMsg;
+            var n = nonce;
+            var s = "secret";
+
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            secret = new Buffer(10);
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            secret = 10;
+            (function() {
+                var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
+            }).should.throw();
+
+            done();
+        });
+    });
+
 });
+
