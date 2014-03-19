@@ -3,10 +3,10 @@
  */
 var should = require('should');
 
-var toBuffer = require('../lib/tobuffer');
+var toBuffer = require('../lib/toBuffer');
 
 if (process.env.COVERAGE) {
-    toBuffer = require('../lib-cov/tobuffer');
+    toBuffer = require('../lib-cov/toBuffer');
 }
 
 
