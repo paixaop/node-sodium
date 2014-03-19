@@ -15,3 +15,4 @@ node-sodium.sublime-workspace
 *.lo
 *.deps
 *.dirstamp
+*.la
