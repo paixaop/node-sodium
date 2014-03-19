@@ -13,3 +13,5 @@ node-sodium.sublime-project
 node-sodium.sublime-workspace
 *.o
 *.lo
+*.deps
+*.dirstamp
