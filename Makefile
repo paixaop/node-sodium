@@ -1,25 +1,27 @@
-
 MOCHA_OPTS= --check-leaks
 REPORTER = tap
+BINDIR = ./node_modules/.bin
 
+sodium:
+	$(BINDIR)/node-gyp rebuild
+	
 test: test-unit
 
 test-unit:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
+	@NODE_ENV=test $(BINDIR)/mocha \
 		--reporter $(REPORTER) \
-		--globals setImmediate,clearImmediate \
+		--globals setImmediate,clearImmediate
 
 instrument: clean
-	istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib
+	$(BINDIR)/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib
 
 
 test-cov: clean instrument
 	@echo Run make test for simple tests with no coverage reports
-	@echo Mocha and Istanbul Node.js must be installed globally
-	@COVERAGE=1 NODE_ENV=test mocha \
+	@COVERAGE=1 NODE_ENV=test $(BINDIR)/mocha \
 		-R mocha-istanbul \
-		$(TESTS)
-	@istanbul report
+		--globals setImmediate,clearImmediate
+	@$(BINDIR)/istanbul report
 	@rm -rf lib-cov
 	@echo
 	@echo Open html-report/index.html file in your browser
@@ -36,13 +38,5 @@ clean:
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
-
-sodium:
-	# libsodium is now compiled through node-gyp
-	#cd libsodium; \
-	#./autogen.sh; \
-	#./configure;  \
-	#make	
-	node-gyp rebuild
 
 .PHONY: test-cov site docs test docclean
