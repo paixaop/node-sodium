@@ -1,19 +1,13 @@
-SHELL := /bin/bash
-TESTS = test/*.js
+
+MOCHA_OPTS= --check-leaks
 REPORTER = tap
 
-CHDIR_SHELL := $(SHELL)
-define chdir
-   $(eval _D=$(firstword $(1) $(@D)))
-   $(info $(MAKE): cd $(_D)) $(eval SHELL = cd $(_D); $(CHDIR_SHELL))
-endef
+test: test-unit
 
-test:
-	@echo Run make test-cov for coverage reports
-	@echo Mocha and Instanbul Node.js must be installed globally
-	@NODE_ENV=test mocha \
-		-R $(REPORTER) \
-		$(TESTS)
+test-unit:
+	@NODE_ENV=test ./node_modules/.bin/mocha \
+		--reporter $(REPORTER) \
+		--globals setImmediate,clearImmediate \
 
 instrument: clean
 	istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib

@@ -9,25 +9,49 @@
     'standalone_static_library': 1,
     'dependencies': [],
     'defines': [
+        '__amd64__',
+        '__ELF__',
+        'SODIUM_STATIC',
+        'HAVE_AMD64_ASM=1',
+        'SODIUM_HAVE_AMD64_ASM',
+        'STDC_HEADERS=1',
+        'HAVE_SYS_TYPES_H=1', 
+        'HAVE_SYS_STAT_H=1', 
+        'HAVE_STDLIB_H=1', 
+        'HAVE_STRING_H=1', 
+        'HAVE_MEMORY_H=1', 
+        'HAVE_STRINGS_H=1', 
+        'HAVE_INTTYPES_H=1', 
+        'HAVE_STDINT_H=1', 
+        'HAVE_UNISTD_H=1', 
+        '__EXTENSIONS__=1', 
+        '_ALL_SOURCE=1', 
+        '_GNU_SOURCE=1', 
+        '_POSIX_PTHREAD_SEMANTICS=1', 
+        '_TANDEM_SOURCE=1', 
+        'HAVE_DLFCN_H=1', 
+        'LT_OBJDIR=\".libs/\"', 
+        'HAVE_EMMINTRIN_H=1', 
+        'HAVE_TMMINTRIN_H=1', 
+        'HAVE_SMMINTRIN_H=1', 
+        'HAVE_IMMINTRIN_H=1', 
+        'HAVE_X86INTRIN_H=1', 
+        'HAVE_WMMINTRIN_H=1', 
+        'HAVE_FENV_H=1', 
         'NATIVE_LITTLE_ENDIAN=1', 
-        'HB_BUILD_CONTRIB_DYN=no'
+        'HAVE_AMD64_ASM=1', 
+        'HAVE_TI_MODE=1', 
+        'HAVE_CPUID=1', 
+        'HAVE_LIBM=1'
     ],
     'include_dirs': [
         'libsodium-<(naclversion)/src/libsodium/include/sodium',
-        'config/<(OS)/<(target_arch)'
+       
     ],
-    'xcode_settings': {
-       'OTHER_CFLAGS' : ['-fPIC']
-    },
     '!cflags': [ '-fno-exceptions' ],
-    'cflags_cc' : ['-fPIC'],
     'cflags': [    
         '-fexceptions',
-        '-fPIC',
-        '-fwrapv', 
-        '-fno-strict-aliasing',     
-        '-fno-strict-overflow',
-        '-fstack-protector-all',
+        
         '-Winit-self', 
         '-Wwrite-strings', 
         '-Wdiv-by-zero',
@@ -37,10 +61,22 @@
         '-Wno-unused-but-set-variable',
         '-g',
         '-O2',
-        '-fvisibility=hidden',
+        '-Wno-unknown-pragmas',
         '-Wno-missing-field-initializers',
         '-Wno-missing-braces'
     ],
+    'ldflags' :
+    [
+    '-pie', 
+'-Wl',
+'-z',
+'relro'
+'-z',
+'now' 
+'-Wl',
+'-z',
+'noexecstack'
+],
             
    'sources': [
         'libsodium-<(naclversion)/src/libsodium/crypto_auth/crypto_auth.c',
@@ -151,6 +187,7 @@
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/aes256estream/hongjun/aes256-ctr.c',
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/aes256estream/stream_aes256estream_api.c',
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/salsa20/stream_salsa20_api.c',
+        'libsodium-<(naclversion)/src/libsodium/crypto_stream/salsa20/amd64_xmm6/stream_salsa20_amd64_xmm6.S',
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/salsa2012/stream_salsa2012_api.c',
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/salsa2012/ref/stream_salsa2012.c',
         'libsodium-<(naclversion)/src/libsodium/crypto_stream/salsa2012/ref/xor_salsa2012.c',
