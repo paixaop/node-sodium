@@ -9,11 +9,10 @@
     },
     "devDependencies": {
         "mocha"  : ">=0.14.1",
-        "tap": "~0.4.1",
         "node-gyp": "~0.12.1"
     },
     "scripts":{
-        "test": "tap test/*-test.js"
+        "test": "make test"
     },
     "repository" : {
         "type" : "git",

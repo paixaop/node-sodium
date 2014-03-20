@@ -14,8 +14,7 @@
                        './deps/libsodium-<(naclversion)/src/libsodium/include'
                   ],
                   'cflags!': [ '-fno-exceptions' ],
-                  'cflags' : ['-fPIC', '-static-libstdc++', '-shared', '-W'],
-                  'ccflags' : ['-fPIC']
+                  
             }
       ]
 }
