@@ -16,3 +16,4 @@ node-sodium.sublime-workspace
 *.deps
 *.dirstamp
 *.la
+coverage/
