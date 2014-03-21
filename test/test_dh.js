@@ -18,8 +18,6 @@ describe('DH Group Key Exchange', function () {
 		var abDH = new Sodium.ECDH(b.pk(), a.sk()).secret();
 		var baDH = new Sodium.ECDH(a.pk(), b.sk()).secret();
 
-		console.log(abDH.toString('hex'));
-		console.log(baDH.toString('hex'));
 		abDH.should.eql(baDH);
 
 
