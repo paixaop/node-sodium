@@ -20,7 +20,6 @@ describe('DH Group Key Exchange', function () {
 
 		abDH.should.eql(baDH);
 
-
 		done();
 	});
 });
