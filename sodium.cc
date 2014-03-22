@@ -19,6 +19,10 @@
 using namespace node;
 using namespace v8;
 
+Local<Function> bufferConstructor = 
+        Local<Function>::Cast(Context::GetCurrent()->Global()->Get(String::New("Buffer")));
+
+
 // Check if a function argument is a node Buffer. If not throw V8 exception
 #define ARG_IS_BUFFER(i,msg) \
     if (!Buffer::HasInstance(args[i])) { \
@@ -66,6 +70,13 @@ using namespace v8;
     if (args.Length() < (n)) {                \
         return V8Exception(message);          \
     }
+        
+#define TO_REAL_BUFFER(slowBuffer, actualBuffer) \
+    Local<Object> actualBuffer = \
+        bufferConstructor->NewInstance(3, \
+            { slowBuffer->handle_, \
+              v8::Integer::New(Buffer::Length(slowBuffer)), \
+              v8::Integer::New(0) });
 
 //Helper function
 static Handle<Value> V8Exception(const char* msg) {
@@ -696,9 +707,9 @@ Handle<Value> bind_crypto_sign_keypair(const Arguments& args) {
     NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
-        Local<Object> result = Object::New();
-        result->Set(String::NewSymbol("publicKey"),vk->handle_);
-        result->Set(String::NewSymbol("secretKey"), sk->handle_);
+        Handle<Object> result = Object::New();
+        result->Set(String::NewSymbol("publicKey"), vk->handle_, DontDelete);
+        result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
         return scope.Close(result);
     }
     return scope.Close(Undefined());
@@ -837,9 +848,9 @@ Handle<Value> bind_crypto_box_keypair(const Arguments& args) {
     NEW_BUFFER_AND_PTR(sk, crypto_box_SECRETKEYBYTES);
     
     if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
-        Local<Object> result = Object::New();
-        result->Set(String::NewSymbol("publicKey"), pk->handle_);
-        result->Set(String::NewSymbol("secretKey"), sk->handle_);
+        Handle<Object> result = Object::New();
+        result->Set(String::NewSymbol("publicKey"), pk->handle_, DontDelete);
+        result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
         return scope.Close(result);
     }
     return scope.Close(Undefined());
