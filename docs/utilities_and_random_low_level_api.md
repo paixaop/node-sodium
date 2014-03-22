@@ -7,24 +7,28 @@
     // example of calling crypto_box_keypair
     var version = sodium.sodium_version_string();
 
-    // example of accessing a constant
+    // getting a random number using libsodium PRNG
     var num = sodium.randombytes_random();
 
 ## Version Functions
+Report the version fo the Libsodium library
 
 ### sodium_version_string ( )
+Get full version number of libsodium compiled with which node-sodium was compiled
 
 Returns:
 
-  * String with full lib sodium version. Example `1.0.2`
+  * String with full lib sodium version. Example `0.4.5`
   
 ### sodium_library_version_minor ( )
+Get the minor version number of libsodium with which node-sodium was compiled. If the full version string is `0.4.5` this function will return `5`.
 
 Returns:
 
   * Number of minor lib sodium version 
   
 ### sodium_library_version_major ( )
+Get the major version number of libsodium with which node-sodium was compiled. If the full version string is `0.4.5` this function will return `4`.
 
 Returns:
 
@@ -101,7 +105,11 @@ Close the file descriptor or the handle for the cryptographic service provider.
 Generate a new key for the pseudorandom number generator. 
 
 ### randombytes_random ()
-Return a random 32-bit unsigned value. 
+Returns
+
+  * random 32-bit unsigned value. 
 
 ### randombytes_uniform (upperBound)
-Return a value between `0` and `upperBound` using a uniform distribution.
+Returns
+
+  * numeric value between `0` and `upperBound` using a uniform distribution.
