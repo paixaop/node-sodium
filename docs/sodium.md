@@ -2,13 +2,13 @@
 The following objects are available in the `sodium` library
 
   * **api** - access to low level `libsodium` api
-  * **Utils** - utility functions
+  * [**Utils**](./utilities_and_random_low_level_api.md) - utility functions
   * **Hash** - all hash functions
-  * **Random** - random number generator functions
-  * **Box** - public key asymmetric crypto
-  * **SecretKey** - symmetric key crypto [doc](./secretbox-low-level-api.md)
+  * [**Random**](./utilities_and_random_low_level_api.md) - random number generator functions
+  * [**Box**](box-low-level-api.md) - public key asymmetric crypto
+  * [**SecretKey**](./secretbox-low-level-api.md) - symmetric key crypto
   * **Stream** - stream crypto
-  * **Sign** - signature generation and validation
+  * [**Sign**](sign-low-level-api.md) - signature generation and validation
   * **Auth** - authentication
   * **OneTimeAuth** - one time authentication
   * **Nonces** - nonce generation
