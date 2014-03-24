@@ -6,7 +6,7 @@ The following objects are available in the `sodium` library
   * **Hash** - all hash functions
   * **Random** - random number generator functions
   * **Box** - public key asymmetric crypto
-  * **SecretKey** - symmetric key crypto 
+  * **SecretKey** - symmetric key crypto [doc](./secretbox-low-level-api.md)
   * **Stream** - stream crypto
   * **Sign** - signature generation and validation
   * **Auth** - authentication
