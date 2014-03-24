@@ -5,17 +5,17 @@ The following objects are available in the `sodium` library
   * **Utils** - utility functions
   * **Hash** - all hash functions
   * **Random** - random number generator functions
-  * **Box** - public key asymetric crypto
-  * **SecretKey** - symetric key crypto 
+  * **Box** - public key asymmetric crypto
+  * **SecretKey** - symmetric key crypto 
   * **Stream** - stream crypto
   * **Sign** - signature generation and validation
-  * **Auth** - authentincation
+  * **Auth** - authentication
   * **OneTimeAuth** - one time authentication
   * **Nonces** - nonce generation
   * **Key** - keys for all crypto functions
 
 
-Lets generate a random number using by requiering the full `sodium` library
+Lets generate a random number using by requiring the full `sodium` library
 
     var sodium = require('sodium');
     var n = sodium.api.randombytes_random();
@@ -27,4 +27,4 @@ Since we only need to call one method from the low level API we could require ju
   	
 The same method can be applied to the other objects exposed through `sodium`.
 
-The low level API gives you access to all ported `libsodium` functions directly. If you have experience using `libsodium` you can bypass the highlevel APIs and use `libsodium` directly.
+The low level API gives you access to all ported `libsodium` functions directly. If you have experience using `libsodium` you can bypass the high-level APIs and use `libsodium` directly.
