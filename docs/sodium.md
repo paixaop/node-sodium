@@ -6,7 +6,7 @@ The following objects are available in the `sodium` library
   * **Hash** - all hash functions
   * [**Random**](./utilities_and_random_low_level_api.md) - random number generator functions
   * [**Box**](box-low-level-api.md) - public key asymmetric crypto
-  * [**SecretKey**](./secretbox-low-level-api.md) - symmetric key crypto
+  * [**SecretKey**](./secretbox-low-level-api.md#random) - symmetric key crypto
   * **Stream** - stream crypto
   * [**Sign**](sign-low-level-api.md) - signature generation and validation
   * **Auth** - authentication
