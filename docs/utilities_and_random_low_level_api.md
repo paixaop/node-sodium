@@ -14,16 +14,28 @@
 Report the version fo the Libsodium library
 
 ### sodium_version_string ( )
+---
+
 Get full version number of libsodium compiled with which node-sodium was compiled
 
-Returns:
+**Returns**:
 
   * String with full lib sodium version. Example `0.4.5`
   
+**Example**:
+  
+```javascript
+var sodium = require('sodium').api;
+var version = sodium.sodium_version_string();
+console.log(version);
+```
+  
 ### sodium_library_version_minor ( )
+---
+	
 Get the minor version number of libsodium with which node-sodium was compiled. If the full version string is `0.4.5` this function will return `5`.
 
-Returns:
+**Returns**:
 
   * Number of minor lib sodium version 
   
