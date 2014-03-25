@@ -15,7 +15,7 @@ var version = sodium.sodium_version_string();
 var num = sodium.randombytes_random();
 ```
 
-The object `sodium` includes all the API calls.
+The object `sodium` includes all the API calls. All code examples in this document assume that you have `var sodium = require('sodium').api;` somewhere in your code, before you call any API functions
 
 ## Version Functions
 Report the version fo the Libsodium library
@@ -31,10 +31,9 @@ Get full version number of libsodium compiled with which node-sodium was compile
   
 **Example**:
   
-```javascript
-var sodium = require('sodium').api;
+```javascript 
 var version = sodium.sodium_version_string();
-console.log(version);
+console.log(version);  // output should be 0.4.5 or similar
 ```
   
 ### sodium_library_version_minor ( )
@@ -44,18 +43,36 @@ Get the minor version number of libsodium with which node-sodium was compiled. I
 
 **Returns**:
 
-  * Number of minor lib sodium version 
+  * **Number** of minor lib sodium version 
+
+**Example**:
+  
+```javascript 
+var minor_version = sodium.sodium_library_version_minor();
+console.log(minor_version);  // output should be 5 or similar
+```  
+
   
 ### sodium_library_version_major ( )
+---
+
 Get the major version number of libsodium with which node-sodium was compiled. If the full version string is `0.4.5` this function will return `4`.
 
-Returns:
+**Returns**:
 
-  * Number of major lib sodium version
+  * **Number** of major lib sodium version
+  
+**Example**:
+  
+```javascript 
+var major_version = sodium.sodium_library_version_major();
+console.log(major_version);  // output should be 5 or similar
+``` 
   
 ## Utilities
 
 ### memzero (buffer)
+---
 
 Securely wipe buffer
 
