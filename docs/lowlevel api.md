@@ -15,7 +15,10 @@ var version = sodium.sodium_version_string();
 var num = sodium.randombytes_random();
 ```
 
-The object `sodium` includes all the API calls. All code examples in this document assume that you have `var sodium = require('sodium').api;` somewhere in your code, before you call any API functions
+The object `sodium` includes all the API calls. All code examples in this document assume that you have `var sodium = require('sodium').api;` somewhere in your code, before you call any API functions.
+
+# Async Interface
+At this time `node-sodium` only provides sync interface for low level API calls.
 
 # Version Functions
 Report the version fo the Libsodium library
@@ -26,7 +29,7 @@ Get full version number of libsodium compiled with which node-sodium was compile
 
 **Returns**:
 
-  * String with full lib sodium version. Example `0.4.5`
+  * **String** with full lib sodium version. Example `0.4.5`
   
 **Example**:
   
@@ -91,7 +94,7 @@ sodium.memzero(b);
 console.log(b);            // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00>
 ``` 
 
-### memcmp(buffer1, buffer2, size)
+## memcmp(buffer1, buffer2, size)
 
 Compare buffers in constant time
 
@@ -149,6 +152,11 @@ if( sodium.crypto_verify_16(b1, b2) != 0 ) {
 }
 ```
 
+**See Also**:
+
+  * [memcmp](#memcmpbuffer1-buffer2-size)
+  * [crypto_verify_32](#crypto_verify_32buffer1-buffer2)
+    
 
 ## crypto_verify_32(buffer1, buffer2)
 
@@ -168,29 +176,55 @@ This function is equivalent of calling `memcmp(buffer1, buffer2, 32)`
 
 **See Also**:
 
-  * [memcmp](#memcmp)
-  * [crypto_verify_16](#crypto_verify_16)
+  * [memcmp](#memcmpbuffer1-buffer2-size)
+  * [crypto_verify_16](#crypto_verify_16buffer1-buffer2)
   
-## Random 
-### randombytes_buf (buffer)
+## sodium_bin2hex()
+Use node's native Buffer.toString() method instead
+
+  
+# Random Numbers
+Internal random number generator functions. Random numbers are a critical part of any encryption system. It is recomended that you use `libsodium` random number API, instead of the default javascript provided functions.
+
+## randombytes_buf(buffer)
 Fill the specified buffer with size random bytes. 
 
-Parameters:
+**Parameters**:
 
-  * `buffer` buffer to fill with random data
+  * `buffer` to fill with random data
   
-### randombytes_close ()
+**Example**:
+
+```javascript
+// Create a nonce
+var b = new Buffer(32);
+sodium.randombytes_buf(b,32);
+```
+  
+## randombytes_close()
 Close the file descriptor or the handle for the cryptographic service provider. 
 
-### randombytes_stir ()
+## randombytes_stir()
 Generate a new key for the pseudorandom number generator. 
 
-### randombytes_random ()
-Returns
+## randombytes_random()
+Generate a 32-bit unsigned random number
 
-  * random 32-bit unsigned value. 
+**Returns**:
 
-### randombytes_uniform (upperBound)
-Returns
+  * **Number** random 32-bit unsigned value. 
 
-  * numeric value between `0` and `upperBound` using a uniform distribution.
+## randombytes_uniform(upperBound)
+Generate a random number between `0` and `upperBound`
+
+**Returns**:
+
+  * **Number** between `0` and `upperBound` using a uniform distribution.
+
+**Example**:
+
+```javascript
+var n = sodium.randombytes_uniform(100);   
+console.log(n);		// number between 0 and 100
+```
+
