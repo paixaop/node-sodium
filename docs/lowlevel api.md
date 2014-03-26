@@ -202,7 +202,7 @@ sodium.randombytes(b,32);
 ```
 
 **See Also**:
-  * [randombytest_buf](#randombytes_bufbuffer)
+  * [randombytes_buf](#randombytes_bufbuffer)
 
 ## randombytes_buf(buffer)
 Fill the specified buffer with size random bytes. Same as `randombytes()`
@@ -220,7 +220,7 @@ sodium.randombytes_buf(b,32);
 ```
 
 **See Also**:
-  * [randombytest](#randombytesbuffer)
+  * [randombytes](#randombytesbuffer)
 
   
 ## randombytes_close()
@@ -285,4 +285,92 @@ sodium.crypto_randombytes_buf(key);
 var hash = sodium.crypto_shorthash(message, key);
 console.log(hash);
 ```
+
+## crypto_hash(buffer)
+Calculate a hash of a data buffer. You can check which of the supported hash functions is used by checking `crypto_hash_PRIMITIVE`.
+
+**Parameters**:
+
+  * **{Buffer}** `buffer` with the data you want to hash
+ 
+**Returns**:
+
+  * **{Buffer}** hashed message. Length of hash is always `sodium.crypto_hash_BYTES`
+
+**Constants**:
+
+  * `crypto_hash_BYTES` length of the hash
+  * `crypto_hash_PRIMITIVE` name of hash function used
+
+**Example**:
+
+```javascript
+var message = new Buffer("Message to hash", "utf-8");
+
+// calculate the hash
+var hash = sodium.crypto_hash(message, key);
+console.log(hash);
+```
+**See Also**:
+ 
+  * [crypto_hash_sha256](#crypto_hash_sha256buffer)
+  * [crypto_hash_sha512](#crypto_hash_sha512buffer)
+
+
+## crypto_hash_sha256(buffer)
+Calculate a SHA256 of a data buffer. 
+
+**Parameters**:
+
+  * **{Buffer}** `buffer` with the data you want to hash
+ 
+**Returns**:
+
+  * **{Buffer}** hashed message
+
+**Example**:
+
+```javascript
+var message = new Buffer("Message to hash", "utf-8");
+
+// calculate the hash
+var hash = sodium.crypto_hash_sha256(message, key);
+console.log(hash);
+```
+
+**See Also**:
+ 
+  * [crypto_hash](#crypto_hashbuffer)
+  * [crypto_hash_sha512](#crypto_hash_sha512buffer)
+
+
+## crypto_hash_sha512(buffer)
+Calculate a SHA256 of a data buffer. 
+
+**Parameters**:
+
+  * **{Buffer}** `buffer` with the data you want to hash
+ 
+**Returns**:
+
+  * **{Buffer}** hashed message
+
+**Example**:
+
+```javascript
+var message = new Buffer("Message to hash", "utf-8");
+
+// calculate the hash
+var hash = sodium.crypto_hash_sha512(message, key);
+console.log(hash);
+```
+
+**See Also**:
+ 
+  * [crypto_hash](#crypto_hashbuffer)
+  * [crypto_hash_sha256](#crypto_hash_sha512buffer)
+
+
+
+
 
