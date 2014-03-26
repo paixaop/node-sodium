@@ -29,7 +29,7 @@ Get full version number of libsodium compiled with which node-sodium was compile
 
 **Returns**:
 
-  * **String** with full lib sodium version. Example `0.4.5`
+  * **{String}** with full lib sodium version. Example `0.4.5`
   
 **Example**:
   
@@ -44,7 +44,7 @@ Get the minor version number of libsodium with which node-sodium was compiled. I
 
 **Returns**:
 
-  * **Number** of minor lib sodium version 
+  * **{Number}** of minor lib sodium version 
 
 **Example**:
   
@@ -60,7 +60,7 @@ Get the major version number of libsodium with which node-sodium was compiled. I
 
 **Returns**:
 
-  * **Number** of major lib sodium version
+  * **{Number}** of major lib sodium version
   
 **Example**:
   
@@ -79,7 +79,7 @@ Securely wipe buffer
 
 **Parameters**:
 
-  * **Buffer** buffer to wipe
+  * **{Buffer}** `buffer` to wipe
 
 **Example**:
   
@@ -100,9 +100,9 @@ Compare buffers in constant time
 
 **Parameters**:
 
-  * `buffer1` buffer you wish to compare with `buffer2`
-  * `buffer2` buffer you wish to compare with `buffer1`
-  * `size` number of bytes to compare
+  * **{Buffer}** `buffer1` you wish to compare with `buffer2`
+  * **{Buffer}** `buffer2`
+  * **{Number}** `size` number of bytes to compare
   
 **Returns**:
 
@@ -131,8 +131,8 @@ Compares the first 16 of the given buffers.
 
 **Parameters**:
 
-  * `buffer1` buffer you wish to compare with `buffer2`
-  * `buffer2` buffer you wish to compare with `buffer1`
+  * **{Buffer}** `buffer1` buffer you wish to compare with `buffer2`
+  * **{Buffer}** `buffer2` 
   
 **Returns**:
 
@@ -164,8 +164,8 @@ Compares the first 32 of the given buffers.
 
 **Parameters**:
 
-  * `buffer1` buffer you wish to compare with `buffer2`
-  * `buffer2` buffer you wish to compare with `buffer1`
+  * **{Buffer}** `buffer1` you wish to compare with `buffer2`
+  * **{Buffer}** `buffer2`
   
 **Returns**:
 
@@ -180,18 +180,36 @@ This function is equivalent of calling `memcmp(buffer1, buffer2, 32)`
   * [crypto_verify_16](#crypto_verify_16buffer1-buffer2)
   
 ## sodium_bin2hex()
-Use node's native Buffer.toString() method instead
+Use node's native `Buffer.toString()` method instead
 
   
 # Random Numbers
 Internal random number generator functions. Random numbers are a critical part of any encryption system. It is recomended that you use `libsodium` random number API, instead of the default javascript provided functions.
 
-## randombytes_buf(buffer)
-Fill the specified buffer with size random bytes. 
+## randombytes(buffer)
+Fill the specified buffer with size random bytes. Same as `randombytes_buf()`
 
 **Parameters**:
 
-  * `buffer` to fill with random data
+  * **{Buffer}** `buffer` to fill with random data
+  
+**Example**:
+
+```javascript
+// Create a nonce
+var b = new Buffer(32);
+sodium.randombytes(b,32);
+```
+
+**See Also**:
+  * [randombytest_buf](#randombytes_bufbuffer)
+
+## randombytes_buf(buffer)
+Fill the specified buffer with size random bytes. Same as `randombytes()`
+
+**Parameters**:
+
+  * **{Buffer}** `buffer` to fill with random data
   
 **Example**:
 
@@ -200,6 +218,10 @@ Fill the specified buffer with size random bytes.
 var b = new Buffer(32);
 sodium.randombytes_buf(b,32);
 ```
+
+**See Also**:
+  * [randombytest](#randombytesbuffer)
+
   
 ## randombytes_close()
 Close the file descriptor or the handle for the cryptographic service provider. 
@@ -212,14 +234,14 @@ Generate a 32-bit unsigned random number
 
 **Returns**:
 
-  * **Number** random 32-bit unsigned value. 
+  * **{Number}** random 32-bit unsigned value. 
 
 ## randombytes_uniform(upperBound)
 Generate a random number between `0` and `upperBound`
 
 **Returns**:
 
-  * **Number** between `0` and `upperBound` using a uniform distribution.
+  * **{Number}** between `0` and `upperBound` using a uniform distribution.
 
 **Example**:
 
@@ -230,19 +252,19 @@ console.log(n);		// number between 0 and 100
 
 # Hash Functions
 
-## crypto_shorthash(buffer, secretKey
+## crypto_shorthash(buffer, secretKey)
 
 A lot of applications and programming language implementations have been recently found to be vulnerable to denial-of-service attacks when a hashfunction with weak security guarantees, like Murmurhash 3, was used to construct a hash table.
 In order to address this, Sodium provides the "shorthash" function, currently implemented using SipHash-2-4. This very fast hash function outputs short, but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
 
 **Parameters**:
 
-  * **Buffer** buffer with the data you want to hash
-  * **Buffer** buffer with the secret data used as key for the hash. `secretKey` **must** be `crypto_shorthash_KEYBYTES` in length.
+  * **{Buffer}** `buffer` with the data you want to hash
+  * **{Buffer}** `secretKey` the secret data used as key for the hash. `secretKey` **must** be `crypto_shorthash_KEYBYTES` in length.
  
 **Returns**:
 
-  * **Buffer** hashed message. Length of hash is always `sodium.crypto_shorthash_BYTES`
+  * **{Buffer}** hashed message. Length of hash is always `sodium.crypto_shorthash_BYTES`
 
 **Constants**:
 
@@ -263,5 +285,4 @@ sodium.crypto_randombytes_buf(key);
 var hash = sodium.crypto_shorthash(message, key);
 console.log(hash);
 ```
-
 
