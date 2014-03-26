@@ -228,3 +228,40 @@ var n = sodium.randombytes_uniform(100);
 console.log(n);		// number between 0 and 100
 ```
 
+# Hash Functions
+
+## crypto_shorthash(buffer, secretKey
+
+A lot of applications and programming language implementations have been recently found to be vulnerable to denial-of-service attacks when a hashfunction with weak security guarantees, like Murmurhash 3, was used to construct a hash table.
+In order to address this, Sodium provides the "shorthash" function, currently implemented using SipHash-2-4. This very fast hash function outputs short, but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
+
+**Parameters**:
+
+  * **Buffer** buffer with the data you want to hash
+  * **Buffer** buffer with the secret data used as key for the hash. `secretKey` **must** be `crypto_shorthash_KEYBYTES` in length.
+ 
+**Returns**:
+
+  * **Buffer** hashed message. Length of hash is always `sodium.crypto_shorthash_BYTES`
+
+**Constants**:
+
+  * `crypto_shorthash_BYTES` length of the hash
+  * `crypto_shorthash_KEYBYTES` length of secret key
+  * `crypto_shorthash_PRIMITIVE` name of hash function used
+
+**Example**:
+
+```javascript
+var message = new Buffer("Message to hash", "utf-8");
+var key = new Buffer(sodium.crypto_shorthash_KEYBYTES);
+
+// generate a random key
+sodium.crypto_randombytes_buf(key);
+
+// calculate the hash
+var hash = sodium.crypto_shorthash(message, key);
+console.log(hash);
+```
+
+
