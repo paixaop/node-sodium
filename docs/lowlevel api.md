@@ -1,6 +1,17 @@
 #Low Level API
 Parts of this document are copied from [NaCl library Documentation](http://nacl.cr.yp.to/index.html) by Daniel J. Bernstein, author of the great NaCl library which is the base of `libsodium`, and therefore `node-sodium`.
 
+  * [Version Functions](#version-functions)
+  * [Utility Functions](#utility-functions)
+  * [Random Numbers](#random-numbers)
+  * [Hash Functions](#hash-functions)
+  * [Authentication Functions](#authentication-functions)
+  * [Secret Key Encryption](#authentication-functions)
+  * [Secret Key Authenticated Encryption](#secret-key-authenticated-encryption)
+  * [Public Key Authenticated Encryption](#public-key-authenticated-encryption)
+  * [Signatures](#Signatures)
+  * [Scalar Multiplication](#scalar-multiplication)
+
 # API Usage
 The low level `libsodium` API is available directly in `node-sodium` by using the `.api` object. Through it you can access all the functions [ported](./ported-functions.md) from `libsodium` without the use of the high level Javascript API. This will feel familiar for developers that are used to work with `libsodium` in other languages. It also gives you the chance to workaround any possible bugs on the higher level APIs.
 
@@ -542,10 +553,11 @@ The `crypto_onetimeauth_verify` function verifies if the `token` is a correct au
   
 **See Also**:
 
-  * [crypto_onetimeauth](#crypto_authmessage-secretkey)
+  * [crypto_onetimeauth](#crypto_onetimeauthmessage-secretkey)
   
 
 # Secret Key Encryption
+As the name implies "Secret Key Encryption" requires that keys are kept secret, and users need to find a secure way to exchange secret keys so they are not compromised.
 
 ## crypto_stream(length, nonce, secretKey)
 
@@ -570,7 +582,7 @@ Generates a stream (Buffer) of `length` bytes using the given `secretKey` and `n
 **Example**:
 
 ```javascript
-var key = new Buffer("sodium.crypto_stream_KEYBYTES);
+var key = new Buffer(sodium.crypto_stream_KEYBYTES);
 var nonce = new Buffer(sodium.crypto_stream_NONCEBYTES);
 
 // Generate random key and nonce
@@ -648,7 +660,7 @@ Encrypts and authenticates a `message` using a unique `nonce` and a `secretKey`.
 
 ### Security model
 
-The `crypto_secretbox` function is designed to meet the standard notions of privacy and authenticity for a secret-key authenticated-encryption scheme using nonces. For formal definitions see, e.g., Bellare and Namprempre, "Authenticated encryption: relations among notions and analysis of the generic composition paradigm," [Lecture Notes in Computer Science 1976 (2000), 531–545](http://www-cse.ucsd.edu/~mihir/papers/oem.html).
+The `crypto_secretbox` function is designed to meet the standard notions of privacy and authenticity for a secret-key authenticated-encryption scheme using nonces. For formal definitions see, e.g., Bellare and Namprempre, "Authenticated encryption: relations among notions and analysis of the generic composition paradigm, [Lecture Notes in Computer Science 1976 (2000), 531–545](http://www-cse.ucsd.edu/~mihir/papers/oem.html).
 
 Note that the length is not hidden. Note also that it is the caller's responsibility to ensure the uniqueness of nonces—for example, by using nonce 1 for the first message, nonce 2 for the second message, etc. Nonces are long enough that randomly generated nonces have negligible risk of collision.
 
@@ -688,13 +700,13 @@ var plainMsg2 = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
 if( !plainMsg2 ) {
     throw("error");
 }
-console.log(plainMsg.toString());
+console.log(plainMsg2.toString());
 ```
 
 **See Also**:
 
   * [crypto_secretbox_open](#crypto_secretbox_openciphertext-nonce-key)
-  * [crypto_stream_xor](crypto_stream_xormessage-nonce-secretkey)
+  * [crypto_stream_xor](#crypto_stream_xormessage-nonce-secretkey)
 
 ## crypto_secretbox_open(cipherText, nonce, key)
 
@@ -714,7 +726,7 @@ Verifies and decrypts a `cipherText` using a unique `nonce` and a `secretKey`
  **See Also**:
  
   * [crypto_secretbox](#crypto_secretboxmessage-nonce-secretkey)
-  * [crypto_stream_xor](crypto_stream_xormessage-nonce-secretkey)
+  * [crypto_stream_xor](#crypto_stream_xormessage-nonce-secretkey)
 
 # Public Key Authenticated Encryption
 
@@ -991,3 +1003,161 @@ Decrypts a cipher text `ctxt` given the receivers given a `nonce` and the partia
   * [crypto_box_afternm](#crypto_box_afternmmessage-nonce-k)
   * [crypto_box_open](#crypto_box_openctxt-nonce-pk-sk)
   * [crypto_box](#crypto_boxmessage-nonce-pk-sk)
+
+# Signatures
+
+## Constants
+
+  * `crypto_sign_BYTES` length of resulting signature.
+  * `crypto_sign_PUBLICKEYBYTES` length of verification key.
+  * `crypto_sign_SECRETKEYBYTES` length of signing key.
+
+
+## crypto_sign_keypair()
+
+Generates a random signing key pair with a secret key and corresponding public key. Returns an object as with two buffers as follows:
+
+**Returns**:
+
+  * **{Object}** `keypair` with public and secret keys
+
+        { secretKey: <secret key buffer>,
+          publicKey: <public key buffer> }
+
+  * `undefined` in case or error
+  
+**Key lengths**:
+
+  * `secretKey` is `crypto_sign_SECRETKEYBYTES` bytes in length
+  * `publicKey` is `crypto_sign_PUBLICKEYBYTES` bytes in length
+  
+**Example**:
+
+```javascript
+var bobKeys = sodium.crypto_sign_keypair();
+```
+
+     
+## crypto_sign(message, secretKey)
+The `crypto_sign` function is designed to meet the standard notion of unforgeability for a public-key signature scheme under chosen-message attacks.
+
+Signs `message` using the signer's signing secret key
+
+**Parameters**:
+
+  * **Buffer** `message` to sign
+  * **Buffer** `secretKey` signer's secret key. **Must** be `crypto_sign_SECRETKEYBYTES` in length
+  
+**Returns**:
+
+  * **Buffer** with signed message
+  * `undefined` in case or error
+  
+**Example**:
+
+```javascript
+var keys = sodium.crypto_sign_keypair();
+var message = new Buffer("node-sodium is cool", 'utf8');
+var signedMsg = sodium.crypto_sign(message, keys.secretKey);
+if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
+	console.log("signature is valid");
+}
+```
+
+        
+## crypto_sign_open(signedMsg, publicKey)
+
+Verifies the signed message `signedMsg` using the signer's verification key, or `publicKey`.
+
+**Parameters**:
+
+  * **Buffer** `signedMsg` signed message
+  * **Buffer** `publicKey` signer's public key. **Must** be `crypto_sign_PUBLICKEYBYTES` in length
+  
+**Returns**:
+
+  * **Buffer** with original message
+  * `undefined` if verification fails.
+
+**Example**:
+
+```javascript
+var keys = sodium.crypto_sign_keypair();
+var message = new Buffer("node-sodium is cool", 'utf8');
+var signedMsg = sodium.crypto_sign(message, keys.secretKey);
+if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
+	console.log("signature is valid");
+}
+```
+
+
+# Scalar Multiplication
+
+## Constants
+  * `crypto_scalarmult_SCALARBYTES`
+  * `crypto_scalarmult_BYTES`
+  * `crypto_scalarmult_PRIMITIVE`
+    
+## crypto_scalarmult(n, p)
+The `crypto_scalarmult` multiplies a group element `p` by an integer `n`.
+
+### Security Model
+
+`crypto_scalarmult` is designed to be strong as a component of various well-known "hashed Diffie–Hellman" applications. In particular, it is designed to make the "computational Diffie–Hellman" problem (CDH) difficult with respect to the standard base.
+
+`crypto_scalarmult` is also designed to make CDH difficult with respect to other nontrivial bases. In particular, if a represented group element has small order, then it is annihilated by all represented scalars. This feature allows protocols to avoid validating membership in the subgroup generated by the standard base.
+
+NaCl/Libsodium does not make any promises regarding the "decisional Diffie–Hellman" problem (DDH), the "static Diffie–Hellman" problem (SDH), etc. Users are responsible for hashing group elements.
+
+### Selected primitive
+
+`crypto_scalarmult` is the function `crypto_scalarmult_curve25519` specified in "Cryptography in NaCl", Sections 2, 3, and 4. This function is conjectured to be strong. For background see Bernstein, "Curve25519: new Diffie-Hellman speed records,["Lecture Notes in Computer Science 3958" (2006), 207–228](http://cr.yp.to/papers.html#curve25519).
+
+**Parameters**:
+
+  * **Buffer** `n` integer to multiply by base. **Must** be `crypto_scalarmult_SCALARBYTES` in length
+  * **Buffer** `p` group element. **Must** be `crypto_scalarmult_BYTES` in length
+
+**Returns**:
+
+  * **Buffer** with multiplication result
+  * `undefined` if an error occurs.
+  
+**Example**:
+
+```javascript
+// Generate a random group element and integer
+var p = new Buffer(sodium.crypto_scalarmult_BYTES);
+var n = new Buffer(sodium.crypto_scalarmult_SCALARBYTES);
+sodium.randombytes(p);
+sodium.randombytes(n);
+
+// Multiply them
+var r = sodium.crypto_scalarmult(n,p);
+console.log(r);
+```
+
+
+## crypto_scalarmult_base(n)
+The `crypto_scalarmult_base` function computes the scalar product of a standard group element and an integer `n`
+
+**Parameters**:
+
+  * **Buffer** `n` integer to multiply by base. **Must** be `crypto_scalarmult_SCALARBYTES` in length
+
+**Returns**:
+
+  * **Buffer** with multiplication result
+  * `undefined` if an error occurs.
+
+**Example**:
+
+```javascript
+// Generate a random integer
+var n = new Buffer(sodium.crypto_scalarmult_SCALARBYTES);
+sodium.randombytes(n);
+
+// Multiply them
+var r = sodium.crypto_scalarmult_base(n);
+console.log(r);
+```
