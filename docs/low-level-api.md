@@ -402,7 +402,7 @@ The `crypto_auth` function authenticates a `message` using a `secretKey`. The fu
 
 As the name implies `secretKey` needs to be kept secret, between sender and receiver of the message. If `secretKey` is compromised an attacker can forge authentication tokens.
 
-### Security model
+### Security Model
 
 The `crypto_auth` function, viewed as a function of the message for a uniform random key, is designed to meet the standard notion of unforgeability. This means that an attacker cannot find authenticators for any messages not authenticated by the sender, even if the attacker has adaptively influenced the messages authenticated by the sender. For a formal definition see, e.g., Section 2.4 of Bellare, Kilian, and Rogaway, "The security of the cipher block chaining message authentication code," [Journal of Computer and System Sciences 61 (2000), 362–399;](http://www-cse.ucsd.edu/~mihir/papers/cbc.html).
 
@@ -481,7 +481,7 @@ The `crypto_onetimeauth` function authenticates a `message` using a `secretKey`.
 
 As the name implies `secretKey` needs to be kept secret, between sender and receiver of the message. If `secretKey` is compromised an attacker can forge authentication tokens.
 
-### Security model
+### Security Model
 
 The `crypto_onetimeauth` function, viewed as a function of the message for a uniform random key, is designed to meet the standard notion of unforgeability after a single message. After the sender authenticates one message, an attacker cannot find authenticators for any other messages.
 The sender must not use `crypto_onetimeauth` to authenticate more than **one** message under the same key. Authenticators for two messages under the same key should be expected to reveal enough information to allow forgeries of authenticators on other messages.
@@ -641,7 +641,7 @@ var plainMsg2 = sodium.crypto_stream_xor(cipherMsg,nonce,key);
 if( !plainMsg2 ) {
     throw("error");
 }
-console.log(plainMsg.toString());
+console.log(plainMsg2.toString());
 ```
 
 # Secret key Authenticated Encryption
@@ -658,7 +658,7 @@ console.log(plainMsg.toString());
 
 Encrypts and authenticates a `message` using a unique `nonce` and a `secretKey`.
 
-### Security model
+### Security Model
 
 The `crypto_secretbox` function is designed to meet the standard notions of privacy and authenticity for a secret-key authenticated-encryption scheme using nonces. For formal definitions see, e.g., Bellare and Namprempre, "Authenticated encryption: relations among notions and analysis of the generic composition paradigm, [Lecture Notes in Computer Science 1976 (2000), 531–545](http://www-cse.ucsd.edu/~mihir/papers/oem.html).
 
@@ -723,7 +723,7 @@ Verifies and decrypts a `cipherText` using a unique `nonce` and a `secretKey`
   * **{Buffer}**  with decrypted message
   * `undefined` in case of error
  
- **See Also**:
+**See Also**:
  
   * [crypto_secretbox](#crypto_secretboxmessage-nonce-secretkey)
   * [crypto_stream_xor](#crypto_stream_xormessage-nonce-secretkey)
@@ -746,7 +746,7 @@ Alongside the standard interface there also exists a pre-computation interface. 
 
   * `crypto_box_PUBLICKEYBYTES` Size of Public Key
   * `crypto_box_SECRETKEYBYTES` Size of Secret Key
-  * `crypto_box_BEFORENMBYTES`  Size of pre-computed ciphertext
+  * `crypto_box_BEFORENMBYTES`  Size of pre-computed cipher text
   * `crypto_box_NONCEBYTES`     Size of Nonce
   * `crypto_box_ZEROBYTES`      No. of leading 0 bytes in the message
   * `crypto_box_BOXZEROBYTES`   No. of leading 0 bytes in the cipher-text
@@ -780,7 +780,7 @@ var bobKeys = sodium.crypto_box_keypair();
 
 Encrypts a message given the senders secret key, and receivers public key. 
 
-### Security model
+### Security Model
 
 The `crypto_box` function is designed to meet the standard notions of privacy and third-party unforgeability for a public-key authenticated-encryption scheme using nonces. For formal definitions see, e.g., Jee Hea An, ["Authenticated encryption in the public-key setting: security notions and analyses,"](http://eprint.iacr.org/2001/079).
 
@@ -844,7 +844,7 @@ console.log(sodium.crypto_box_PRIMITIVE);
 
 ## crypto_box_open(ctxt, nonce, pk, sk)
 
-Decrypts a ciphertext ctxt given the receivers private key, and senders public key and the same nonce that was used when calling `crypto_box`. 
+Decrypts a cipher text ctxt given the receivers private key, and senders public key and the same nonce that was used when calling `crypto_box`. 
 
 **Parameters**:
 
@@ -897,7 +897,7 @@ console.log(sodium.crypto_box_PRIMITIVE);
 
 ## crypto_box_beforenm(pk, sk)
 
-Partially performs the computation required for both encryption and decryption of data. Use this function to speed up your encryption/decryption if you are going to send many messages between any pair of senders and recievers.
+Partially performs the computation required for both encryption and decryption of data. Use this function to speed up your encryption/decryption if you are going to send many messages between any pair of senders and receivers.
 
 **Parameters**:
 
@@ -1094,9 +1094,9 @@ if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
 # Scalar Multiplication
 
 ## Constants
-  * `crypto_scalarmult_SCALARBYTES`
-  * `crypto_scalarmult_BYTES`
-  * `crypto_scalarmult_PRIMITIVE`
+  * `crypto_scalarmult_SCALARBYTES` size of integer
+  * `crypto_scalarmult_BYTES` size of group element
+  * `crypto_scalarmult_PRIMITIVE` name of primitive used by default
     
 ## crypto_scalarmult(n, p)
 The `crypto_scalarmult` multiplies a group element `p` by an integer `n`.
@@ -1109,7 +1109,7 @@ The `crypto_scalarmult` multiplies a group element `p` by an integer `n`.
 
 NaCl/Libsodium does not make any promises regarding the "decisional Diffie–Hellman" problem (DDH), the "static Diffie–Hellman" problem (SDH), etc. Users are responsible for hashing group elements.
 
-### Selected primitive
+### Selected Primitive
 
 `crypto_scalarmult` is the function `crypto_scalarmult_curve25519` specified in "Cryptography in NaCl", Sections 2, 3, and 4. This function is conjectured to be strong. For background see Bernstein, "Curve25519: new Diffie-Hellman speed records,["Lecture Notes in Computer Science 3958" (2006), 207–228](http://cr.yp.to/papers.html#curve25519).
 
