@@ -19,6 +19,7 @@
 using namespace node;
 using namespace v8;
 
+// Get the Node::Buffer class contructor
 Local<Function> bufferConstructor = 
         Local<Function>::Cast(Context::GetCurrent()->Global()->Get(String::New("Buffer")));
 
@@ -31,6 +32,7 @@ Local<Function> bufferConstructor =
         return ThrowException(Exception::Error(String::New(oss.str().c_str()))); \
     }
 
+// Create a new buffer, and get a pointer to it
 #define NEW_BUFFER_AND_PTR(name, size) \
     Buffer* name = Buffer::New(size); \
     unsigned char* name ## _ptr = (unsigned char*)Buffer::Data(name)
@@ -1135,6 +1137,7 @@ void RegisterModule(Handle<Object> target) {
 
     // register random utilities
     NEW_METHOD(randombytes_buf);
+    NODE_SET_METHOD(target, "randombytes", bind_randombytes_buf);
     NEW_METHOD(randombytes_close);
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);
@@ -1149,6 +1152,8 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(crypto_hash_sha512);
     NEW_METHOD(crypto_hash_sha256);
     NEW_INT_PROP(crypto_hash_BYTES);
+    NEW_INT_PROP(crypto_hash_sha256_BYTES);
+    NEW_INT_PROP(crypto_hash_sha512_BYTES);
     NEW_INT_PROP(crypto_hash_BLOCKBYTES);
     NEW_STRING_PROP(crypto_hash_PRIMITIVE);
 
@@ -1188,6 +1193,7 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_secretbox_KEYBYTES);
     NEW_INT_PROP(crypto_secretbox_NONCEBYTES);
     NEW_INT_PROP(crypto_secretbox_ZEROBYTES);
+    NEW_STRING_PROP(crypto_secretbox_PRIMITIVE);
 
     // Sign
     NEW_METHOD(crypto_sign);
@@ -1196,6 +1202,7 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
+    NEW_STRING_PROP(crypto_sign_PRIMITIVE);
     
     // Box
     NEW_METHOD(crypto_box);
