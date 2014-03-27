@@ -6,10 +6,10 @@ Parts of this document are copied from [NaCl library Documentation](http://nacl.
   * [Random Numbers](#random-numbers)
   * [Hash Functions](#hash-functions)
   * [Authentication Functions](#authentication-functions)
-  * [Secret Key Encryption](#authentication-functions)
+  * [Secret Key Encryption](#secret-key-encryption)
   * [Secret Key Authenticated Encryption](#secret-key-authenticated-encryption)
   * [Public Key Authenticated Encryption](#public-key-authenticated-encryption)
-  * [Signatures](#Signatures)
+  * [Signatures](#signatures)
   * [Scalar Multiplication](#scalar-multiplication)
 
 # API Usage
