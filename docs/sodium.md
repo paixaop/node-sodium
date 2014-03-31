@@ -30,7 +30,7 @@ The same method can be applied to the other objects exposed through `sodium`.
 The low level API gives you access to all ported `libsodium` functions directly. If you have experience using `libsodium` you can bypass the high-level APIs and use `libsodium` directly.
 
 # Low Level API
-`node-sodium` is a port of `libsodium` ([github repo](http://www.github.com/)), which it self is a port of the original [NaCl library](http://cr.yp.to/nacl) by Daniel Bernstein. The underlying library provides a C API that is exposed in `node-sodium` under the `.api` object. You can use the low level [documentation](./low-level-api.md) and examples to understand how to use it.
+`node-sodium` is a port of `libsodium` ([github repo](https://github.com/jedisct1/libsodium)), which it self is a port of the original [NaCl library](http://cr.yp.to/nacl) by Daniel Bernstein. The underlying library provides a C API that is exposed in `node-sodium` under the `.api` object. You can use the low level [documentation](./low-level-api.md) and examples to understand how to use it.
 
 # High Level APIs
 `node-soidum` defines a series of high level APIs that try to make it easier for the node developer to use. The high level APIs combine encryption, decryption functions, or sign and verify functions under the same class, while generating the appropriate keys, or nonces and taking care of message padding.
