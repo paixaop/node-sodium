@@ -19,10 +19,14 @@
 using namespace node;
 using namespace v8;
 
-// Get the Node::Buffer class contructor
-Local<Function> bufferConstructor = 
-        Local<Function>::Cast(Context::GetCurrent()->Global()->Get(String::New("Buffer")));
 
+// get handle to the global object
+Local<Object> globalObj = Context::GetCurrent()->Global();
+
+// Retrieve the buffer constructor function 
+Local<Function> bufferConstructor = 
+       Local<Function>::Cast(globalObj->Get(String::New("Buffer")));
+       
 
 // Check if a function argument is a node Buffer. If not throw V8 exception
 #define ARG_IS_BUFFER(i,msg) \
@@ -74,12 +78,12 @@ Local<Function> bufferConstructor =
     }
         
 #define TO_REAL_BUFFER(slowBuffer, actualBuffer) \
-    Local<Object> actualBuffer = \
-        bufferConstructor->NewInstance(3, \
-            { slowBuffer->handle_, \
-              v8::Integer::New(Buffer::Length(slowBuffer)), \
-              v8::Integer::New(0) });
-
+    Handle<Value> constructorArgs ## slowBuffer[3] = \
+        { slowBuffer->handle_, \
+          v8::Integer::New(Buffer::Length(slowBuffer)), \
+          v8::Integer::New(0) }; \
+    Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs ## slowBuffer);
+        
 //Helper function
 static Handle<Value> V8Exception(const char* msg) {
     return ThrowException(Exception::Error(String::New(msg)));
@@ -709,7 +713,7 @@ Handle<Value> bind_crypto_sign_keypair(const Arguments& args) {
     NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
-        Handle<Object> result = Object::New();
+        Local<Object> result = Object::New();
         result->Set(String::NewSymbol("publicKey"), vk->handle_, DontDelete);
         result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
         return scope.Close(result);
@@ -850,7 +854,7 @@ Handle<Value> bind_crypto_box_keypair(const Arguments& args) {
     NEW_BUFFER_AND_PTR(sk, crypto_box_SECRETKEYBYTES);
     
     if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
-        Handle<Object> result = Object::New();
+        Local<Object> result = Object::New();
         result->Set(String::NewSymbol("publicKey"), pk->handle_, DontDelete);
         result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
         return scope.Close(result);
