@@ -102,4 +102,7 @@ You need to have mocha test suite installed globally then you can run the node-s
     make test-cov
 	
 
+# License
+This software is licensed thorugh MIT License. Please read the LICENSE file for more details.
+
 
