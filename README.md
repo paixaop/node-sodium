@@ -68,7 +68,7 @@ Lib Sodium is somewhat documented [here](http://mob5.host.cs.st-andrews.ac.uk/ht
 
 # Install
 
-Tested on Mac and Linux
+Tested on Mac, Linux and IllumOS Systems
 
     npm install sodium
     
