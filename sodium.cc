@@ -39,7 +39,8 @@ Local<Function> bufferConstructor =
 // Create a new buffer, and get a pointer to it
 #define NEW_BUFFER_AND_PTR(name, size) \
     Buffer* name = Buffer::New(size); \
-    unsigned char* name ## _ptr = (unsigned char*)Buffer::Data(name)
+    Local<Object> name ## _handle = Local<Object>::New(name->handle_); \
+    unsigned char* name ## _ptr = (unsigned char*)Buffer::Data(name ## _handle)
 
 #define GET_ARG_AS(i, NAME, TYPE) \
     ARG_IS_BUFFER(i,#NAME); \
