@@ -47,17 +47,17 @@ describe("SecretBox", function () {
         done();
     });
 
-    it("generate throw on a bad cipherBox buffer", function (done) {
+    it("generate return undefined on an altered cipherText", function (done) {
         var box = new SecretBox();
         var cipherBox = box.encrypt("This is a test", 'utf8');
 
         cipherBox.cipherText[18] = 99;
         cipherBox.cipherText[19] = 99;
         cipherBox.cipherText[20] = 99;
-        (function() {
-            box.decrypt(cipherBox);
-        }).should.throw();
-        done();
+        var plainText = box.decrypt(cipherBox);
+        if (!plainText) {
+            done();
+        }
     });
 
     it("set bad secretKey should fail", function (done) {
