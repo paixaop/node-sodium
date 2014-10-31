@@ -1159,7 +1159,7 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_hash_BYTES);
     NEW_INT_PROP(crypto_hash_sha256_BYTES);
     NEW_INT_PROP(crypto_hash_sha512_BYTES);
-    NEW_INT_PROP(crypto_hash_BLOCKBYTES);
+    //NEW_INT_PROP(crypto_hash_BLOCKBYTES);
     NEW_STRING_PROP(crypto_hash_PRIMITIVE);
 
     // Auth
