@@ -1,5 +1,5 @@
 {
-  'variables': { 'target_arch%': 'ia32', 'naclversion': '0.4.5' },
+  'variables': { 'target_arch%': 'ia32', 'naclversion': '1.0.0' },
 
         'targets': [
             {
