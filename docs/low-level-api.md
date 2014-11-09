@@ -1015,7 +1015,7 @@ Decrypts a cipher text `ctxt` given the receivers given a `nonce` and the partia
 
 ## crypto_sign_keypair()
 
-Generates a random signing key pair with a secret key and corresponding public key. Returns an object as with two buffers as follows:
+Generates a random signing key pair with a secret key and corresponding public key. Returns an object with two buffers as follows:
 
 **Returns**:
 
@@ -1035,6 +1035,40 @@ Generates a random signing key pair with a secret key and corresponding public k
 
 ```javascript
 var bobKeys = sodium.crypto_sign_keypair();
+```
+
+## crypto_sign_seed_keypair(seed)
+
+Deterministically generates a signing key pair with a secret key and
+corresponding public key. The signing key pair is used for signing and contains
+the seed, in fact the only secret is the seed the other parts of the signing key
+always be reconstructed from the seed using this method. Hence, you only have
+to save the seed in your configuration file, database or where you store keys.
+
+**Parameters**:
+
+  * **Buffer** `message` to sign
+  * **Buffer** `seed` to generate signing key pair from. **Must** be `crypto_sign_SEEDBYTES` in length
+
+**Returns**:
+
+  * **{Object}** `keypair` with public and secret keys
+
+        { secretKey: <secret key buffer>,
+          publicKey: <public key buffer> }
+
+  * `undefined` in case or error
+
+**Key lengths**:
+
+  * `secretKey` is `crypto_sign_SECRETKEYBYTES` bytes in length
+  * `publicKey` is `crypto_sign_PUBLICKEYBYTES` bytes in length
+
+**Example**:
+
+```javascript
+var seed = new buffer('zSX0jgvyyaw8n+Z/Iv6lS7EI9pS7aesQUgxIsihjXfA=', 'base64');
+var aliceKeys = sodium.crypto_sign_seed_keypair(seed);
 ```
 
      

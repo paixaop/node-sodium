@@ -709,11 +709,55 @@ Handle<Value> bind_crypto_sign(const Arguments& args) {
  */
 Handle<Value> bind_crypto_sign_keypair(const Arguments& args) {
     HandleScope scope;
-    
+
     NEW_BUFFER_AND_PTR(vk, crypto_sign_PUBLICKEYBYTES);
     NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
+        Local<Object> result = Object::New();
+        result->Set(String::NewSymbol("publicKey"), vk->handle_, DontDelete);
+        result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
+        return scope.Close(result);
+    }
+    return scope.Close(Undefined());
+}
+
+/**
+ * Deterministically generate a signing/verification key pair from a seed.
+ *
+ * int crypto_sign_keypair(
+ *    unsigned char * vk,
+ *    unsigned char * sk,
+ *    const unsigned char * ps)
+ *
+ * Parameters:
+ *    [out] vk  the verification key.
+ *    [out] sk  the signing key.
+ *    [in]  sd  the seed for the key-pair.
+ *
+ * Returns:
+ *    0 if operation successful.
+ *
+ * Precondition:
+ *    the buffer for vk must be at least crypto_sign_PUBLICKEYBYTES in length
+ *    the buffer for sk must be at least crypto_sign_SECRETKEYTBYTES in length
+ *    the buffer for sd must be at least crypto_sign_SEEDBYTES in length
+ *
+ * Postcondition:
+ *    first crypto_sign_PUBLICKEYTBYTES of vk will be the key data.
+ *    first crypto_sign_SECRETKEYTBYTES of sk will be the key data.
+ */
+Handle<Value> bind_crypto_sign_seed_keypair(const Arguments& args) {
+    HandleScope scope;
+    
+    NUMBER_OF_MANDATORY_ARGS(1,"the argument seed must be a buffer");
+
+    GET_ARG_AS_UCHAR_LEN(0, sd, crypto_sign_SEEDBYTES);
+
+    NEW_BUFFER_AND_PTR(vk, crypto_sign_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
+
+    if( crypto_sign_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = Object::New();
         result->Set(String::NewSymbol("publicKey"), vk->handle_, DontDelete);
         result->Set(String::NewSymbol("secretKey"), sk->handle_, DontDelete);
@@ -1203,6 +1247,7 @@ void RegisterModule(Handle<Object> target) {
     // Sign
     NEW_METHOD(crypto_sign);
     NEW_METHOD(crypto_sign_keypair);
+    NEW_METHOD(crypto_sign_seed_keypair);
     NEW_METHOD(crypto_sign_open);
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
