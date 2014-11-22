@@ -9,7 +9,7 @@ Public-key authenticated message signatures: Sign
 
 **secretKey**:  *String|Buffer|Array*,  sender's private key.
 
-**publicKey**:  *String|Buffer|Array*,  recipient's private key.
+**publicKey**:  *String|Buffer|Array*,  recipient's public key.
 
 bytes()
 -------
