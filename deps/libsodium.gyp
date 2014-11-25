@@ -53,7 +53,7 @@
                     'HAVE_FENV_H=1',
                     'NATIVE_LITTLE_ENDIAN=1',
                     #'HAVE_AMD64_ASM=1',
-                    'HAVE_TI_MODE=1',
+                    #'HAVE_TI_MODE=1',
                     'HAVE_CPUID=1',
                     'HAVE_LIBM=1'
             ],
