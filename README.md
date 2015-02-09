@@ -64,7 +64,7 @@ The low level `libsodium` API documentation is now complete. All ported function
 Please be patient as I document the rest of the APIs, or better still help out :)
 
 # Lib Sodium Documentation
-Lib Sodium is somewhat documented [here](http://mob5.host.cs.st-andrews.ac.uk/html/). Node-Sodium follows the same structure and I will keep documenting it as fast as possible. 
+Lib Sodium is documented [here](http://doc.libsodium.org/). Node-Sodium follows the same structure and I will keep documenting it as fast as possible. 
 
 # Install
 
