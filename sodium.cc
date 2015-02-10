@@ -680,6 +680,47 @@ NAN_METHOD(bind_crypto_sign) {
 }
 
 /**
+ * Signs a given message using the signer's signing key, without appending the
+ * message to the signature
+ *
+ * int crypto_sign_detached(
+ *    unsigned char * sig,
+ *    unsigned long long * slen,
+ *    const unsigned char * msg,
+ *    unsigned long long mlen,
+ *    const unsigned char * sk)
+ *
+ * Parameters:
+ *    [out] sig    the resulting detached signature
+ *    [out] slen   length of the resulting signature (if not NULL)
+ *    [in]  msg    the message to be signed
+ *    [in]  mlen   length of the message
+ *    [in]  sk     the signing key
+ *
+ * Returns:
+ *    0 if the operation is successful
+ *
+ * Precondition:
+ *    sig must be of length crypto_sign_BYTES
+ *    sk must be of length crypto_sign_SECRETKEYBYTES
+ */
+NAN_METHOD(bind_crypto_sign_detached) {
+    NanEscapableScope();
+
+    NUMBER_OF_MANDATORY_ARGS(2, "arguments message, and secretKey must be buffers");
+
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_sign_SECRETKEYBYTES);
+
+    NEW_BUFFER_AND_PTR(sig, crypto_sign_BYTES);
+
+    if( crypto_sign_detached(sig_ptr, NULL, message, message_size, secretKey) == 0){
+        NanReturnValue(sig);
+    }
+    NanReturnValue(NanUndefined());
+}
+
+/**
  * Generates a signing/verification key pair.
  *
  * int crypto_sign_keypair(
@@ -804,6 +845,43 @@ NAN_METHOD(bind_crypto_sign_open) {
         NanReturnValue(m);
     }
     NanReturnValue(NanUndefined());
+}
+
+/**
+ * Verifies the detached signature of a message using the signer's public key
+ *
+ * int crypto_sign_verify_detached(
+ *    const unsigned char * sig,
+ *    const unsigned char * msg,
+ *    unsigned long long mlen,
+ *    const unsigned char * pk)
+ *
+ * Parameters:
+ *    [in] sig    the detached signature for the message
+ *    [in] msg    the message to verify signature for
+ *    [in] mlen   length of the message
+ *    [in] pk     the signer's public key
+ *
+ * Returns:
+ *    0 if successful, -1 otherwise
+ *
+ * Precondition:
+ *    sig must be of length crypto_sign_BYTES
+ *    pk must be of length crypto_sign_PUBLICKEYBYTES
+ */
+NAN_METHOD(bind_crypto_sign_verify_detached) {
+    NanEscapableScope();
+
+    NUMBER_OF_MANDATORY_ARGS(3, "arguments signature, message and publicKey must be buffers");
+
+    GET_ARG_AS_UCHAR_LEN(0, signature, crypto_sign_BYTES);
+    GET_ARG_AS_UCHAR(1, message);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_sign_PUBLICKEYBYTES);
+
+    if( crypto_sign_verify_detached(signature, message, message_size, publicKey) == 0) {
+        NanReturnValue(NanNew<Boolean>(true));
+    }
+    NanReturnValue(NanNew<Boolean>(false));
 }
 
 /**
@@ -1339,9 +1417,11 @@ void RegisterModule(Handle<Object> target) {
 
     // Sign
     NEW_METHOD(crypto_sign);
+    NEW_METHOD(crypto_sign_detached);
     NEW_METHOD(crypto_sign_keypair);
     NEW_METHOD(crypto_sign_seed_keypair);
     NEW_METHOD(crypto_sign_open);
+    NEW_METHOD(crypto_sign_verify_detached);
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);

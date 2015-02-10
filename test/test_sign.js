@@ -14,12 +14,12 @@ if (process.env.COVERAGE) {
 describe("Sign", function () {
     it("sign/verify message", function (done) {
         var sign = new Sign();
-        var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         var checkMsg = Sign.verify(signedMsg);
         checkMsg.toString('utf8').should.eql("This is a test");
         done();
     });
+
     it("sign/verify with existing key", function(done) {
         var key = new SignKey(
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=',
@@ -27,7 +27,6 @@ describe("Sign", function () {
             'xbKDKhNwHv81Pk6pHNPR5oV/7pskFJIFF8M7JTfH2Q==',
             'base64');
         var sign = new Sign(key);
-        var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         signedMsg.publicKey.toString('base64').should.eql(
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');
@@ -35,15 +34,51 @@ describe("Sign", function () {
         checkMsg.toString('utf8').should.eql("This is a test");
         done();
     });
+
     it("sign/verify with key from seed", function(done) {
         var key = new SignKey.fromSeed('Aav6yqemxoPNNqxeKJXMlruKxXEHLD931S8pXzxt4mk=', 'base64');
         var sign = new Sign(key);
-        var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         signedMsg.publicKey.toString('base64').should.eql(
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');
         var checkMsg = Sign.verify(signedMsg);
         checkMsg.toString('utf8').should.eql("This is a test");
+        done();
+    });
+
+    it("sign/verify detached", function(done) {
+        var key = new SignKey(
+            'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=',
+            'Aav6yqemxoPNNqxeKJXMlruKxXEHLD931S8pXzxt4mkO' +
+            'xbKDKhNwHv81Pk6pHNPR5oV/7pskFJIFF8M7JTfH2Q==',
+            'base64');
+        var sign = new Sign(key);
+        var signature = sign.signDetached("This is a test", 'utf8');
+        var valid = Sign.verifyDetached(
+            signature,
+            key.publicKey.get(),
+            "This is a test",
+            'utf8'
+        );
+        valid.should.be.true;
+        done();
+    });
+
+    it("sign/verify detached (invalid signature)", function(done) {
+        var key = new SignKey(
+            'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=',
+            'Aav6yqemxoPNNqxeKJXMlruKxXEHLD931S8pXzxt4mkO' +
+            'xbKDKhNwHv81Pk6pHNPR5oV/7pskFJIFF8M7JTfH2Q==',
+            'base64');
+        var sign = new Sign(key);
+        var signature = sign.signDetached("This is a test", 'utf8');
+        var valid = Sign.verifyDetached(
+            signature,
+            key.publicKey.get(),
+            "This is NOT the messag that was signed",
+            'utf8'
+        );
+        valid.should.be.false;
         done();
     });
 });

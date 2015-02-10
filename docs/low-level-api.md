@@ -1098,7 +1098,19 @@ if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
 }
 ```
 
-        
+### crypto_sign_detached(message, secretKey)
+
+Signs `message` and returns a detached signature (a signature where the signed message isn't concatenated to it)
+
+Parameters:
+
+  * **Buffer** `message` to sign
+  * **Buffer** `secretKey` signer's secret key. **Must** be `crypto_sign_SECRETKEYBYTES` in length
+
+Returns:
+  * **Buffer** with the detached signature
+  * `undefined` in case or error
+
 ## crypto_sign_open(signedMsg, publicKey)
 
 Verifies the signed message `signedMsg` using the signer's verification key, or `publicKey`.
@@ -1124,6 +1136,20 @@ if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
 }
 ```
 
+### crypto_sign_verify_detached(signature, message, publicKey)
+
+Verifies the detached signature of a given message using the signer's public key
+
+Parameters:
+
+* **Buffer** `signature` buffer with the detached signature
+* **Buffer** `message` buffer with the signed message
+* **Buffer** `publicKey` buffer with the signer's public key
+
+Returns:
+
+* **Boolean** `true` if the signature is valid
+* **Boolean** `false` otherwise or if an error occurred
 
 # Scalar Multiplication
 
