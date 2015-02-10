@@ -1,12 +1,12 @@
 
-#ifndef __SODIUM_VERSION_H__
-#define __SODIUM_VERSION_H__
+#ifndef sodium_version_H
+#define sodium_version_H
 
 #include "export.h"
 
-#define SODIUM_VERSION_STRING "0.4.5"
+#define SODIUM_VERSION_STRING "1.0.2"
 
-#define SODIUM_LIBRARY_VERSION_MAJOR 4
+#define SODIUM_LIBRARY_VERSION_MAJOR 7
 #define SODIUM_LIBRARY_VERSION_MINOR 4
 
 #ifdef __cplusplus
