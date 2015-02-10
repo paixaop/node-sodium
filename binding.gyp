@@ -11,7 +11,8 @@
                         "<(module_root_dir)/deps/libsodium.gyp:libsodium"
                   ],
                   'include_dirs': [
-                       './deps/libsodium-<(naclversion)/src/libsodium/include'
+                       './deps/libsodium-<(naclversion)/src/libsodium/include',
+                       "<!(node -e \"require('nan')\")"
                   ],
                   'cflags!': [ '-fno-exceptions' ],
                   

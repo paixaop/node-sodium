@@ -5,7 +5,8 @@
     "license" : "MIT",
     "description" : "Lib Sodium port for node.js",
     "dependencies": {
-        "should" : ">=2.1.0"
+        "should" : ">=2.1.0",
+        "nan": ">=1.4.1"
     },
     "devDependencies": {
         "mocha"  : ">=0.14.1",
