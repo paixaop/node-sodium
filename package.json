@@ -6,13 +6,13 @@
     "description" : "Lib Sodium port for node.js",
     "dependencies": {
         "should" : ">=2.1.0",
-        "nan": ">=1.4.1"
+         "nan": ">=1.6.2"
     },
     "devDependencies": {
         "mocha"  : ">=0.14.1",
         "mocha-istanbul" : ">=0.2.0",
         "istanbul" : ">=0.2.6",
-        "node-gyp": "~0.12.1"
+        "node-gyp": ">=1.0.2"
     },
     "scripts":{
         "test": "make test"

@@ -49,8 +49,10 @@ List of all functions ported by node-sodium
 
 ## Box
   * crypto_box
+  * crypto_box_easy
   * crypto_box_keypair
   * crypto_box_open
+  * crypto_box_open_easy
   * crypto_box_beforenm
   * crypto_box_afternm
   * crypto_box_open_afternm

@@ -109,7 +109,7 @@ var bobpk = new Buffer(bobpkA);
 var cipherText = new Buffer(cipherTextA);
 var secret = new Buffer(secretA);
 
-describe('Box', function() {
+describe('crypto_box', function() {
     it('crypto_box should encrypt to known cipher text', function(done) {
         var cipherMsg = sodium.crypto_box(plainText,nonce, bobpk, alicesk);
         if( !cipherMsg ) {
@@ -120,7 +120,7 @@ describe('Box', function() {
     });
 
     // Test bad params
-    it('should fail on bad param 1 string', function(done) {
+    it('should fail on bad param 1', function(done) {
         var p = "";
         var n = nonce;
         var pk = bobpk
@@ -310,7 +310,7 @@ describe('Box', function() {
     });
 });
 
-describe('BoxOpen', function() {
+describe('crypto_box_open', function() {
     var sender = sodium.crypto_box_keypair();
     var receiver = sodium.crypto_box_keypair();
 
