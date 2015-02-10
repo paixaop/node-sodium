@@ -2,7 +2,7 @@
     'targets': [{
             'target_name': 'libsodium',
             'variables': {
-                'naclversion': '1.0.0',
+                'naclversion': '1.0.2',
                 'target_arch%': 'ia32'
             },
             'type': 'static_library',
