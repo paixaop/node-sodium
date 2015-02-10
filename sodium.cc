@@ -865,6 +865,52 @@ NAN_METHOD(bind_crypto_box) {
 }
 
 /**
+ * Encrypts a message given the senders secret key, and receivers public key.
+ * int crypto_box_easy   (
+ *    unsigned char * ctxt,
+ *    const unsigned char * msg,
+ *    unsigned long long mlen,
+ *    const unsigned char * nonce,
+ *    const unsigned char * pk,
+ *    const unsigned char * sk)
+ *
+ * Parameters:
+ *    [out] ctxt    the buffer for the cipher-text.
+ *    [in]  msg     the message to be encrypted.
+ *    [in]  mlen    the length of msg.
+ *    [in]  nonce   a randomly generated nonce.
+ *    [in]  pk      the receivers public key, used for encryption.
+ *    [in]  sk      the senders private key, used for signing.
+ *
+ * Returns:
+ *    0 if operation is successful.
+ *
+ * Precondition:
+ *    the nonce must have size crypto_box_NONCEBYTES.
+ *
+ * Postcondition:
+ *    first mlen bytes of ctxt will contain the ciphertext.
+ */
+NAN_METHOD(bind_crypto_box_easy) {
+    NanEscapableScope();
+    
+    NUMBER_OF_MANDATORY_ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
+    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
+
+    NEW_BUFFER_AND_PTR(ctxt, message_size + crypto_box_MACBYTES);
+
+    if( crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
+        NanReturnValue(ctxt);
+    }
+    NanReturnValue(NanUndefined());
+}
+
+
+/**
  * Randomly generates a secret key and a corresponding public key.
  *
  * int crypto_box_keypair(
@@ -966,6 +1012,59 @@ NAN_METHOD(bind_crypto_box_open) {
         NEW_BUFFER_AND_PTR(plain_text, cipherText_size - crypto_box_ZEROBYTES);
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
         NanReturnValue(plain_text);
+    }
+    NanReturnValue(NanUndefined());
+}
+
+/**
+ * Decrypts a ciphertext ctxt given the receivers private key, and senders public key.
+ *
+ * int crypto_box_open_easy(
+ *    unsigned char *       msg,
+ *    const unsigned char * ctxt,
+ *    unsigned long long    clen,
+ *    const unsigned char * nonce,
+ *    const unsigned char * pk,
+ *    const unsigned char * sk)
+ *
+ * Parameters:
+ *     [out] msg     the buffer to place resulting plaintext.
+ *     [in]  ctxt    the ciphertext to be decrypted.
+ *     [in]  clen    the length of the ciphertext.
+ *     [in]  nonce   a randomly generated.
+ *     [in]  pk      the senders public key, used for verification.
+ *     [in]  sk      the receivers private key, used for decryption.
+ *
+ Returns:
+ *     0 if successful and -1 if verification fails.
+ *
+ Precondition:
+ *     the nonce must have size crypto_box_NONCEBYTES.
+ *
+ * Postcondition:
+ *     first clen bytes of msg will contain the plaintext.
+ */
+NAN_METHOD(bind_crypto_box_open_easy) {
+    NanEscapableScope();
+    
+    NUMBER_OF_MANDATORY_ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, cipherText);
+    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
+    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);    
+    
+    // cipherText should have crypto_box_MACBYTES + encrypted message chars so lets check
+    if( cipherText_size < crypto_box_MACBYTES ) {
+        std::ostringstream oss;
+        oss << "argument cipherText must have a length of at least " << crypto_box_MACBYTES << " bytes";
+        return NanThrowError(oss.str().c_str());
+    }
+    
+    NEW_BUFFER_AND_PTR(msg, cipherText_size - crypto_box_MACBYTES);
+    
+    if( crypto_box_open_easy(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
+        NanReturnValue(msg);
     }
     NanReturnValue(NanUndefined());
 }
@@ -1250,8 +1349,10 @@ void RegisterModule(Handle<Object> target) {
     
     // Box
     NEW_METHOD(crypto_box);
+    NEW_METHOD(crypto_box_easy);
     NEW_METHOD(crypto_box_keypair);
     NEW_METHOD(crypto_box_open);
+    NEW_METHOD(crypto_box_open_easy);
     NEW_METHOD(crypto_box_beforenm);
     NEW_METHOD(crypto_box_afternm);
     NEW_METHOD(crypto_box_open_afternm);
