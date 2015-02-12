@@ -6,5 +6,5 @@ branches:
     - master
 notifications:
   email:
-    - t34mann@gmail.com
+    - paixaop@gmail.com
 script: npm test
