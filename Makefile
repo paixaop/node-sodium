@@ -2,6 +2,15 @@ MOCHA_OPTS= --check-leaks
 REPORTER = tap
 BINDIR = ./node_modules/.bin
 
+LIBSODIUM_VERSION = 1.0.2
+LIBSODIUM_DIR = ./deps/libsodium-$(LIBSODIUM_VERSION)
+
+configure:
+	@cd $(LIBSODIUM_DIR)/ && ./autogen.sh
+	@cd $(LIBSODIUM_DIR)/ && ./configure
+	@node defines.js
+	
+
 sodium:
 	$(BINDIR)/node-gyp rebuild
 	
@@ -38,5 +47,6 @@ clean:
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
+	-rm -fr *.o
 
 .PHONY: test-cov site docs test docclean
