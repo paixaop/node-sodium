@@ -17,3 +17,4 @@ node-sodium.sublime-workspace
 *.dirstamp
 *.la
 coverage/
+deps/libsodium.gyp
