@@ -28,6 +28,26 @@ describe('Sign', function() {
         done();
     });
 
+    it('a detached message signature should verify correctly', function(done) {
+        var keys = sodium.crypto_sign_keypair();
+        var message = new Buffer("Libsodium is cool", 'utf8');
+        var signature = sodium.crypto_sign_detached(message, keys.secretKey);
+
+        var verified = sodium.crypto_sign_verify_detached(signature, message, keys.publicKey);
+        verified.should.be.exactly(true);
+        done();
+    });
+
+    it('a modified detached message signature should not verify correctly', function(done) {
+        var keys = sodium.crypto_sign_keypair();
+        var message = new Buffer("Libsodium is cool", 'utf8');
+        var signature = sodium.crypto_sign_detached(message, keys.secretKey);
+        signature.writeFloatLE(Math.random(), 0);
+        var verified = sodium.crypto_sign_verify_detached(signature, message, keys.publicKey);
+        verified.should.be.exactly(false);
+        done();
+    });
+
     it('should throw with less than 2 arguments', function(done) {
         var keys = sodium.crypto_sign_keypair();
         var message = new Buffer("Libsodium is cool", 'utf8');
