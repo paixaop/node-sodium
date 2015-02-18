@@ -17,7 +17,7 @@ fs.readFile(libsodium_dir + "/Makefile", 'utf8', function (err, make) {
   if (!defs) {
     return console.log("No DEFS found in libsodium Makefile");
   }
-  
+
   var re = /-D(.*?)(?:(?=\s?-D)|$)/g;
   var m;
   var d = "";   
@@ -29,8 +29,14 @@ fs.readFile(libsodium_dir + "/Makefile", 'utf8', function (err, make) {
     d += "\t\t\t\t'" + m[1] + "',\n";
   }
   
+  /*var defines = defs[1].match(/-D([^\s]+)/g);
+  
+  var d = "";
+  defines.forEach(function(element) {
+    d += "\t\t\t\t'" + element + "',\n";
+  });
+  */
   d = d.replace(/\\/g, '');
-
   fs.readFile("deps/libsodium.gyp.in", 'utf8', function (err, template) {
     if (err) {
       return console.log(err);
