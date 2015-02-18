@@ -469,7 +469,7 @@ NAN_METHOD(bind_crypto_stream) {
     if( crypto_stream(stream_ptr, slen, nonce, key) == 0) {
         NanReturnValue(stream);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -509,7 +509,7 @@ NAN_METHOD(bind_crypto_stream_xor) {
     if( crypto_stream_xor(ctxt_ptr, message, message_size, nonce, key) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -565,7 +565,7 @@ NAN_METHOD(bind_crypto_secretbox) {
     if( crypto_secretbox(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -635,7 +635,7 @@ NAN_METHOD(bind_crypto_secretbox_open) {
 
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -676,7 +676,7 @@ NAN_METHOD(bind_crypto_sign) {
     if( crypto_sign(sig_ptr, &slen, message, message_size, secretKey) == 0) {
         NanReturnValue(sig);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -709,11 +709,13 @@ NAN_METHOD(bind_crypto_sign_keypair) {
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), vk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+
+        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -753,11 +755,13 @@ NAN_METHOD(bind_crypto_sign_seed_keypair) {
 
     if( crypto_sign_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), vk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+
+        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -803,7 +807,7 @@ NAN_METHOD(bind_crypto_sign_open) {
         memcpy(m_ptr, msg_ptr, mlen);
         NanReturnValue(m);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -861,7 +865,7 @@ NAN_METHOD(bind_crypto_box) {
     if( crypto_box(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -906,7 +910,7 @@ NAN_METHOD(bind_crypto_box_easy) {
     if( crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
@@ -940,11 +944,13 @@ NAN_METHOD(bind_crypto_box_keypair) {
     
     if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), pk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+
+        result->ForceSet(NanNew<String>("publicKey"), pk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1013,7 +1019,7 @@ NAN_METHOD(bind_crypto_box_open) {
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1066,7 +1072,7 @@ NAN_METHOD(bind_crypto_box_open_easy) {
     if( crypto_box_open_easy(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(msg);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1145,7 +1151,7 @@ NAN_METHOD(bind_crypto_box_afternm) {
     if( crypto_box_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1211,7 +1217,7 @@ NAN_METHOD(bind_crypto_box_open_afternm) {
 
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1228,7 +1234,7 @@ NAN_METHOD(bind_crypto_scalarmult_base) {
     if( crypto_scalarmult_base(q_ptr, n) == 0) {
         NanReturnValue(q);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
@@ -1249,15 +1255,15 @@ NAN_METHOD(bind_crypto_scalarmult) {
     if( crypto_scalarmult(q_ptr, n, p) == 0) {
         NanReturnValue(q);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
 #define NEW_INT_PROP(NAME) \
-    target->Set(NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
+    target->ForceSet(NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
 
 #define NEW_STRING_PROP(NAME) \
-    target->Set(NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
+    target->ForceSet(NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
 
 #define NEW_METHOD(NAME) \
     NODE_SET_METHOD(target, #NAME, bind_ ## NAME)
