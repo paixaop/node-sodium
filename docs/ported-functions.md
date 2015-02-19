@@ -46,6 +46,8 @@ List of all functions ported by node-sodium
   * crypto_sign
   * crypto_sign_keypair
   * crypto_sign_open
+  * crypto_sign_detached
+  * crypto_sign_verify_detached
 
 ## Box
   * crypto_box
