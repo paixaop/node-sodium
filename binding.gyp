@@ -1,5 +1,6 @@
 {
-  'variables': { 'target_arch%': 'ia32'},
+  'variables': {
+        'target_arch%': '<!(node -e \"var os = require(\'os\'); console.log(os.arch());\")>'},
 
         'targets': [
             {
