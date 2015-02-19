@@ -11,3 +11,5 @@ notifications:
   email:
     - paixaop@gmail.com
 script: npm test
+before_script:
+  - make configure
