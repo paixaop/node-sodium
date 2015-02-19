@@ -76,7 +76,8 @@ node-sodium depends on lib sodium, so if lib sodium does not compile on your pla
 
 # Manual Build
 
-    node-gyp build    
+    make configure
+    make sodium
 
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
