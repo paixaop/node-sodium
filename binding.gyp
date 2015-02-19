@@ -1,5 +1,5 @@
 {
-  'variables': { 'target_arch%': 'ia32', 'naclversion': '1.0.2' },
+  'variables': { 'target_arch%': 'ia32'},
 
         'targets': [
             {
@@ -11,7 +11,7 @@
                         "<(module_root_dir)/deps/libsodium.gyp:libsodium"
                   ],
                   'include_dirs': [
-                       './deps/libsodium-<(naclversion)/src/libsodium/include',
+                       './deps/libsodium/src/libsodium/include',
                        "<!(node -e \"require('nan')\")"
                   ],
                   'cflags!': [ '-fno-exceptions' ],
