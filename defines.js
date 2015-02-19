@@ -1,12 +1,13 @@
 var fs = require('fs');
 var os = require('os');
 
-console.log(os.arch());
+console.log("Extracting DEFINES from Libsodium make file...");
+console.log("Detected system architecture " + os.arch());
 
-var version = "1.0.2";
-var libsodium_dir = "./deps/libsodium-" + version;
+var libsodium_dir = "./deps/libsodium";
 
 fs.readFile(libsodium_dir + "/Makefile", 'utf8', function (err, make) {
+  console.log("Libsodium Makefile : " + libsodium_dir + "/Makefile");
   if (err) {
     console.log("Please run autogen.sh and configure in " + libsodium_dir + " directory first");
     return console.log(err);
@@ -28,26 +29,21 @@ fs.readFile(libsodium_dir + "/Makefile", 'utf8', function (err, make) {
     // View your result using the m-variable.
     d += "\t\t\t\t'" + m[1] + "',\n";
   }
-  
-  /*var defines = defs[1].match(/-D([^\s]+)/g);
-  
-  var d = "";
-  defines.forEach(function(element) {
-    d += "\t\t\t\t'" + element + "',\n";
-  });
-  */
+
   d = d.replace(/\\/g, '');
   fs.readFile("deps/libsodium.gyp.in", 'utf8', function (err, template) {
+    console.log("Libsodium GYP template file " + "deps/libsodium.gyp.in");
+
     if (err) {
       return console.log(err);
     }
 
     var result = template.replace(/{DEFINES}/g, d);
     result = result.replace(/{ARCH}/g, "'" + os.arch() + "'");
-    result = result.replace(/{VERSION}/g, "'" + version + "'");
 
     fs.writeFile("deps/libsodium.gyp", result, 'utf8', function (err) {
        if (err) return console.log(err);
+        console.log("Writing output to GYP file deps/libsodium.gyp");
        return true;
     });
     return true;
