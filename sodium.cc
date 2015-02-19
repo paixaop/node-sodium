@@ -709,10 +709,8 @@ NAN_METHOD(bind_crypto_sign_keypair) {
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-
         result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
         result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
-
         NanReturnValue(result);
     }
     NanReturnUndefined();
