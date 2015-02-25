@@ -15,6 +15,7 @@
         "node-gyp": ">=1.0.2"
     },
     "scripts":{
+        "preinstall": "make sodium",
         "test": "make test"
     },
     "repository" : {
