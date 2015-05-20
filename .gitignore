@@ -19,7 +19,7 @@ node-sodium.sublime-workspace
 coverage/
 deps/libsodium.gyp
 
-deps/libsodium/autom4te.cache/requests
+deps/libsodium/autom4te.cache/*
 
 deps/libsodium/config.log
 
