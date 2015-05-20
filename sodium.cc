@@ -469,7 +469,7 @@ NAN_METHOD(bind_crypto_stream) {
     if( crypto_stream(stream_ptr, slen, nonce, key) == 0) {
         NanReturnValue(stream);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -509,7 +509,7 @@ NAN_METHOD(bind_crypto_stream_xor) {
     if( crypto_stream_xor(ctxt_ptr, message, message_size, nonce, key) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -565,7 +565,7 @@ NAN_METHOD(bind_crypto_secretbox) {
     if( crypto_secretbox(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -635,7 +635,7 @@ NAN_METHOD(bind_crypto_secretbox_open) {
 
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -676,6 +676,47 @@ NAN_METHOD(bind_crypto_sign) {
     if( crypto_sign(sig_ptr, &slen, message, message_size, secretKey) == 0) {
         NanReturnValue(sig);
     }
+    NanReturnUndefined();
+}
+
+/**
+ * Signs a given message using the signer's signing key (detached mode).
+ *
+ * int crypto_sign_detached(
+ *    unsigned char * sig,
+ *    unsigned long long * slen,
+ *    const unsigned char * msg,
+ *    unsigned long long mlen,
+ *    const unsigned char * sk)
+ *
+ * Parameters:
+ *    [out] sig     the resulting signature.
+ *    [out] slen    the length of the signature.
+ *    [in]  msg     the message to be signed.
+ *    [in]  mlen    the length of the message.
+ *    [in]  sk      the signing key.
+ *
+ * Returns:
+ *    0 if operation successful
+ *
+ * Precondition:
+ *    sig must be of length crypto_sign_BYTES
+ *    sk must be of length crypto_sign_SECRETKEYBYTES
+ */
+NAN_METHOD(bind_crypto_sign_detached) {
+    NanEscapableScope();
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and secretKey must be buffers");
+    
+    GET_ARG_AS_UCHAR(0, message);
+    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_sign_SECRETKEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(sig, crypto_sign_BYTES);
+
+    unsigned long long slen = 0;
+    if( crypto_sign_detached(sig_ptr, &slen, message, message_size, secretKey) == 0) {
+        NanReturnValue(sig);
+    }
     NanReturnValue(NanUndefined());
 }
 
@@ -709,11 +750,11 @@ NAN_METHOD(bind_crypto_sign_keypair) {
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), vk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -753,11 +794,13 @@ NAN_METHOD(bind_crypto_sign_seed_keypair) {
 
     if( crypto_sign_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), vk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+
+        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -803,7 +846,47 @@ NAN_METHOD(bind_crypto_sign_open) {
         memcpy(m_ptr, msg_ptr, mlen);
         NanReturnValue(m);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
+}
+
+/**
+ * Verifies the signed message sig using the signer's verification key.
+ *
+ * int crypto_sign_verify_detached(
+ *    const unsigned char * sig,
+ *    const unsigned char * msg,
+ *    unsigned long long mlen,
+ *    const unsigned char * vk)
+ *
+ * Parameters:
+ *
+ *    [in]  sig     the signature
+ *    [in] msg     the message.
+ *    [in] mlen    the length of msg.
+ *    [in]  vk      the verification key.
+ *
+ * Returns:
+ *    0 if successful, -1 if verification fails.
+ *
+ * Precondition:
+ *    length of sig must be crypto_sign_BYTES
+ *
+ * Warning:
+ *    if verification fails msg may contain data from the computation.
+ */
+NAN_METHOD(bind_crypto_sign_verify_detached) {
+    NanEscapableScope();
+    
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments signedMessage and verificationKey must be buffers");
+    
+    GET_ARG_AS_UCHAR_LEN(0, signature, crypto_sign_BYTES);
+    GET_ARG_AS_UCHAR(1, message);
+    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_sign_PUBLICKEYBYTES);
+    
+    if( crypto_sign_verify_detached(signature, message, message_size, publicKey) == 0) {
+        NanReturnValue(NanTrue());
+    }
+    NanReturnValue(NanFalse());
 }
 
 /**
@@ -861,7 +944,7 @@ NAN_METHOD(bind_crypto_box) {
     if( crypto_box(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -906,7 +989,7 @@ NAN_METHOD(bind_crypto_box_easy) {
     if( crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
@@ -940,11 +1023,13 @@ NAN_METHOD(bind_crypto_box_keypair) {
     
     if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->Set(NanNew<String>("publicKey"), pk, DontDelete);
-        result->Set(NanNew<String>("secretKey"), sk, DontDelete);
+
+        result->ForceSet(NanNew<String>("publicKey"), pk, DontDelete);
+        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+
         NanReturnValue(result);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1013,7 +1098,7 @@ NAN_METHOD(bind_crypto_box_open) {
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1066,7 +1151,7 @@ NAN_METHOD(bind_crypto_box_open_easy) {
     if( crypto_box_open_easy(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
         NanReturnValue(msg);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1145,7 +1230,7 @@ NAN_METHOD(bind_crypto_box_afternm) {
     if( crypto_box_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
         NanReturnValue(ctxt);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1211,7 +1296,7 @@ NAN_METHOD(bind_crypto_box_open_afternm) {
 
         NanReturnValue(plain_text);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 /**
@@ -1228,7 +1313,7 @@ NAN_METHOD(bind_crypto_scalarmult_base) {
     if( crypto_scalarmult_base(q_ptr, n) == 0) {
         NanReturnValue(q);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
@@ -1249,15 +1334,15 @@ NAN_METHOD(bind_crypto_scalarmult) {
     if( crypto_scalarmult(q_ptr, n, p) == 0) {
         NanReturnValue(q);
     }
-    NanReturnValue(NanUndefined());
+    NanReturnUndefined();
 }
 
 
 #define NEW_INT_PROP(NAME) \
-    target->Set(NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
+    target->ForceSet(NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
 
 #define NEW_STRING_PROP(NAME) \
-    target->Set(NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
+    target->ForceSet(NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
 
 #define NEW_METHOD(NAME) \
     NODE_SET_METHOD(target, #NAME, bind_ ## NAME)
@@ -1339,9 +1424,11 @@ void RegisterModule(Handle<Object> target) {
 
     // Sign
     NEW_METHOD(crypto_sign);
+    NEW_METHOD(crypto_sign_detached);
     NEW_METHOD(crypto_sign_keypair);
     NEW_METHOD(crypto_sign_seed_keypair);
     NEW_METHOD(crypto_sign_open);
+    NEW_METHOD(crypto_sign_verify_detached);
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);

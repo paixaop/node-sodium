@@ -1,5 +1,6 @@
 {
-  'variables': { 'target_arch%': 'ia32', 'naclversion': '1.0.0' },
+  'variables': {
+        'target_arch%': '<!(node -e \"var os = require(\'os\'); console.log(os.arch());\")>'},
 
         'targets': [
             {
@@ -11,7 +12,7 @@
                         "<(module_root_dir)/deps/libsodium.gyp:libsodium"
                   ],
                   'include_dirs': [
-                       './deps/libsodium-<(naclversion)/src/libsodium/include',
+                       './deps/libsodium/src/libsodium/include',
                        "<!(node -e \"require('nan')\")"
                   ],
                   'cflags!': [ '-fno-exceptions' ],

@@ -71,3 +71,29 @@ Verify digital signature
 
 **cipherText**:  *Buffer|String|Array*,  the signed message
 
+signDetached(message, \[encoding\])
+---------------------------
+Digitally sign message
+
+
+
+
+**Parameters**
+
+**message**:  *Buffer|String|Array*,  message to sign
+
+**[encoding]**:  *String*,  encoding of message string
+
+**Returns**
+
+*Object*,  cipher box
+
+verifyDetached(signature, message)
+------------------
+Verify digital signature
+
+
+
+**Parameters**
+** signature  the signature
+** message *Buffer|String|Array*,   message to verify

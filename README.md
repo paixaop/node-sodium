@@ -78,7 +78,8 @@ node-sodium depends on lib sodium, so if lib sodium does not compile on your pla
 
 # Manual Build
 
-    node-gyp build    
+    make configure
+    make sodium
 
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
@@ -107,4 +108,6 @@ You need to have mocha test suite installed globally then you can run the node-s
 # License
 This software is licensed thorugh MIT License. Please read the LICENSE file for more details.
 
+# Author
 
+Built and maintained by Pedro Paixao
