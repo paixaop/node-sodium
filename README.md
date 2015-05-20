@@ -1,7 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/paixaop/node-sodium.png)](http://travis-ci.org/paixaop/node-sodium)
 
-Please check the develop branch for node 0.11 and 0.12 support, detached signatures and system architecture detection
-
 # node-sodium
 
 
