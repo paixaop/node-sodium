@@ -1,6 +1,6 @@
 {
     "name": "sodium",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "author" : "Pedro Paixao <paixaop@gmail.com>",
     "license" : "MIT",
     "description" : "Lib Sodium port for node.js",
