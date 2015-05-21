@@ -76,6 +76,9 @@ node-sodium depends on lib sodium, so if lib sodium does not compile on your pla
 
 # Manual Build
 
+Before you run the manual build you must run the `npm install` once to install the required dependencies, like `node-gyp` that are needed to compile the `node-sodium`.
+Please note that `npm install` will install the dependencies and compile `node-sodium` as well. After this initial step you can make changes to the source and run the following commands to manually build the module.
+
     make configure
     make sodium
 
