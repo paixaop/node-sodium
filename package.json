@@ -15,7 +15,8 @@
         "node-gyp": ">=1.0.2"
     },
     "scripts":{
-        "test": "make test"
+        "test": "make test",
+        "preinstall": "make"
     },
     "repository" : {
         "type" : "git",
