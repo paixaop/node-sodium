@@ -16,7 +16,8 @@
     },
     "scripts":{
         "test": "make test",
-        "install": "make"
+        "preinstall": "make",
+        "install": "node-gyp rebuild"
     },
     "repository" : {
         "type" : "git",
