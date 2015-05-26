@@ -16,7 +16,7 @@
     },
     "scripts":{
         "test": "make test",
-        "preinstall": "make"
+        "install": "make"
     },
     "repository" : {
         "type" : "git",
