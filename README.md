@@ -2,6 +2,7 @@
 
 # node-sodium
 
+Uses Libsodium 1.0.3
 
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
