@@ -108,14 +108,14 @@ sodium_bin2hex(char * const hex, const size_t hex_maxlen,
     while (i < bin_len) {
         c = bin[i] & 0xf;
         b = bin[i] >> 4;
-        x = (unsigned char) (87 + c + (((c - 10) >> 31) & -39)) << 8 |
-            (unsigned char) (87 + b + (((b - 10) >> 31) & -39));
+        x = (unsigned char) (87U + c + (((c - 10U) >> 8) & ~38U)) << 8 |
+            (unsigned char) (87U + b + (((b - 10U) >> 8) & ~38U));
         hex[i * 2U] = (char) x;
         x >>= 8;
         hex[i * 2U + 1U] = (char) x;
         i++;
     }
-    hex[i * 2U] = 0;
+    hex[i * 2U] = 0U;
 
     return hex;
 }
@@ -131,22 +131,25 @@ sodium_hex2bin(unsigned char * const bin, const size_t bin_maxlen,
     int           ret = 0;
     unsigned char c;
     unsigned char c_acc = 0U;
-    unsigned char c_num;
+    unsigned char c_alpha0, c_alpha;
+    unsigned char c_num0, c_num;
     unsigned char c_val;
     unsigned char state = 0U;
 
     while (hex_pos < hex_len) {
         c = (unsigned char) hex[hex_pos];
-        if ((c_num = c ^ 48U) < 10U) {
-            c_val = c_num;
-        } else if ((c_num = (c & ~32U)) > 64 && c_num < 71U) {
-            c_val = c_num - 55U;
-        } else if (ignore != NULL && strchr(ignore, c) != NULL && state == 0U) {
-            hex_pos++;
-            continue;
-        } else {
+        c_num = c ^ 48U;
+        c_num0 = (c_num - 10U) >> 8;
+        c_alpha = (c & ~32U) - 55U;
+        c_alpha0 = ((c_alpha - 10U) ^ (c_alpha - 16U)) >> 8;
+        if ((c_num0 | c_alpha0) == 0U) {
+            if (ignore != NULL && state == 0U && strchr(ignore, c) != NULL) {
+                hex_pos++;
+                continue;
+            }
             break;
         }
+        c_val = (c_num0 & c_num) | (c_alpha0 & c_alpha);
         if (bin_pos >= bin_maxlen) {
             ret = -1;
             errno = ERANGE;
@@ -413,7 +416,7 @@ sodium_allocarray(size_t count, size_t size)
 {
     size_t total_size;
 
-    if (size >= (size_t) SIZE_MAX / count) {
+    if (count > (size_t) 0U && size >= (size_t) SIZE_MAX / count) {
         errno = ENOMEM;
         return NULL;
     }

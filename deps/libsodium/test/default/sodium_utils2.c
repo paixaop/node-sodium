@@ -8,7 +8,7 @@
 #include "cmptest.h"
 
 #ifdef __SANITIZE_ADDRESS__
-# error This test requires address sanitizer to be off
+# warning The sodium_utils2 test is expected to fail with address sanitizer
 #endif
 
 static void segv_handler(int sig)
@@ -39,6 +39,10 @@ int main(void)
     if (sodium_allocarray(SIZE_MAX / 2U + 1U, SIZE_MAX / 2U) != NULL) {
         return 1;
     }
+    sodium_free(sodium_allocarray(0U, 0U));
+    sodium_free(sodium_allocarray(0U, 1U));
+    sodium_free(sodium_allocarray(1U, 0U));
+
     buf = sodium_allocarray(1000U, 50U);
     memset(buf, 0, 50000U);
     sodium_free(buf);

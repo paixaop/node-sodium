@@ -226,6 +226,7 @@ am__libsodium_la_SOURCES_DIST =  \
 	crypto_auth/hmacsha512256/cp/hmac_hmacsha512256.c \
 	crypto_auth/hmacsha512256/cp/verify_hmacsha512256.c \
 	crypto_box/crypto_box.c crypto_box/crypto_box_easy.c \
+	crypto_box/crypto_box_seal.c \
 	crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305_api.c \
 	crypto_box/curve25519xsalsa20poly1305/ref/api.h \
 	crypto_box/curve25519xsalsa20poly1305/ref/after_curve25519xsalsa20poly1305.c \
@@ -472,6 +473,7 @@ am_libsodium_la_OBJECTS = crypto_aead/chacha20poly1305/sodium/libsodium_la-aead_
 	crypto_auth/hmacsha512256/cp/libsodium_la-verify_hmacsha512256.lo \
 	crypto_box/libsodium_la-crypto_box.lo \
 	crypto_box/libsodium_la-crypto_box_easy.lo \
+	crypto_box/libsodium_la-crypto_box_seal.lo \
 	crypto_box/curve25519xsalsa20poly1305/libsodium_la-box_curve25519xsalsa20poly1305_api.lo \
 	crypto_box/curve25519xsalsa20poly1305/ref/libsodium_la-after_curve25519xsalsa20poly1305.lo \
 	crypto_box/curve25519xsalsa20poly1305/ref/libsodium_la-before_curve25519xsalsa20poly1305.lo \
@@ -846,6 +848,7 @@ libsodium_la_SOURCES =  \
 	crypto_auth/hmacsha512256/cp/hmac_hmacsha512256.c \
 	crypto_auth/hmacsha512256/cp/verify_hmacsha512256.c \
 	crypto_box/crypto_box.c crypto_box/crypto_box_easy.c \
+	crypto_box/crypto_box_seal.c \
 	crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305_api.c \
 	crypto_box/curve25519xsalsa20poly1305/ref/api.h \
 	crypto_box/curve25519xsalsa20poly1305/ref/after_curve25519xsalsa20poly1305.c \
@@ -1142,6 +1145,9 @@ crypto_box/$(DEPDIR)/$(am__dirstamp):
 crypto_box/libsodium_la-crypto_box.lo: crypto_box/$(am__dirstamp) \
 	crypto_box/$(DEPDIR)/$(am__dirstamp)
 crypto_box/libsodium_la-crypto_box_easy.lo:  \
+	crypto_box/$(am__dirstamp) \
+	crypto_box/$(DEPDIR)/$(am__dirstamp)
+crypto_box/libsodium_la-crypto_box_seal.lo:  \
 	crypto_box/$(am__dirstamp) \
 	crypto_box/$(DEPDIR)/$(am__dirstamp)
 crypto_box/curve25519xsalsa20poly1305/$(am__dirstamp):
@@ -2108,6 +2114,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_auth/hmacsha512256/cp/$(DEPDIR)/libsodium_la-verify_hmacsha512256.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_box/$(DEPDIR)/libsodium_la-crypto_box.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_box/$(DEPDIR)/libsodium_la-crypto_box_easy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@crypto_box/$(DEPDIR)/libsodium_la-crypto_box_seal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_box/curve25519xsalsa20poly1305/$(DEPDIR)/libsodium_la-box_curve25519xsalsa20poly1305_api.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_box/curve25519xsalsa20poly1305/ref/$(DEPDIR)/libsodium_la-after_curve25519xsalsa20poly1305.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@crypto_box/curve25519xsalsa20poly1305/ref/$(DEPDIR)/libsodium_la-before_curve25519xsalsa20poly1305.Plo@am__quote@
@@ -2396,6 +2403,13 @@ crypto_box/libsodium_la-crypto_box_easy.lo: crypto_box/crypto_box_easy.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='crypto_box/crypto_box_easy.c' object='crypto_box/libsodium_la-crypto_box_easy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsodium_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o crypto_box/libsodium_la-crypto_box_easy.lo `test -f 'crypto_box/crypto_box_easy.c' || echo '$(srcdir)/'`crypto_box/crypto_box_easy.c
+
+crypto_box/libsodium_la-crypto_box_seal.lo: crypto_box/crypto_box_seal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsodium_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT crypto_box/libsodium_la-crypto_box_seal.lo -MD -MP -MF crypto_box/$(DEPDIR)/libsodium_la-crypto_box_seal.Tpo -c -o crypto_box/libsodium_la-crypto_box_seal.lo `test -f 'crypto_box/crypto_box_seal.c' || echo '$(srcdir)/'`crypto_box/crypto_box_seal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) crypto_box/$(DEPDIR)/libsodium_la-crypto_box_seal.Tpo crypto_box/$(DEPDIR)/libsodium_la-crypto_box_seal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='crypto_box/crypto_box_seal.c' object='crypto_box/libsodium_la-crypto_box_seal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsodium_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o crypto_box/libsodium_la-crypto_box_seal.lo `test -f 'crypto_box/crypto_box_seal.c' || echo '$(srcdir)/'`crypto_box/crypto_box_seal.c
 
 crypto_box/curve25519xsalsa20poly1305/libsodium_la-box_curve25519xsalsa20poly1305_api.lo: crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305_api.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsodium_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT crypto_box/curve25519xsalsa20poly1305/libsodium_la-box_curve25519xsalsa20poly1305_api.lo -MD -MP -MF crypto_box/curve25519xsalsa20poly1305/$(DEPDIR)/libsodium_la-box_curve25519xsalsa20poly1305_api.Tpo -c -o crypto_box/curve25519xsalsa20poly1305/libsodium_la-box_curve25519xsalsa20poly1305_api.lo `test -f 'crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305_api.c' || echo '$(srcdir)/'`crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305_api.c
