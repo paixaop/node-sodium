@@ -76,4 +76,17 @@ describe("Auth", function () {
             auth.validate("123123", "123123");
         }).should.throw();
     });
+
+    it('should set an encoding if a supported encoding is passed to setEncoding', function() {
+        var auth = new Auth();
+        auth.setEncoding('base64');
+        auth.defaultEncoding.should.equal('base64');
+    });
+
+    it('should fail to set an encoding if an unsupported encoding is passed to setEncoding', function() {
+        var auth = new Auth();
+        (function () {
+            auth.setEncoding('unsupported-encoding');
+        }).should.throw();
+    });
 });

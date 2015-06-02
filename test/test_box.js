@@ -28,6 +28,34 @@ describe("Box", function () {
         done();
     });
 
+    it("encrypt should throw if no first argument", function () {
+        var box = new Box();
+        (function() {
+            box.decrypt();
+        }).should.throw();
+    });
+
+    it("encrypt should throw if the first argument is not an object with `cipherText` and `nonce` properties", function () {
+        var box = new Box();
+        (function() {
+            box.decrypt({});
+        }).should.throw();
+        (function() {
+            box.decrypt({cipherText: new Buffer('foo')});
+        }).should.throw();
+        (function() {
+            box.decrypt({nonce: 'bar'});
+        }).should.throw();
+    });
+
+    it("encrypt show throw if cipherBox.cipherText is not a buffer", function () {
+        var box = new Box();
+        (function() {
+            box.decrypt({cipherText: "not a buffer", nonce: "foo"});
+        }).should.throw();
+    });
+
+
     it("key size should match that of sodium", function (done) {
         var box = new Box();
         box.key().getPublicKey().size().should.eql(sodium.crypto_box_PUBLICKEYBYTES);
@@ -87,4 +115,16 @@ describe("Box", function () {
         done();
     });
 
+    it('should set an encoding if a supported encoding is passed to setEncoding', function() {
+        var box = new Box();
+        box.setEncoding('base64');
+        box.defaultEncoding.should.equal('base64');
+    });
+
+    it('should fail to set an encoding if an unsupported encoding is passed to setEncoding', function() {
+        var box = new Box();
+        (function () {
+            box.setEncoding('unsupported-encoding');
+        }).should.throw();
+    });
 });
