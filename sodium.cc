@@ -890,6 +890,64 @@ NAN_METHOD(bind_crypto_sign_verify_detached) {
 }
 
 /**
+ * Convert a ed25519 signing public key to a curve25519 exchange key.
+ *
+ * Parameters:
+ *    [out] curve25519_pk the public exchange key.
+ *    [in]  ed25519_pk    the public signing key.
+ *
+ * Returns:
+ *    0
+ *
+ * Precondition:
+ *    ed25519_pk must be a ed25519 public key.
+ */
+
+NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
+    NanEscapableScope();
+
+    NUMBER_OF_MANDATORY_ARGS(1, "argument ed25519_pk must be a buffer")
+
+    GET_ARG_AS_UCHAR_LEN(0, ed25519_pk, crypto_sign_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
+
+    crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk);
+
+    NanReturnValue(curve25519_pk);
+}
+
+
+/**
+ * Convert a ed25519 signing secret key to a curve25519 exchange key.
+ *
+ * Parameters:
+ *    [out] curve25519_sk the secret exchange key.
+ *    [in]  ed25519_sk    the secret signing key.
+ *
+ * Returns:
+ *    0
+ *
+ * Precondition:
+ *    ed25519_sk must be a ed25519 secret key.
+ */
+
+
+NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
+    NanEscapableScope();
+
+    NUMBER_OF_MANDATORY_ARGS(1, "argument ed25519_sk must be a buffer");
+
+    GET_ARG_AS_UCHAR_LEN(0, ed25519_sk, crypto_sign_SECRETKEYBYTES);
+    NEW_BUFFER_AND_PTR(curve25519_sk, crypto_box_SECRETKEYBYTES);
+
+    crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk);
+
+    NanReturnValue(curve25519_sk);
+}
+
+
+
+/**
  * Encrypts a message given the senders secret key, and receivers public key.
  * int crypto_box	(
  *    unsigned char * ctxt,
@@ -1429,6 +1487,8 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(crypto_sign_seed_keypair);
     NEW_METHOD(crypto_sign_open);
     NEW_METHOD(crypto_sign_verify_detached);
+    NEW_METHOD(crypto_sign_ed25519_pk_to_curve25519);
+    NEW_METHOD(crypto_sign_ed25519_sk_to_curve25519);
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
