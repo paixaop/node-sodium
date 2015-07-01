@@ -1561,6 +1561,8 @@ void RegisterModule(Handle<Object> target) {
     // Secret Box
     NEW_METHOD(crypto_secretbox);
     NEW_METHOD(crypto_secretbox_open);
+    NEW_METHOD(crypto_secretbox_easy);
+    NEW_METHOD(crypto_secretbox_open_easy);
     NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
     NEW_INT_PROP(crypto_secretbox_KEYBYTES);
     NEW_INT_PROP(crypto_secretbox_NONCEBYTES);
