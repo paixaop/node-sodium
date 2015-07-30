@@ -639,6 +639,93 @@ NAN_METHOD(bind_crypto_secretbox_open) {
 }
 
 /**
+ * Encrypts and authenticates a message using the given secret key, and nonce.
+ *
+ * int crypto_secretbox_easy(
+ *    unsigned char *ctxt,
+ *    const unsigned char *msg,
+ *    unsigned long long mlen,
+ *    const unsigned char *nonce,
+ *    const unsigned char *key)
+ *
+ * Parameters:
+ *    [out] ctxt   the buffer for the cipher-text.
+ *    [in]   msg   the message to be encrypted.
+ *    [in]   mlen   the length of msg.
+ *    [in]   nonce   a nonce with length crypto_box_NONCEBYTES.
+ *    [in]   key   the shared secret key.
+ *
+ * Returns:
+ *    0 if operation is successful.
+ *
+ * Precondition:
+ *
+ * Postcondition:
+ *    first mlen + crypto_secretbox_MACLENGTH bytes of ctxt will contain the ciphertext.
+ */
+
+NAN_METHOD(bind_crypto_secretbox_easy) {
+		NanEscapableScope();
+		
+		NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
+		
+		GET_ARG_AS_UCHAR(0, message);
+		GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
+		GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+		
+		NEW_BUFFER_AND_PTR(c, message_size + crypto_secretbox_MACBYTES);
+
+		if( crypto_secretbox_easy(c_ptr, message, message_size, nonce, key) == 0) {
+				NanReturnValue(c);
+		}
+		NanReturnUndefined();
+}
+/**
+ * int crypto_secretbox_open_easy(
+ *    unsigned char *msg,
+ *    const unsigned char *ctxt,
+ *    unsigned long long clen,
+ *    const unsigned char *nonce,
+ *    const unsigned char *key)
+ * Parameters:
+ *    [out] msg   the buffer to place resulting plaintext.
+ *    [in]   ctxt   the ciphertext to be decrypted.
+ *    [in]   clen   the length of the ciphertext.
+ *    [in]   nonce   a randomly generated nonce.
+ *    [in]   key   the shared secret key.
+ *
+ * Returns:
+ *    0 if successful and -1 if verification fails.
+ *
+ * Precondition:
+ *    the nonce must be of length crypto_secretbox_NONCEBYTES
+ *
+ * Postcondition:
+ *    first clen - crypto_secretbox_MACBYTES bytes of msg will contain the plaintext.
+ *
+ * Warning:
+ *    if verification fails msg may contain data from the computation.
+ */
+
+NAN_METHOD(bind_crypto_secretbox_open_easy) {
+		NanEscapableScope();
+		
+		NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
+		
+		GET_ARG_AS_UCHAR(0, cipher_text);
+		GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
+		GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+		
+		NEW_BUFFER_AND_PTR(c, cipher_text_size - crypto_secretbox_MACBYTES);
+
+		if( crypto_secretbox_open_easy(c_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
+				NanReturnValue(c);
+		}
+		NanReturnUndefined();
+}
+
+
+/**
  * Signs a given message using the signer's signing key.
  *
  * int crypto_sign(
@@ -1474,6 +1561,8 @@ void RegisterModule(Handle<Object> target) {
     // Secret Box
     NEW_METHOD(crypto_secretbox);
     NEW_METHOD(crypto_secretbox_open);
+    NEW_METHOD(crypto_secretbox_easy);
+    NEW_METHOD(crypto_secretbox_open_easy);
     NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
     NEW_INT_PROP(crypto_secretbox_KEYBYTES);
     NEW_INT_PROP(crypto_secretbox_NONCEBYTES);

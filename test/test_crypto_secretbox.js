@@ -93,6 +93,7 @@ var key = new Buffer(keyA);
 var nonce = new Buffer(nonceA);
 var plainText = new Buffer(plainTextB);
 var cipherText = new Buffer(cipherTextA);
+var cipherTextEasy = cipherText.slice(16, cipherText.length);
 
 describe('Secretbox', function() {
     it('crypto_secretbox should return a buffer', function(done) {
@@ -120,136 +121,75 @@ describe('Secretbox', function() {
     });
 });
 
-describe("crypto_secretbox verify parameters", function () {
-    it('bad param 1 string', function(done) {
-        plainText = "token";
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
+describe('Secretbox_easy', function() {
+    it('crypto_secretbox_easy should return a buffer', function(done) {
+        var r = sodium.crypto_secretbox_easy(plainText,nonce,key);
+        if( !r ) {
+      	    should.fail();
+        }
+
+        r.should.eql(cipherTextEasy);
         done();
     });
 
-    it('bad param 1 small number', function(done) {
-        plainText = 2;
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
+    it('crypto_secretbox_easy/crypto_secretbox_open_easy should encrypt/decrypt', function(done) {
+        //var plainMsg = crypto.randomBytes(1000);
+        var cipherMsg = sodium.crypto_secretbox_easy(plainText,nonce,key);
+        if( !cipherMsg ) {
+            should.fail();
+        }
+        var plainMsg = sodium.crypto_secretbox_open_easy(cipherMsg,nonce,key);
+        if( !plainMsg ) {
+            should.fail();
+        }
 
-    it('bad param 2 string', function(done) {
-        nonce = "token";
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 2 small number', function(done) {
-        nonce = 2;
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 2 small buffer', function(done) {
-        nonce = new Buffer(2);
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 3 string', function(done) {
-        key = "token";
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 3 small number', function(done) {
-        key = 2;
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 3 small buffer', function(done) {
-        key = new Buffer(2);
-        (function() {
-            var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        }).should.throw();
+        plainMsg.should.eql(plainText);
         done();
     });
 });
 
-describe("crypto_secretbox_open verify parameters", function () {
-    var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
+function method_parameter_types (name, fn, good, bad) {
+    describe(name + ' verify parameters', function () {
+        good.forEach(function(v, i) {
+            bad.forEach(function (bad) {
+                var input = good.slice()
+                input[i] = bad
+                it('bad param '+(i+1)+' ' + typeof bad, function (done) {
 
-    it('bad param 1 string', function(done) {
-        cipherMsg = "token";
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
+                    (function() {
+                        var cipherMsg = fn.apply(null, input);
+                    }).should.throw();
+                    done();
 
-    it('bad param 1 small number', function(done) {
-        cipherMsg = 2;
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
+                });
+            });
+        });
     });
+}
 
-    it('bad param 2 string', function(done) {
-        nonce = "token";
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
+var areBuffers = [plainText, nonce, key]
+var notBuffers = [1, 'hello', null, true]
+var nonceAndKey = [nonce, key]
+var smallBuffers = [new Buffer(2), new Buffer(12)]
 
-    it('bad param 2 small number', function(done) {
-        nonce = 2;
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
+;[
+    'crypto_secretbox',
+    'crypto_secretbox_easy',
+    'crypto_secretbox_open',
+    'crypto_secretbox_open_easy',
+].forEach(function (name) {
+    method_parameter_types(
+        name,
+        sodium[name],
+        areBuffers,
+        notBuffers
+    )
+    method_parameter_types(
+        name,
+        sodium[name].bind(null, plainText),
+        nonceAndKey,
+        smallBuffers
+    )
 
-    it('bad param 2 small buffer', function(done) {
-        nonce = new Buffer(2);
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
+})
 
-    it('bad param 3 string', function(done) {
-        key = "token";
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 3 small number', function(done) {
-        key = 2;
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
-
-    it('bad param 3 small buffer', function(done) {
-        key = new Buffer(2);
-        (function() {
-            var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        }).should.throw();
-        done();
-    });
-});
