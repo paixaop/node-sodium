@@ -8,11 +8,11 @@
     "nan": "^1.6.2"
   },
   "devDependencies": {
-    "istanbul": ">=0.2.6",
-    "mocha": ">=0.14.1",
-    "mocha-istanbul": ">=0.2.0",
-    "node-gyp": ">=1.0.2",
-    "should": ">=2.1.0"
+    "istanbul": "^0.2.6",
+    "mocha": "^0.14.1",
+    "mocha-istanbul": "^0.2.0",
+    "node-gyp": "^1.0.2",
+    "should": "^2.1.0"
   },
   "scripts": {
     "test": "make test",
