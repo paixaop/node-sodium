@@ -16,8 +16,10 @@ node-sodium.sublime-workspace
 *.deps
 *.dirstamp
 *.la
+*.log
 coverage/
 deps/libsodium.gyp
+deps/libsodium/libtool
 deps/libsodium/autom4te.cache/*
 deps/libsodium/config.log
 deps/libsodium/config.status
@@ -29,3 +31,4 @@ deps/libsodium/src/libsodium/Makefile
 deps/libsodium/src/Makefile
 deps/libsodium/test/default/Makefile
 deps/libsodium/test/Makefile
+deps/libsodium/libtool
