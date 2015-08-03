@@ -21,6 +21,7 @@ coverage/
 deps/libsodium.gyp
 deps/libsodium/libtool
 deps/libsodium/autom4te.cache/*
+deps/libsodium/autom4te.cache/traces.0
 deps/libsodium/config.log
 deps/libsodium/config.status
 deps/libsodium/dist-build/Makefile
