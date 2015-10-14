@@ -27,7 +27,7 @@ getEncoding()
 Get the current default encoding
 
 
-encrypt(message, \[encoding)
+encrypt(message, \[encoding\])
 ----------------------------
 Encrypt the message
 
