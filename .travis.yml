@@ -3,13 +3,5 @@ node_js:
   - "0.10"
   - "0.11"
   - "0.12"
-branches:
-  only:
-    - master
-    - develop
-notifications:
-  email:
-    - paixaop@gmail.com
-script: npm test
-before_install:
-  - make configure
+  -  4
+
