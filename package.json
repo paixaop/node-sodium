@@ -5,7 +5,8 @@
   "license": "MIT",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "nan": "^2.0.9"
+    "nan": "^2.0.9",
+    "prebuild": "^2.8.1"
   },
   "devDependencies": {
     "istanbul": ">=0.2.6",
@@ -16,8 +17,8 @@
   },
   "scripts": {
     "test": "make test",
-    "preinstall": "make",
-    "install": "node-gyp rebuild"
+    "install": "prebuild --install --preinstall make",
+    "prebuild": "prebuild --all --strip"
   },
   "repository": {
     "type": "git",

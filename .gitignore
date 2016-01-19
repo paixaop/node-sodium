@@ -53,3 +53,4 @@ deps/libsodium/src/libsodium/Makefile.in
 deps/libsodium/src/libsodium/include/Makefile.in
 deps/libsodium/test/Makefile.in
 deps/libsodium/test/default/Makefile.in
+prebuilds/
