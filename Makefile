@@ -5,7 +5,7 @@ BINDIR = ./node_modules/.bin
 LIBSODIUM_DIR = ./deps/libsodium
 
 configure:
-	@cd $(LIBSODIUM_DIR)/ && ./autogen.sh
+  #@cd $(LIBSODIUM_DIR)/ && ./autogen.sh
 	@cd $(LIBSODIUM_DIR)/ && ./configure
 	@node defines.js
 	
