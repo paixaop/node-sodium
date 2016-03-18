@@ -1,17 +1,19 @@
 
 #include <limits.h>
+#include <stdint.h>
 #include <string.h>
 
-#include "api.h"
 #include "crypto_hash_sha512.h"
+#include "crypto_sign_ed25519.h"
 #include "crypto_verify_32.h"
-#include "ge.h"
-#include "sc.h"
 #include "utils.h"
+#include "../../../crypto_core/curve25519/ref10/curve25519_ref10.h"
 
 int
-crypto_sign_verify_detached(const unsigned char *sig, const unsigned char *m,
-                            unsigned long long mlen, const unsigned char *pk)
+crypto_sign_ed25519_verify_detached(const unsigned char *sig,
+                                    const unsigned char *m,
+                                    unsigned long long mlen,
+                                    const unsigned char *pk)
 {
     crypto_hash_sha512_state hs;
     unsigned char h[64];
@@ -48,9 +50,9 @@ crypto_sign_verify_detached(const unsigned char *sig, const unsigned char *m,
 }
 
 int
-crypto_sign_open(unsigned char *m, unsigned long long *mlen_p,
-                 const unsigned char *sm, unsigned long long smlen,
-                 const unsigned char *pk)
+crypto_sign_ed25519_open(unsigned char *m, unsigned long long *mlen_p,
+                         const unsigned char *sm, unsigned long long smlen,
+                         const unsigned char *pk)
 {
     unsigned long long mlen;
 
@@ -58,7 +60,7 @@ crypto_sign_open(unsigned char *m, unsigned long long *mlen_p,
         goto badsig;
     }
     mlen = smlen - 64;
-    if (crypto_sign_verify_detached(sm, sm + 64, mlen, pk) != 0) {
+    if (crypto_sign_ed25519_verify_detached(sm, sm + 64, mlen, pk) != 0) {
         memset(m, 0, mlen);
         goto badsig;
     }

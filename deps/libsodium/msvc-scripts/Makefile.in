@@ -90,6 +90,7 @@ host_triplet = @host@
 subdir = msvc-scripts
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/ld-output-def.m4 $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -138,6 +139,13 @@ CCASDEPMODE = @CCASDEPMODE@
 CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+CFLAGS_AESNI = @CFLAGS_AESNI@
+CFLAGS_MMX = @CFLAGS_MMX@
+CFLAGS_PCLMUL = @CFLAGS_PCLMUL@
+CFLAGS_SSE2 = @CFLAGS_SSE2@
+CFLAGS_SSE3 = @CFLAGS_SSE3@
+CFLAGS_SSE41 = @CFLAGS_SSE41@
+CFLAGS_SSSE3 = @CFLAGS_SSSE3@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CWFLAGS = @CWFLAGS@
@@ -156,6 +164,7 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
 HAVE_AMD64_ASM_V = @HAVE_AMD64_ASM_V@
+HAVE_AVX_ASM_V = @HAVE_AVX_ASM_V@
 HAVE_CPUID_V = @HAVE_CPUID_V@
 HAVE_TI_MODE_V = @HAVE_TI_MODE_V@
 INSTALL = @INSTALL@

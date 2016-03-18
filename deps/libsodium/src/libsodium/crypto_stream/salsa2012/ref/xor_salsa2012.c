@@ -4,8 +4,8 @@ D. J. Bernstein
 Public domain.
 */
 
-#include "api.h"
 #include "crypto_core_salsa2012.h"
+#include "crypto_stream_salsa2012.h"
 #include "utils.h"
 
 typedef unsigned int uint32;
@@ -14,7 +14,7 @@ static const unsigned char sigma[16] = {
     'e', 'x', 'p', 'a', 'n', 'd', ' ', '3', '2', '-', 'b', 'y', 't', 'e', ' ', 'k'
 };
 
-int crypto_stream_xor(
+int crypto_stream_salsa2012_xor(
         unsigned char *c,
   const unsigned char *m,unsigned long long mlen,
   const unsigned char *n,

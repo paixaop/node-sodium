@@ -160,6 +160,100 @@ NAN_METHOD(bind_sodium_bin2hex) {
     return Nan::ThrowError("use node's native Buffer.toString()");
 }
 
+/**
+ * void sodium_increment(unsigned char *n, const size_t nlen);
+ *
+ */
+NAN_METHOD(bind_sodium_increment) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+
+    GET_ARG_AS_UCHAR(0, buffer_1);
+
+    size_t size;
+    if (info[1]->IsUint32()) {
+        size = info[2]->Int32Value();
+    } else {
+        return Nan::ThrowError("argument size must be a positive number");
+    }
+
+    sodium_increment(buffer_1, size);
+
+    return info.GetReturnValue().Set(Nan::Null());
+}
+
+/**
+ * int sodium_compare(const unsigned char *b1_, const unsigned char *b2, size_t len);
+ */
+NAN_METHOD(bind_soium_compare) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
+
+    GET_ARG_AS_UCHAR(0, buffer_1);
+    GET_ARG_AS_UCHAR(1, buffer_2);
+
+    size_t size;
+    if (info[2]->IsUint32()) {
+        size = info[2]->Int32Value();
+    } else {
+        return Nan::ThrowError("argument size must be a positive number");
+    }
+
+    size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
+
+    if( s < size ) {
+        size = s;
+    }
+
+    return info.GetReturnValue().Set(
+        Nan::New<Integer>(sodium_compare(buffer_1, buffer_2, size))
+    );
+}
+
+/**
+ * void sodium_add(unsigned char *a, const unsigned char *b, const size_t len);
+ */
+ NAN_METHOD(bind_sodium_add) {
+     Nan::EscapableHandleScope scope;
+
+     NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
+
+     GET_ARG_AS_UCHAR(0, buffer_1);
+     GET_ARG_AS_UCHAR(1, buffer_2);
+
+     size_t size;
+     if (info[2]->IsUint32()) {
+         size = info[2]->Int32Value();
+     } else {
+         return Nan::ThrowError("argument size must be a positive number");
+     }
+
+     sodium_add(buffer_1, buffer_2, size) == 0 )
+     return info.GetReturnValue().Set(buffer_1);
+}
+
+/**
+ * `int sodium_is_zero(const unsigned char *n, const size_t nlen);
+ */
+ NAN_METHOD(bind_sodium_is_zero) {
+     Nan::EscapableHandleScope scope;
+
+     NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+
+     GET_ARG_AS_UCHAR(0, buffer_1);
+
+     size_t size;
+     if (info[1]->IsUint32()) {
+         size = info[1]->Int32Value();
+     } else {
+         return Nan::ThrowError("argument size must be a positive number");
+     }
+
+     return info.GetReturnValue().Set(sodium_is_zero(buffer_1, size));
+}
+
 // Lib Sodium Random
 
 // void randombytes_buf(void *const buf, const size_t size)
@@ -1567,11 +1661,25 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(sodium_library_version_minor);
     NEW_METHOD(sodium_library_version_major);
 
-    // register utilities
-    NEW_METHOD(memzero);
-    NEW_METHOD(memcmp);
+    // Helpers
+    // Docs: https://download.libsodium.org/doc/helpers/index.html
 
-    // register random utilities
+    // Constant-time test for equality
+    NEW_METHOD(memcmp);
+    NEW_METHOD(memzero);
+
+    // Hexadecimal encoding/decoding
+    NEW_METHOD(sodium_bin2hex);
+    NEW_METHOD(sodium_hex2bin);
+
+    // Large Numbers
+    NEW_METHOD(sodium_increment);
+    NEW_METHOD(sodium_add);
+    NEW_METHOD(sodium_compare);
+    NEW_METHOD(sodium_is_zero);
+
+    // Generating Random Data
+    // Docs: https://download.libsodium.org/doc/generating_random_data/index.html
     NEW_METHOD(randombytes_buf);
     Nan::SetMethod(target, "randombytes", bind_randombytes_buf);
     NEW_METHOD(randombytes_close);
