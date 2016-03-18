@@ -24,22 +24,22 @@
 
 #include <string.h>
 #include <stdint.h>
-#include "api.h"
 
 #ifdef HAVE_TI_MODE
+
+#include "utils.h"
+#include "curve25519_donna_c64.h"
+#include "../scalarmult_curve25519.h"
 
 typedef uint8_t u8;
 typedef uint64_t limb;
 typedef limb felem[5];
 // This is a special gcc mode for 128-bit integers. It's implemented on 64-bit
 // platforms only as far as I know.
-typedef unsigned uint128_t __attribute__((mode(TI)));
-
-#undef force_inline
-#define force_inline __attribute__((always_inline))
+typedef unsigned uint128_t __attribute__ ((mode(TI)));
 
 /* Sum two numbers: output += in */
-static inline void force_inline
+static inline void
 fsum(limb *output, const limb *in) {
   output[0] += in[0];
   output[1] += in[1];
@@ -54,7 +54,7 @@ fsum(limb *output, const limb *in) {
  * Assumes that out[i] < 2**52
  * On return, out[i] < 2**55
  */
-static inline void force_inline
+static inline void
 fdifference_backwards(felem out, const felem in) {
   /* 152 is 19 << 3 */
   static const limb two54m152 = (((limb)1) << 54) - 152;
@@ -68,7 +68,7 @@ fdifference_backwards(felem out, const felem in) {
 }
 
 /* Multiply a number by a scalar: output = in * scalar */
-static inline void force_inline
+static inline void
 fscalar_product(felem output, const felem in, const limb scalar) {
   uint128_t a;
 
@@ -98,7 +98,7 @@ fscalar_product(felem output, const felem in, const limb scalar) {
  * Assumes that in[i] < 2**55 and likewise for in2.
  * On return, output[i] < 2**52
  */
-static inline void force_inline
+static inline void
 fmul(felem output, const felem in2, const felem in) {
   uint128_t t[5];
   limb r0,r1,r2,r3,r4,s0,s1,s2,s3,s4,c;
@@ -147,7 +147,7 @@ fmul(felem output, const felem in2, const felem in) {
   output[4] = r4;
 }
 
-static inline void force_inline
+static inline void
 fsquare_times(felem output, const felem in, limb count) {
   uint128_t t[5];
   limb r0,r1,r2,r3,r4,c;
@@ -190,18 +190,18 @@ fsquare_times(felem output, const felem in, limb count) {
 }
 
 #ifdef NATIVE_LITTLE_ENDIAN
-static inline limb force_inline
+static inline limb
 load_limb(const u8 *in) {
     limb out;
     memcpy(&out, in, sizeof (limb));
     return out;
 }
-static inline void force_inline
+static inline void
 store_limb(u8 *out, limb in) {
     memcpy(out, &in, sizeof (limb));
 }
 #else
-static inline limb force_inline
+static inline limb
 load_limb(const u8 *in) {
   return
     ((limb)in[0]) |
@@ -214,7 +214,7 @@ load_limb(const u8 *in) {
     (((limb)in[7]) << 56);
 }
 
-static inline void force_inline
+static inline void
 store_limb(u8 *out, limb in) {
   out[0] = in & 0xff;
   out[1] = (in >> 8) & 0xff;
@@ -442,8 +442,12 @@ crecip(felem out, const felem z) {
   /* 2^255 - 21 */ fmul(out, t0, a);
 }
 
-int
-crypto_scalarmult(u8 *mypublic, const u8 *secret, const u8 *basepoint) {
+static const unsigned char basepoint[32] = {9};
+
+static int
+crypto_scalarmult_curve25519_donna_c64(unsigned char *mypublic,
+                                       const unsigned char *secret,
+                                       const unsigned char *basepoint) {
   limb bp[5], x[5], z[5], zmone[5];
   uint8_t e[32];
   int i;
@@ -460,5 +464,18 @@ crypto_scalarmult(u8 *mypublic, const u8 *secret, const u8 *basepoint) {
   fcontract(mypublic, z);
   return 0;
 }
+
+static int
+crypto_scalarmult_curve25519_donna_c64_base(unsigned char *q,
+                                            const unsigned char *n)
+{
+  return crypto_scalarmult_curve25519_donna_c64(q, n, basepoint);
+}
+
+struct crypto_scalarmult_curve25519_implementation
+crypto_scalarmult_curve25519_donna_c64_implementation = {
+    SODIUM_C99(.mult = ) crypto_scalarmult_curve25519_donna_c64,
+    SODIUM_C99(.mult_base = ) crypto_scalarmult_curve25519_donna_c64_base
+};
 
 #endif
