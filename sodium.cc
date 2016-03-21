@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
-    #include <string>
+#include <string>
 #include <sstream>
 
 #include <nan.h>
@@ -160,6 +160,12 @@ NAN_METHOD(bind_sodium_bin2hex) {
     return Nan::ThrowError("use node's native Buffer.toString()");
 }
 
+NAN_METHOD(bind_sodium_hex2bin) {
+    Nan::HandleScope scope;
+
+    return Nan::ThrowError("use node's native Buffer.toString()");
+}
+
 /**
  * void sodium_increment(unsigned char *n, const size_t nlen);
  *
@@ -186,7 +192,7 @@ NAN_METHOD(bind_sodium_increment) {
 /**
  * int sodium_compare(const unsigned char *b1_, const unsigned char *b2, size_t len);
  */
-NAN_METHOD(bind_soium_compare) {
+NAN_METHOD(bind_sodium_compare) {
     Nan::EscapableHandleScope scope;
 
     NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
@@ -230,8 +236,8 @@ NAN_METHOD(bind_soium_compare) {
          return Nan::ThrowError("argument size must be a positive number");
      }
 
-     sodium_add(buffer_1, buffer_2, size) == 0 )
-     return info.GetReturnValue().Set(buffer_1);
+     sodium_add(buffer_1, buffer_2, size);
+     return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
@@ -251,7 +257,9 @@ NAN_METHOD(bind_soium_compare) {
          return Nan::ThrowError("argument size must be a positive number");
      }
 
-     return info.GetReturnValue().Set(sodium_is_zero(buffer_1, size));
+     return info.GetReturnValue().Set(
+       Nan::New<Integer>(sodium_is_zero(buffer_1, size))
+     );
 }
 
 // Lib Sodium Random
@@ -1140,7 +1148,9 @@ NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
     GET_ARG_AS_UCHAR_LEN(0, ed25519_pk, crypto_sign_PUBLICKEYBYTES);
     NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
 
-    crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk);
+    if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
+      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
+    }
 
     return info.GetReturnValue().Set(curve25519_pk);
 }
@@ -1169,7 +1179,9 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
     GET_ARG_AS_UCHAR_LEN(0, ed25519_sk, crypto_sign_SECRETKEYBYTES);
     NEW_BUFFER_AND_PTR(curve25519_sk, crypto_box_SECRETKEYBYTES);
 
-    crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk);
+    if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
+      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
+    }
 
     return info.GetReturnValue().Set(curve25519_sk);
 }
@@ -1477,7 +1489,9 @@ NAN_METHOD(bind_crypto_box_beforenm) {
 
     NEW_BUFFER_AND_PTR(k, crypto_box_BEFORENMBYTES);
 
-    crypto_box_beforenm(k_ptr, publicKey, secretKey);
+    if( crypto_box_beforenm(k_ptr, publicKey, secretKey) != 0) {
+      return Nan::ThrowError("crypto_box_beforenm failed");
+    }
 
     return info.GetReturnValue().Set(k);
 }
@@ -1652,7 +1666,9 @@ NAN_METHOD(bind_crypto_scalarmult) {
 
 void RegisterModule(Handle<Object> target) {
     // init sodium library before we do anything
-    sodium_init();
+    if( sodium_init() == -1 ) {
+        return Nan::ThrowError("libsodium cannot be initialized!");
+    }
 
     // Register version functions
     NEW_METHOD(sodium_version_string);
