@@ -22,6 +22,9 @@ using namespace node;
 using namespace v8;
 
 
+// As per Libsodium install docs
+#define SODIUM_STATIC
+
 // get handle to the global object
 Local<Object> globalObj = Nan::GetCurrentContext()->Global();
 
