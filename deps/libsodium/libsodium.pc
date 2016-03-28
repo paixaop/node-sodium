@@ -1,4 +1,4 @@
-prefix=/Users/pedro/IDrive-Sync/work/node-sodium/deps/staticlib
+prefix=/Users/pedro/IDrive-Sync/work/node-sodium/deps/build
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
