@@ -157,13 +157,13 @@ NAN_METHOD(bind_memcmp) {
  * char *sodium_bin2hex(char * const hex, const size_t hexlen,
  *                    const unsigned char *bin, const size_t binlen);
  */
-NAN_METHOD(bind_sodium_bin2hex) {
+NAN_METHOD(bind_bin2hex) {
     Nan::HandleScope scope;
 
     return Nan::ThrowError("use node's native Buffer.toString()");
 }
 
-NAN_METHOD(bind_sodium_hex2bin) {
+NAN_METHOD(bind_hex2bin) {
     Nan::HandleScope scope;
 
     return Nan::ThrowError("use node's native Buffer.toString()");
@@ -173,21 +173,13 @@ NAN_METHOD(bind_sodium_hex2bin) {
  * void sodium_increment(unsigned char *n, const size_t nlen);
  *
  */
-NAN_METHOD(bind_sodium_increment) {
+NAN_METHOD(bind_increment) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
 
-    GET_ARG_AS_UCHAR(0, buffer_1);
-
-    size_t size;
-    if (info[1]->IsUint32()) {
-        size = info[2]->Int32Value();
-    } else {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
-
-    sodium_increment(buffer_1, size);
+    GET_ARG_AS_UCHAR(0, buffer);
+    sodium_increment(buffer, buffer_size);
 
     return info.GetReturnValue().Set(Nan::Null());
 }
@@ -195,7 +187,7 @@ NAN_METHOD(bind_sodium_increment) {
 /**
  * int sodium_compare(const unsigned char *b1_, const unsigned char *b2, size_t len);
  */
-NAN_METHOD(bind_sodium_compare) {
+NAN_METHOD(bind_compare) {
     Nan::EscapableHandleScope scope;
 
     NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
@@ -224,7 +216,7 @@ NAN_METHOD(bind_sodium_compare) {
 /**
  * void sodium_add(unsigned char *a, const unsigned char *b, const size_t len);
  */
- NAN_METHOD(bind_sodium_add) {
+ NAN_METHOD(bind_add) {
      Nan::EscapableHandleScope scope;
 
      NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
@@ -246,7 +238,7 @@ NAN_METHOD(bind_sodium_compare) {
 /**
  * `int sodium_is_zero(const unsigned char *n, const size_t nlen);
  */
- NAN_METHOD(bind_sodium_is_zero) {
+ NAN_METHOD(bind_is_zero) {
      Nan::EscapableHandleScope scope;
 
      NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
@@ -1688,14 +1680,14 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(memzero);
 
     // Hexadecimal encoding/decoding
-    NEW_METHOD(sodium_bin2hex);
-    NEW_METHOD(sodium_hex2bin);
+    NEW_METHOD(bin2hex);
+    NEW_METHOD(hex2bin);
 
     // Large Numbers
-    NEW_METHOD(sodium_increment);
-    NEW_METHOD(sodium_add);
-    NEW_METHOD(sodium_compare);
-    NEW_METHOD(sodium_is_zero);
+    NEW_METHOD(increment);
+    NEW_METHOD(add);
+    NEW_METHOD(compare);
+    NEW_METHOD(is_zero);
 
     // Generating Random Data
     // Docs: https://download.libsodium.org/doc/generating_random_data/index.html
