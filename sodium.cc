@@ -190,71 +190,51 @@ NAN_METHOD(bind_increment) {
 NAN_METHOD(bind_compare) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
+    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
 
     GET_ARG_AS_UCHAR(0, buffer_1);
     GET_ARG_AS_UCHAR(1, buffer_2);
 
-    size_t size;
-    if (info[2]->IsUint32()) {
-        size = info[2]->Int32Value();
-    } else {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
-
-    size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
-
-    if( s < size ) {
-        size = s;
+    if( buffer_1_size != buffer_2_size ) {
+        return Nan::ThrowError("buffers need to be the same size");
     }
 
     return info.GetReturnValue().Set(
-        Nan::New<Integer>(sodium_compare(buffer_1, buffer_2, size))
+        Nan::New<Integer>(sodium_compare(buffer_1, buffer_2, buffer_1_size))
     );
 }
 
 /**
  * void sodium_add(unsigned char *a, const unsigned char *b, const size_t len);
  */
- NAN_METHOD(bind_add) {
-     Nan::EscapableHandleScope scope;
+NAN_METHOD(bind_add) {
+    Nan::EscapableHandleScope scope;
 
-     NUMBER_OF_MANDATORY_ARGS(3,"argument must be a buffer");
+    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
 
-     GET_ARG_AS_UCHAR(0, buffer_1);
-     GET_ARG_AS_UCHAR(1, buffer_2);
+    GET_ARG_AS_UCHAR(0, buffer_1);
+    GET_ARG_AS_UCHAR(1, buffer_2);
 
-     size_t size;
-     if (info[2]->IsUint32()) {
-         size = info[2]->Int32Value();
-     } else {
-         return Nan::ThrowError("argument size must be a positive number");
-     }
-
-     sodium_add(buffer_1, buffer_2, size);
-     return info.GetReturnValue().Set(Nan::Null());
+    if( buffer_1_size != buffer_2_size ) {
+        return Nan::ThrowError("buffers need to be the same size");
+    }
+    sodium_add(buffer_1, buffer_2, buffer_1_size);
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
  * `int sodium_is_zero(const unsigned char *n, const size_t nlen);
  */
- NAN_METHOD(bind_is_zero) {
-     Nan::EscapableHandleScope scope;
+NAN_METHOD(bind_is_zero) {
+    Nan::EscapableHandleScope scope;
 
-     NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
 
-     GET_ARG_AS_UCHAR(0, buffer_1);
+    GET_ARG_AS_UCHAR(0, buffer_1);
 
-     size_t size;
-     if (info[1]->IsUint32()) {
-         size = info[1]->Int32Value();
-     } else {
-         return Nan::ThrowError("argument size must be a positive number");
-     }
-
-     return info.GetReturnValue().Set(
-       Nan::New<Integer>(sodium_is_zero(buffer_1, size))
-     );
+    return info.GetReturnValue().Set(
+        Nan::New<Integer>(sodium_is_zero(buffer_1, buffer_1_size))
+    );
 }
 
 // Lib Sodium Random
