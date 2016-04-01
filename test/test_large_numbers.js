@@ -5,6 +5,7 @@
 
 var should = require('should');
 var sodium = require('../build/Release/sodium');
+var assert = require('assert');
 
 describe('LargeNumbers', function() {
     it('should increment a zero filled buffer to 3 after 3 calls', function(done) {
@@ -23,18 +24,87 @@ describe('LargeNumbers', function() {
         done();
     });
     
-     it('should add two buffers', function(done) {
+    it('should add two buffers of the same size', function(done) {
+        var buf1 = new Buffer(10);
+        var buf2 = new Buffer(10);
+        var buf3 = new Buffer(10);
+        
+        sodium.randombytes_buf(buf1);
+        buf1.copy(buf2);
+        buf3.fill(0);
+        
+        var j= sodium.randombytes_uniform(10000);
+        for(var i = 0; i < j; i++) {
+            sodium.increment(buf1);
+            sodium.increment(buf3);
+        }
+        
+        sodium.add(buf2, buf3, 10);
+        assert(sodium.compare(buf1, buf2)==0);
+        done();
+    });
+    
+    it('should throw on buffers of different sizes', function(done) {
+        var buf1 = new Buffer(10);
+        var buf2 = new Buffer(100);
+        
+        (function() {
+            sodium.add(buf1, buf2);
+        }).should.throw();
+        
+        done();
+    });
+         
+    it('add should fail on param 1 ont being a buffer', function(done) {
+        var buf = new Buffer(10);
+        (function() {
+            sodium.add("abc", buf);
+        }).should.throw();
+        done();
+    });
+    
+    it('add should fail on param 2 ont being a buffer', function(done) {
+        var buf = new Buffer(10);
+        (function() {
+            sodium.add(buf, "abc");
+        }).should.throw();
+        done();
+    });
+    
+    it('compare should return true on equal buffers', function(done) {
         var buf1 = new Buffer(10);
         var buf2 = new Buffer(10);
         
         sodium.randombytes_buf(buf1);
+        buf1.copy(buf2);
         
+        assert(sodium.compare(buf1, buf2)==0);
         
-        var zeros = 0;
-        buf[0].should.be.eql(3);
-        for(var i=1; i<buf.length; i++) {
-            buf[i].should.be.eql(0);
-        }
+        done();
+    });
+    
+    it('compare should return true on equal buffers', function(done) {
+        var buf1 = new Buffer(10);
+        var buf2 = new Buffer(10);
+        
+        sodium.randombytes_buf(buf1);
+        sodium.randombytes_buf(buf2);
+        
+        assert(sodium.compare(buf1, buf2)==-1);
+        
+        done();
+    });
+    
+    it('compare should throw on different size buffers', function(done) {
+        var buf1 = new Buffer(10);
+        var buf2 = new Buffer(100);
+        
+        sodium.randombytes_buf(buf1);
+        sodium.randombytes_buf(buf2);
+        
+        (function() {
+            sodium.compare(buf1, buf2);
+        }).should.throw();
         
         done();
     });
