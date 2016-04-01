@@ -83,14 +83,14 @@ describe('LargeNumbers', function() {
         done();
     });
     
-    it('compare should return true on equal buffers', function(done) {
+    it('compare should return not return 0 on different buffers', function(done) {
         var buf1 = new Buffer(10);
         var buf2 = new Buffer(10);
         
         sodium.randombytes_buf(buf1);
         sodium.randombytes_buf(buf2);
         
-        assert(sodium.compare(buf1, buf2)==-1);
+        assert(sodium.compare(buf1, buf2)!=0);
         
         done();
     });
