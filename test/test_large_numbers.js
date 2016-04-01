@@ -108,4 +108,18 @@ describe('LargeNumbers', function() {
         
         done();
     });
+    
+    it('is_zero test for 0', function(done) {
+        var buf = new Buffer(10);
+        buf.fill(0);
+        assert(sodium.is_zero(buf)==1);
+        done();
+    });
+    
+    it('is_zero test should be false for non zero buffers', function(done) {
+        var buf = new Buffer(10);
+        sodium.randombytes_buf(buf);
+        assert(sodium.is_zero(buf)==0);
+        done();
+    });
 });
