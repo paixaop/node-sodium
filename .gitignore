@@ -11,6 +11,8 @@ lib-cov/
 node_modules/
 node-sodium.sublime-project
 node-sodium.sublime-workspace
+*.a
+*.dylib
 *.o
 *.lo
 *.deps
@@ -53,3 +55,4 @@ deps/libsodium/src/libsodium/Makefile.in
 deps/libsodium/src/libsodium/include/Makefile.in
 deps/libsodium/test/Makefile.in
 deps/libsodium/test/default/Makefile.in
+*/.libs/*
