@@ -76,6 +76,19 @@ Local<Function> bufferConstructor =
 #define GET_ARG_AS_VOID_LEN(i, NAME, MAXLEN) \
     GET_ARG_AS_LEN(i, NAME, MAXLEN, void*)
 
+#define GET_ARG_NUMBER(i, NAME) \
+    size_t NAME; \
+    if (info[i]->IsUint32()) { \
+        NAME = info[i]->Int32Value(); \
+    } else { \
+        return Nan::ThrowError("argument size must be a number"); \
+    }
+
+#define GET_ARG_POSITIVE_NUMBER(i, NAME) \
+    GET_ARG_NUMBER(i, NAME); \
+    if( NAME < 0 ) { \
+        return Nan::ThrowError("argument size must be a positive number"); \
+    }
 
 #define NUMBER_OF_MANDATORY_ARGS(n, message) \
     if (info.Length() < (n)) {               \
@@ -130,18 +143,13 @@ NAN_METHOD(bind_memzero) {
 NAN_METHOD(bind_memcmp) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: buffer, buffer, positive number");
 
     GET_ARG_AS_VOID(0, buffer_1);
     GET_ARG_AS_VOID(1, buffer_2);
 
-    size_t size;
-    if (info[2]->IsUint32()) {
-        size = info[2]->Int32Value();
-    } else {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
-
+    GET_ARG_POSITIVE_NUMBER(2, size);
+    
     size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
 
     if( s < size ) {
@@ -1629,6 +1637,53 @@ NAN_METHOD(bind_crypto_scalarmult) {
     }
 }
 
+/**
+ * int crypto_generichash(unsigned char *out,
+ *                        size_t outlen,
+ *                        const unsigned char *in,
+ *                        unsigned long long inlen,
+ *                        const unsigned char *key,
+ *                        size_t keylen);
+ *  buffer out,
+ *  number out_size,
+ *  buffer in,
+ *  buffer key
+ */
+NAN_METHOD(bind_crypto_generichash) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: hash size, message, key");
+    
+    GET_ARG_POSITIVE_NUMBER(0, out_size);
+    
+    if( out_size > crypto_generichash_BYTES_MAX ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    if( out_size < crypto_generichash_BYTES_MIN ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    GET_ARG_AS_UCHAR(1, in);
+    GET_ARG_AS_UCHAR(2, key);
+
+    NEW_BUFFER_AND_PTR(hash, out_size);
+    memset(hash_ptr, 0, out_size);
+    
+    
+    
+    
+    if (crypto_generichash(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
+        return info.GetReturnValue().Set(hash);
+    } else {
+        return info.GetReturnValue().Set(Nan::Null());
+    }
+    
+}
 
 #define NEW_INT_PROP(NAME) \
     Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
@@ -1763,10 +1818,20 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_box_ZEROBYTES);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
 
+    // Short Hash
     NEW_METHOD(crypto_shorthash);
     NEW_INT_PROP(crypto_shorthash_BYTES);
     NEW_INT_PROP(crypto_shorthash_KEYBYTES);
     NEW_STRING_PROP(crypto_shorthash_PRIMITIVE);
+    
+    // Generic Hash
+    NEW_METHOD(crypto_generichash);
+    NEW_INT_PROP(crypto_generichash_BYTES);
+    NEW_INT_PROP(crypto_generichash_BYTES_MIN);
+    NEW_INT_PROP(crypto_generichash_BYTES_MAX);
+    NEW_INT_PROP(crypto_generichash_KEYBYTES);
+    NEW_INT_PROP(crypto_generichash_KEYBYTES_MIN);
+    NEW_INT_PROP(crypto_generichash_KEYBYTES_MAX);
 
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult);
