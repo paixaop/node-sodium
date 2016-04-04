@@ -5,6 +5,7 @@ BINDIR = ./node_modules/.bin
 LIBSODIUM_DIR = ./deps/libsodium
 
 configure:
+	git submodule update --init
 	@cd $(LIBSODIUM_DIR)/ && ./autogen.sh
 	@cd $(LIBSODIUM_DIR)/ && ./configure
 	@node defines.js
@@ -45,12 +46,7 @@ git-pull:
 	git submodule status
 
 clean:
-	-rm -fr lib-cov
-	-rm -fr covershot
-	-rm -fr html-report
-	-rm -fr coverage
-	-rm -fr coverage.html
-	-rm -fr *.o
+	-rm -fr node_modules build lib-cov covershot html-report coverage coverage.html *.o
 
 all:
 	sodium
