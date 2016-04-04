@@ -1670,23 +1670,224 @@ NAN_METHOD(bind_crypto_generichash) {
     
     GET_ARG_AS_UCHAR(1, in);
     GET_ARG_AS_UCHAR(2, key);
+    
+    if( key_size > crypto_generichash_KEYBYTES_MAX ) {
+        std::ostringstream oss;
+        oss << "generichash key size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    if( key_size != 0 && key_size < crypto_generichash_KEYBYTES_MIN ) {
+        std::ostringstream oss;
+        oss << "generichash key size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
 
     NEW_BUFFER_AND_PTR(hash, out_size);
     memset(hash_ptr, 0, out_size);
-    
-    
-    
-    
+
     if (crypto_generichash(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
         return info.GetReturnValue().Set(hash);
     } else {
         return info.GetReturnValue().Set(Nan::Null());
+    } 
+}
+
+/*
+int crypto_generichash_init(crypto_generichash_state *state,
+                            const unsigned char *key,
+                            const size_t keylen, const size_t outlen);
+  Buffer state
+  Buffer key
+  Number out_size
+  state = sodium_malloc((crypto_generichash_statebytes() + (size_t) 63U)
+ *                       & ~(size_t) 63U);
+*/
+NAN_METHOD(bind_crypto_generichash_init) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: key, out_size");
+    
+    NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U)
+                        & ~(size_t) 63U);
+    
+    GET_ARG_AS_UCHAR(0, key);
+    
+    if( key_size > crypto_generichash_KEYBYTES_MAX ) {
+        std::ostringstream oss;
+        oss << "generichash key size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
     }
     
+    if( key_size != 0 && key_size < crypto_generichash_KEYBYTES_MIN ) {
+        std::ostringstream oss;
+        oss << "generichash key size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    GET_ARG_POSITIVE_NUMBER(1, out_size);
+    
+    if( out_size > crypto_generichash_BYTES_MAX ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    if( out_size < crypto_generichash_BYTES_MIN ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    if (crypto_generichash_init((crypto_generichash_state *)state_ptr, key, key_size, out_size) == 0) {
+        return info.GetReturnValue().Set(state);
+    } else {
+        return info.GetReturnValue().Set(Nan::Null());
+    } 
+}
+
+
+/*
+int crypto_generichash_update(crypto_generichash_state *state,
+                              const unsigned char *in,
+                              unsigned long long inlen);
+                              
+    buffer state
+    buffer message
+*/
+NAN_METHOD(bind_crypto_generichash_update) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: state, message");
+    
+    GET_ARG_AS_VOID(0, state);
+    GET_ARG_AS_UCHAR(1, message);
+    
+    crypto_generichash_update((crypto_generichash_state *)state, message, message_size);
+    return info.GetReturnValue().Set(Nan::Null()); 
+}
+
+/*
+int crypto_generichash_final(crypto_generichash_state *state,
+                             unsigned char *out, const size_t outlen);
+*/
+NAN_METHOD(bind_crypto_generichash_final) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: state, out_size");
+    
+    GET_ARG_AS_VOID(0, state);
+    GET_ARG_POSITIVE_NUMBER(1, out_size);
+    
+    if( out_size > crypto_generichash_BYTES_MAX ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    if( out_size < crypto_generichash_BYTES_MIN ) {
+        std::ostringstream oss;
+        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
+        return Nan::ThrowError(oss.str().c_str());
+    }
+    
+    NEW_BUFFER_AND_PTR(hash, out_size);
+    
+    if (crypto_generichash_final((crypto_generichash_state *)state, hash_ptr, out_size) == 0) {
+        return info.GetReturnValue().Set(hash);
+    } else {
+        return info.GetReturnValue().Set(Nan::Null());
+    } 
+}
+
+/**
+ * “int crypto_pwhash_scryptsalsa208sha256(unsigned char * const out,
+                                       unsigned long long outlen,
+                                       const char * const passwd,
+                                       unsigned long long passwdlen,
+                                       const unsigned char * const salt,
+                                       unsigned long long opslimit,
+                                       size_t memlimit);”
+
+    number out length
+    buffer passwd
+    buffer salt
+    number opslimit
+    number memlimit
+ */
+NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(5,"arguments must be: output length, password buffer, salt buffer, oLimit, memLimit");
+    
+    GET_ARG_POSITIVE_NUMBER(0, out_size);
+    GET_ARG_AS(1, passwd, char*);
+    GET_ARG_AS_UCHAR_LEN(2, salt, crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
+    GET_ARG_POSITIVE_NUMBER(3, oppLimit);
+    GET_ARG_POSITIVE_NUMBER(4, memLimit);
+    
+    NEW_BUFFER_AND_PTR(hash, out_size);
+    
+    if (crypto_pwhash_scryptsalsa208sha256(hash_ptr, out_size, passwd, passwd_size, salt, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(hash);
+    } else {
+        return info.GetReturnValue().Set(Nan::Null());
+    } 
+}
+
+/**
+  int crypto_pwhash_scryptsalsa208sha256_str(char out[crypto_pwhash_scryptsalsa208sha256_STRBYTES],
+                                           const char * const passwd,
+                                           unsigned long long passwdlen,
+                                           unsigned long long opslimit,
+                                           size_t memlimit);
+                                           
+                                           
+ */
+NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(5,"arguments must be: output length, password buffer, salt buffer, oLimit, memLimit");
+    
+    GET_ARG_AS(1, passwd, char*);
+    GET_ARG_POSITIVE_NUMBER(3, oppLimit);
+    GET_ARG_POSITIVE_NUMBER(4, memLimit);
+    
+    NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    
+    if (crypto_pwhash_scryptsalsa208sha256_str((char*)hash_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(hash);
+    } else {
+        return info.GetReturnValue().Set(Nan::Null());
+    } 
+}
+
+/**
+ * int crypto_pwhash_scryptsalsa208sha256_str_verify(const char str[crypto_pwhash_scryptsalsa208sha256_STRBYTES],
+                                                  const char * const passwd,
+                                                  unsigned long long passwdlen);
+ */
+NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: pwhash string, password");
+    
+    GET_ARG_AS_UCHAR_LEN(0, hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    GET_ARG_AS(1, passwd, char*);
+    
+    if (crypto_pwhash_scryptsalsa208sha256_str_verify((char*)hash, passwd, passwd_size) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    } else {
+        return info.GetReturnValue().Set(Nan::False());
+    } 
 }
 
 #define NEW_INT_PROP(NAME) \
     Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
+
+#define NEW_NUMBER_PROP(NAME) \
+    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Number>(NAME), v8::ReadOnly);
+
 
 #define NEW_STRING_PROP(NAME) \
     Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<String>(NAME).ToLocalChecked(), v8::ReadOnly);
@@ -1826,12 +2027,25 @@ void RegisterModule(Handle<Object> target) {
     
     // Generic Hash
     NEW_METHOD(crypto_generichash);
+    NEW_METHOD(crypto_generichash_init);
+    NEW_METHOD(crypto_generichash_update);
+    NEW_METHOD(crypto_generichash_final);
     NEW_INT_PROP(crypto_generichash_BYTES);
     NEW_INT_PROP(crypto_generichash_BYTES_MIN);
     NEW_INT_PROP(crypto_generichash_BYTES_MAX);
     NEW_INT_PROP(crypto_generichash_KEYBYTES);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MIN);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MAX);
+    
+    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256);
+    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str);
+    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str_verify);
+    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
 
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult);
