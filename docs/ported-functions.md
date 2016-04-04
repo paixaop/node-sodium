@@ -13,6 +13,10 @@ List of all functions ported by node-sodium
   * memcmp
   * crypto_verify_16
   * crypto_verify_32
+  * sodium_increment
+  * sodium_compare
+  * sodium_add
+  * sodium_is_zero
 
 ## Random 
   * randombytes_buf
@@ -25,6 +29,10 @@ List of all functions ported by node-sodium
   * crypto_hash
   * crypto_hash_sha512
   * crypto_hash_sha256
+  * crypto_generichash
+  * crypto_generichash_init
+  * crypto_generichash_update
+  * crypto_generichash_final
 
 ## Auth
   * crypto_auth
