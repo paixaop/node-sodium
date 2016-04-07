@@ -331,6 +331,20 @@ NAN_METHOD(bind_crypto_verify_32) {
     );
 }
 
+// int crypto_verify_64(const unsigned char * string1, const unsigned char * string2)
+NAN_METHOD(bind_crypto_verify_64) {
+    Nan::EscapableHandleScope scope;
+
+    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
+
+    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_64_BYTES);
+    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_64_BYTES);
+
+    return info.GetReturnValue().Set(
+        Nan::New<Integer>(crypto_verify_64(string1, string2))
+    );
+}
+
 /**
  * int crypto_shorthash(
  *    unsigned char *out,
@@ -1939,6 +1953,10 @@ void RegisterModule(Handle<Object> target) {
     // String comparisons
     NEW_METHOD(crypto_verify_16);
     NEW_METHOD(crypto_verify_32);
+    NEW_METHOD(crypto_verify_64);
+    NEW_INT_PROP(crypto_verify_16_BYTES);
+    NEW_INT_PROP(crypto_verify_32_BYTES);
+    NEW_INT_PROP(crypto_verify_64_BYTES);
 
     // Hash
     NEW_METHOD(crypto_hash);
@@ -1985,6 +2003,7 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(crypto_secretbox_easy);
     NEW_METHOD(crypto_secretbox_open_easy);
     NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
+    NEW_INT_PROP(crypto_secretbox_MACBYTES);
     NEW_INT_PROP(crypto_secretbox_KEYBYTES);
     NEW_INT_PROP(crypto_secretbox_NONCEBYTES);
     NEW_INT_PROP(crypto_secretbox_ZEROBYTES);
@@ -2014,11 +2033,14 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(crypto_box_afternm);
     NEW_METHOD(crypto_box_open_afternm);
     NEW_INT_PROP(crypto_box_NONCEBYTES);
+    NEW_INT_PROP(crypto_box_MACBYTES);
     NEW_INT_PROP(crypto_box_BEFORENMBYTES);
     NEW_INT_PROP(crypto_box_BOXZEROBYTES);
     NEW_INT_PROP(crypto_box_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_box_SECRETKEYBYTES);
     NEW_INT_PROP(crypto_box_ZEROBYTES);
+    NEW_INT_PROP(crypto_box_SEEDBYTES);
+    NEW_INT_PROP(crypto_box_SEALBYTES);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
 
     // Short Hash
@@ -2032,6 +2054,7 @@ void RegisterModule(Handle<Object> target) {
     NEW_METHOD(crypto_generichash_init);
     NEW_METHOD(crypto_generichash_update);
     NEW_METHOD(crypto_generichash_final);
+    NEW_STRING_PROP(crypto_generichash_PRIMITIVE);
     NEW_INT_PROP(crypto_generichash_BYTES);
     NEW_INT_PROP(crypto_generichash_BYTES_MIN);
     NEW_INT_PROP(crypto_generichash_BYTES_MAX);
@@ -2048,6 +2071,17 @@ void RegisterModule(Handle<Object> target) {
     NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    NEW_STRING_PROP(crypto_pwhash_scryptsalsa208sha256_STRPREFIX);
+    NEW_NUMBER_PROP(crypto_pwhash_ALG_DEFAULT);
+    NEW_NUMBER_PROP(crypto_pwhash_SALTBYTES);
+    NEW_NUMBER_PROP(crypto_pwhash_STRBYTES);
+    NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
 
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult);
