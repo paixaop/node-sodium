@@ -5,7 +5,6 @@
 
 var assert = require('assert');
 var sodium = require('../build/Release/sodium');
-var crypto = require('crypto');
 var toBuffer = require('../lib/toBuffer');
 
 describe('PWHash', function() {
