@@ -1847,11 +1847,11 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(5,"arguments must be: output length, password buffer, salt buffer, oLimit, memLimit");
+    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
     
-    GET_ARG_AS(1, passwd, char*);
-    GET_ARG_POSITIVE_NUMBER(3, oppLimit);
-    GET_ARG_POSITIVE_NUMBER(4, memLimit);
+    GET_ARG_AS(0, passwd, char*);
+    GET_ARG_POSITIVE_NUMBER(1, oppLimit);
+    GET_ARG_POSITIVE_NUMBER(2, memLimit);
     
     NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
     
