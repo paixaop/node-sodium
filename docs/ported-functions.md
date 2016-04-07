@@ -33,6 +33,9 @@ List of all functions ported by node-sodium
   * crypto_generichash_init
   * crypto_generichash_update
   * crypto_generichash_final
+  * crypto_pwhash_scryptsalsa208sha256
+  * crypto_pwhash_scryptsalsa208sha256_str
+  * crypto_pwhash_scryptsalsa208sha256_str_verify
 
 ## Auth
   * crypto_auth
