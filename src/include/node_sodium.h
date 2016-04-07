@@ -5,6 +5,9 @@
  * @email paixaop at gmail dot com
  * @License MIT
  */
+#ifndef __NODE_SODIUM_H__
+#define __NODE_SODIUM_H__
+
 #include <node.h>
 #include <node_buffer.h>
 
@@ -104,3 +107,5 @@ using namespace v8;
 
 #define NEW_METHOD(NAME) \
     Nan::SetMethod(target, #NAME, bind_ ## NAME)
+
+#endif
