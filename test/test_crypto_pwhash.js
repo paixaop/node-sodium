@@ -33,6 +33,21 @@ describe('PWHash', function() {
         done();
     });
     
+    it('should generate pwhash using low level scrypt API', function(done) {
+        var password = new Buffer("pleaseletmein");
+        var salt = new Buffer("SodiumChloride");
+        
+        var result = toBuffer("7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887");
+        
+        var N = 16384;
+        var r = 8;
+        var p = 1;
+        var output = new Buffer(64);
+        
+        sodium.crypto_pwhash_scryptsalsa208sha256_ll(password, salt, N, r, p, output);
+        assert(sodium.compare(result,output)==0);
+        done(); 
+    });
     
 });
     
