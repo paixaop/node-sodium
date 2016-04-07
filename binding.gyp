@@ -6,9 +6,11 @@
     {
       'target_name': 'sodium',
       'sources': [
-        'sodium.cc',
+        './src/sodium.cc',
+        './src/crypto_pwhash.cc'
       ],
       'include_dirs': [
+        './src/include',
         './deps/build/include',
         "<!(node -e \"require('nan')\")"
       ],
