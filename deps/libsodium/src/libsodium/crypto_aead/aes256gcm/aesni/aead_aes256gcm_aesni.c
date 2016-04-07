@@ -3,6 +3,7 @@
  * AES256-GCM, based on original code by Romain Dolbeau
  */
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +21,10 @@
 #pragma GCC target("pclmul")
 
 #include <immintrin.h>
+
+#ifndef ENOSYS
+# define ENOSYS ENXIO
+#endif
 
 #if defined(__INTEL_COMPILER) || defined(_bswap64)
 #elif defined(_MSC_VER)
@@ -124,8 +129,8 @@ aesni_encrypt1(unsigned char *out, __m128i nv, const __m128i *rkeys)
 }
 
 /** multiple-blocks-at-once AES encryption with AES-NI ;
-    on Haswell, aesenc as a latency of 7 and a througput of 1
-    so the sequence of aesenc should be bubble-free, if you
+    on Haswell, aesenc as a latency of 7 and a throughput of 1
+    so the sequence of aesenc should be bubble-free if you
     have at least 8 blocks. Let's build an arbitratry-sized
     function */
 /* Step 1 : loading the nonce */
@@ -504,12 +509,13 @@ crypto_aead_aes256gcm_beforenm(crypto_aead_aes256gcm_state *ctx_,
 }
 
 int
-crypto_aead_aes256gcm_encrypt_afternm(unsigned char *c, unsigned long long *clen,
-                                      const unsigned char *m, unsigned long long mlen,
-                                      const unsigned char *ad, unsigned long long adlen,
-                                      const unsigned char *nsec,
-                                      const unsigned char *npub,
-                                      const crypto_aead_aes256gcm_state *ctx_)
+crypto_aead_aes256gcm_encrypt_detached_afternm(unsigned char *c,
+                                               unsigned char *mac, unsigned long long *maclen_p,
+                                               const unsigned char *m, unsigned long long mlen,
+                                               const unsigned char *ad, unsigned long long adlen,
+                                               const unsigned char *nsec,
+                                               const unsigned char *npub,
+                                               const crypto_aead_aes256gcm_state *ctx_)
 {
     const __m128i       rev = _mm_set_epi8(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
     const context      *ctx = (const context *) ctx_;
@@ -526,7 +532,7 @@ crypto_aead_aes256gcm_encrypt_afternm(unsigned char *c, unsigned long long *clen
 
     (void) nsec;
     memcpy(H, ctx->H, sizeof H);
-    if (mlen > 16ULL * (1ULL << 32)) {
+    if (mlen > 16ULL * ((1ULL << 32) - 2)) {
         abort(); /* LCOV_EXCL_LINE */
     }
     memcpy(&n2[0], npub, 3 * 4);
@@ -614,21 +620,40 @@ crypto_aead_aes256gcm_encrypt_afternm(unsigned char *c, unsigned long long *clen
     addmul(accum, fb, 16, H);
 
     for (i = 0; i < 16; ++i) {
-        c[i + mlen] = T[i] ^ accum[15 - i];
+        mac[i] = T[i] ^ accum[15 - i];
     }
-    if (clen != NULL) {
-        *clen = mlen + 16;
+    if (maclen_p != NULL) {
+        *maclen_p = 16;
     }
     return 0;
 }
 
 int
-crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen_p,
-                                      unsigned char *nsec,
-                                      const unsigned char *c, unsigned long long clen,
+crypto_aead_aes256gcm_encrypt_afternm(unsigned char *c, unsigned long long *clen_p,
+                                      const unsigned char *m, unsigned long long mlen,
                                       const unsigned char *ad, unsigned long long adlen,
+                                      const unsigned char *nsec,
                                       const unsigned char *npub,
                                       const crypto_aead_aes256gcm_state *ctx_)
+{
+    int ret = crypto_aead_aes256gcm_encrypt_detached_afternm(c,
+                                                             c + mlen, NULL,
+                                                             m, mlen,
+                                                             ad, adlen,
+                                                             nsec, npub, ctx_);
+    if (clen_p != NULL) {
+        *clen_p = mlen + crypto_aead_aes256gcm_ABYTES;
+    }
+    return ret;
+}
+
+int
+crypto_aead_aes256gcm_decrypt_detached_afternm(unsigned char *m, unsigned char *nsec,
+                                               const unsigned char *c, unsigned long long clen,
+                                               const unsigned char *mac,
+                                               const unsigned char *ad, unsigned long long adlen,
+                                               const unsigned char *npub,
+                                               const crypto_aead_aes256gcm_state *ctx_)
 {
     const __m128i       rev = _mm_set_epi8(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
     const context      *ctx = (const context *) ctx_;
@@ -645,20 +670,15 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
     CRYPTO_ALIGN(16) unsigned char fb[16];
 
     (void) nsec;
-    if (clen > 16ULL * (1ULL << 32) - 16ULL) {
+    if (clen > 16ULL * (1ULL << 32)) {
         abort(); /* LCOV_EXCL_LINE */
     }
-    if (mlen_p != NULL) {
-        *mlen_p = 0U;
-    }
-    if (clen < 16) {
-        return -1;
-    }
-    mlen = clen - 16;
+    mlen = clen;
 
     memcpy(&n2[0], npub, 3 * 4);
     n2[3] = 0x01000000;
     aesni_encrypt1(T, _mm_load_si128((const __m128i *) n2), rkeys);
+
     {
         uint64_t x;
         x = _bswap64((uint64_t)(8 * adlen));
@@ -666,6 +686,7 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
         x = _bswap64((uint64_t)(8 * mlen));
         memcpy(&fb[8], &x, sizeof x);
     }
+
     memcpy(H, ctx->H, sizeof H);
     Hv = _mm_shuffle_epi8(_mm_load_si128((const __m128i *) H), rev);
     _mm_store_si128((__m128i *) H, Hv);
@@ -752,6 +773,7 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
             }                                                \
         }                                                    \
     } while(0)
+
     n2[3] &= 0x00ffffff;
 
     COUNTER_INC2(n2);
@@ -762,9 +784,10 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
         unsigned char d = 0;
 
         for (i = 0; i < 16; i++) {
-            d |= (c[i + mlen] ^ (T[i] ^ accum[15 - i]));
+            d |= (mac[i] ^ (T[i] ^ accum[15 - i]));
         }
         if (d != 0) {
+            memset(m, 0, mlen);
             return -1;
         }
     }
@@ -773,10 +796,54 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
     LOOPDRND128;
     LOOPDRMD128;
 
+    return 0;
+}
+
+int
+crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen_p,
+                                      unsigned char *nsec,
+                                      const unsigned char *c, unsigned long long clen,
+                                      const unsigned char *ad, unsigned long long adlen,
+                                      const unsigned char *npub,
+                                      const crypto_aead_aes256gcm_state *ctx_)
+{
+    unsigned long long mlen = 0ULL;
+    int                ret = -1;
+
+    if (clen >= crypto_aead_aes256gcm_ABYTES) {
+        ret = crypto_aead_aes256gcm_decrypt_detached_afternm
+            (m, nsec, c, clen - crypto_aead_aes256gcm_ABYTES,
+             c + clen - crypto_aead_aes256gcm_ABYTES,
+             ad, adlen, npub, ctx_);
+    }
     if (mlen_p != NULL) {
+        if (ret == 0) {
+            mlen = clen - crypto_aead_aes256gcm_ABYTES;
+        }
         *mlen_p = mlen;
     }
-    return 0;
+    return ret;
+}
+
+int
+crypto_aead_aes256gcm_encrypt_detached(unsigned char *c,
+                                       unsigned char *mac,
+                                       unsigned long long *maclen_p,
+                                       const unsigned char *m,
+                                       unsigned long long mlen,
+                                       const unsigned char *ad,
+                                       unsigned long long adlen,
+                                       const unsigned char *nsec,
+                                       const unsigned char *npub,
+                                       const unsigned char *k)
+{
+    CRYPTO_ALIGN(16) crypto_aead_aes256gcm_state ctx;
+
+    crypto_aead_aes256gcm_beforenm(&ctx, k);
+
+    return crypto_aead_aes256gcm_encrypt_detached_afternm
+        (c, mac, maclen_p, m, mlen, ad, adlen, nsec, npub,
+            (const crypto_aead_aes256gcm_state *) &ctx);
 }
 
 int
@@ -790,12 +857,32 @@ crypto_aead_aes256gcm_encrypt(unsigned char *c,
                               const unsigned char *npub,
                               const unsigned char *k)
 {
-    crypto_aead_aes256gcm_state ctx;
+    CRYPTO_ALIGN(16) crypto_aead_aes256gcm_state ctx;
 
     crypto_aead_aes256gcm_beforenm(&ctx, k);
 
     return crypto_aead_aes256gcm_encrypt_afternm
         (c, clen_p, m, mlen, ad, adlen, nsec, npub,
+            (const crypto_aead_aes256gcm_state *) &ctx);
+}
+
+int
+crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
+                                       unsigned char *nsec,
+                                       const unsigned char *c,
+                                       unsigned long long clen,
+                                       const unsigned char *mac,
+                                       const unsigned char *ad,
+                                       unsigned long long adlen,
+                                       const unsigned char *npub,
+                                       const unsigned char *k)
+{
+    CRYPTO_ALIGN(16) crypto_aead_aes256gcm_state ctx;
+
+    crypto_aead_aes256gcm_beforenm(&ctx, k);
+
+    return crypto_aead_aes256gcm_decrypt_detached_afternm
+        (m, nsec, c, clen, mac, ad, adlen, npub,
             (const crypto_aead_aes256gcm_state *) &ctx);
 }
 
@@ -810,13 +897,13 @@ crypto_aead_aes256gcm_decrypt(unsigned char *m,
                               const unsigned char *npub,
                               const unsigned char *k)
 {
-    crypto_aead_aes256gcm_state ctx;
+    CRYPTO_ALIGN(16) crypto_aead_aes256gcm_state ctx;
 
     crypto_aead_aes256gcm_beforenm(&ctx, k);
 
     return crypto_aead_aes256gcm_decrypt_afternm
         (m, mlen_p, nsec, c, clen, ad, adlen, npub,
-            (const crypto_aead_aes256gcm_state *) &ctx);
+         (const crypto_aead_aes256gcm_state *) &ctx);
 }
 
 int
@@ -824,6 +911,125 @@ crypto_aead_aes256gcm_is_available(void)
 {
     return sodium_runtime_has_pclmul() & sodium_runtime_has_aesni();
 }
+
+#else
+
+int
+crypto_aead_aes256gcm_encrypt_detached(unsigned char *c,
+                                       unsigned char *mac,
+                                       unsigned long long *maclen_p,
+                                       const unsigned char *m,
+                                       unsigned long long mlen,
+                                       const unsigned char *ad,
+                                       unsigned long long adlen,
+                                       const unsigned char *nsec,
+                                       const unsigned char *npub,
+                                       const unsigned char *k)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_encrypt(unsigned char *c, unsigned long long *clen_p,
+                              const unsigned char *m, unsigned long long mlen,
+                              const unsigned char *ad, unsigned long long adlen,
+                              const unsigned char *nsec, const unsigned char *npub,
+                              const unsigned char *k)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
+                                       unsigned char *nsec,
+                                       const unsigned char *c,
+                                       unsigned long long clen,
+                                       const unsigned char *mac,
+                                       const unsigned char *ad,
+                                       unsigned long long adlen,
+                                       const unsigned char *npub,
+                                       const unsigned char *k)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_decrypt(unsigned char *m, unsigned long long *mlen_p,
+                              unsigned char *nsec, const unsigned char *c,
+                              unsigned long long clen, const unsigned char *ad,
+                              unsigned long long adlen, const unsigned char *npub,
+                              const unsigned char *k)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_beforenm(crypto_aead_aes256gcm_state *ctx_,
+                               const unsigned char *k)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_encrypt_detached_afternm(unsigned char *c,
+                                               unsigned char *mac, unsigned long long *maclen_p,
+                                               const unsigned char *m, unsigned long long mlen,
+                                               const unsigned char *ad, unsigned long long adlen,
+                                               const unsigned char *nsec,
+                                               const unsigned char *npub,
+                                               const crypto_aead_aes256gcm_state *ctx_)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_encrypt_afternm(unsigned char *c, unsigned long long *clen_p,
+                                      const unsigned char *m, unsigned long long mlen,
+                                      const unsigned char *ad, unsigned long long adlen,
+                                      const unsigned char *nsec, const unsigned char *npub,
+                                      const crypto_aead_aes256gcm_state *ctx_)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_decrypt_detached_afternm(unsigned char *m, unsigned char *nsec,
+                                               const unsigned char *c, unsigned long long clen,
+                                               const unsigned char *mac,
+                                               const unsigned char *ad, unsigned long long adlen,
+                                               const unsigned char *npub,
+                                               const crypto_aead_aes256gcm_state *ctx_)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen_p,
+                                      unsigned char *nsec,
+                                      const unsigned char *c, unsigned long long clen,
+                                      const unsigned char *ad, unsigned long long adlen,
+                                      const unsigned char *npub,
+                                      const crypto_aead_aes256gcm_state *ctx_)
+{
+    errno = ENOSYS;
+    return -1;
+}
+
+int
+crypto_aead_aes256gcm_is_available(void)
+{
+    return 0;
+}
+
+#endif
 
 size_t
 crypto_aead_aes256gcm_keybytes(void)
@@ -854,13 +1060,3 @@ crypto_aead_aes256gcm_statebytes(void)
 {
     return (sizeof(crypto_aead_aes256gcm_state) + (size_t) 15U) & ~(size_t) 15U;
 }
-
-#else
-
-int
-crypto_aead_aes256gcm_is_available(void)
-{
-    return 0;
-}
-
-#endif

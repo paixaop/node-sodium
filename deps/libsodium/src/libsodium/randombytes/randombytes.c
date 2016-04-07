@@ -17,6 +17,9 @@
 # include "randombytes_nativeclient.h"
 #endif
 
+/* C++Builder defines a "random" macro */
+#undef random
+
 #ifndef __EMSCRIPTEN__
 #ifdef __native_client__
 static const randombytes_implementation *implementation =

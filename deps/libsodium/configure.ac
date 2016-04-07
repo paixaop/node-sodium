@@ -1,5 +1,5 @@
 AC_PREREQ([2.65])
-AC_INIT([libsodium],[1.0.8],
+AC_INIT([libsodium],[1.0.10],
   [https://github.com/jedisct1/libsodium/issues],
   [libsodium],
   [https://github.com/jedisct1/libsodium])
@@ -17,9 +17,9 @@ ISODATE=`date +%Y-%m-%d`
 AC_SUBST(ISODATE)
 
 SODIUM_LIBRARY_VERSION_MAJOR=9
-SODIUM_LIBRARY_VERSION_MINOR=1
+SODIUM_LIBRARY_VERSION_MINOR=2
 DLL_VERSION=8
-SODIUM_LIBRARY_VERSION=18:1:0
+SODIUM_LIBRARY_VERSION=19:0:1
 #                       | | |
 #                +------+ | +---+
 #                |        |     |
@@ -139,11 +139,13 @@ AC_ARG_ENABLE(opt,
 [AS_HELP_STRING(--enable-opt,Optimize for the native CPU - The resulting library will be faster but not portable)],
 [
   AS_IF([test "x$enableval" = "xyes"], [
-    CFLAGS="$CFLAGS -march=native -save-temps"
-    LDFLAGS="$LDFLAGS -march=native"])
+    CFLAGS="$CFLAGS -O3 -march=native"
+    LDFLAGS="$LDFLAGS -O3 -march=native"])
 ])
 
 AC_SUBST([MAINT])
+
+AX_VALGRIND_CHECK
 
 dnl Checks
 
@@ -184,6 +186,22 @@ AX_CHECK_COMPILE_FLAG([-fno-strict-overflow], [CFLAGS="$CFLAGS -fno-strict-overf
   AX_CHECK_COMPILE_FLAG([-fwrapv], [CFLAGS="$CFLAGS -fwrapv"])
 ])
 
+AS_IF([test "$GCC" = "yes" ], [
+  AS_CASE([$host_cpu],
+    [i?86|amd64|x86_64], [
+      AC_COMPILE_IFELSE(
+        [AC_LANG_SOURCE([
+#if !defined(__clang__) && defined(__GNUC__) && ((__GNUC__ << 8) | __GNUC_MINOR__) < 0x403
+# error old gcc
+#endif
+int main(void) { return 0; }
+         ])],,[
+          AX_CHECK_COMPILE_FLAG([-flax-vector-conversions], [CFLAGS="$CFLAGS -flax-vector-conversions"])
+        ])
+      ]
+    )
+  ])
+
 LIBTOOL_OLD_FLAGS="$LIBTOOL_EXTRA_FLAGS"
 LIBTOOL_EXTRA_FLAGS="$LIBTOOL_EXTRA_FLAGS -version-info $SODIUM_LIBRARY_VERSION"
 AC_ARG_ENABLE(soname-versions,
@@ -198,6 +216,7 @@ AC_ARG_ENABLE(soname-versions,
 AS_CASE([$host_os],
   [cygwin*|mingw*|msys|pw32*|cegcc*], [
     AX_CHECK_LINK_FLAG([-Wl,--dynamicbase], [LDFLAGS="$LDFLAGS -Wl,--dynamicbase"])
+    AX_CHECK_LINK_FLAG([-Wl,--high-entropy-va], [LDFLAGS="$LDFLAGS -Wl,--high-entropy-va"])
     AX_CHECK_LINK_FLAG([-Wl,--nxcompat], [LDFLAGS="$LDFLAGS -Wl,--nxcompat"])
   ])
 
@@ -214,7 +233,6 @@ AS_CASE([$host_os],
   ])
 ])
 
-AX_CHECK_COMPILE_FLAG([-Winit-self], [CFLAGS="$CFLAGS -Winit-self"])
 AX_CHECK_COMPILE_FLAG([-Wwrite-strings], [CFLAGS="$CFLAGS -Wwrite-strings"])
 AX_CHECK_COMPILE_FLAG([-Wdiv-by-zero], [CFLAGS="$CFLAGS -Wdiv-by-zero"])
 AX_CHECK_COMPILE_FLAG([-Wsometimes-uninitialized], [CFLAGS="$CFLAGS -Wsometimes-uninitialized"])
@@ -240,16 +258,15 @@ be sad
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wbad-function-cast], [CWFLAGS="$CWFLAGS -Wbad-function-cast"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wcast-align], [CWFLAGS="$CWFLAGS -Wcast-align"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wcast-qual], [CWFLAGS="$CWFLAGS -Wcast-qual"])
-AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wchar-subscripts], [CWFLAGS="$CWFLAGS -Wchar-subscripts"])
-AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wcomment], [CWFLAGS="$CWFLAGS -Wcomment"])
+AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wduplicated-cond], [CWFLAGS="$CWFLAGS -Wduplicated-cond"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wfloat-equal], [CWFLAGS="$CWFLAGS -Wfloat-equal"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wformat=2], [CWFLAGS="$CWFLAGS -Wformat=2"])
-AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wimplicit], [CWFLAGS="$CWFLAGS -Wimplicit"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wmissing-declarations], [CWFLAGS="$CWFLAGS -Wmissing-declarations"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wmissing-prototypes], [CWFLAGS="$CWFLAGS -Wmissing-prototypes"])
+AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wnested-externs], [CWFLAGS="$CWFLAGS -Wnested-externs"])
+AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wno-unknown-pragmas], [CWFLAGS="$CWFLAGS -Wno-unknown-pragmas"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wnormalized=id], [CWFLAGS="$CWFLAGS -Wnormalized=id"])
-AX_CHECK_COMPILE_FLAG([$CWFLAGS -Woverride-init], [CWFLAGS="$CWFLAGS -Woverride-init"])
-AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wparentheses], [CWFLAGS="$CWFLAGS -Wparentheses"])
+AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wnull-dereference], [CWFLAGS="$CWFLAGS -Wnull-dereference"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wpointer-arith], [CWFLAGS="$CWFLAGS -Wpointer-arith"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wredundant-decls], [CWFLAGS="$CWFLAGS -Wredundant-decls"])
 AX_CHECK_COMPILE_FLAG([$CWFLAGS -Wstrict-prototypes], [CWFLAGS="$CWFLAGS -Wstrict-prototypes"])
@@ -292,7 +309,8 @@ AS_IF([test "x$EMSCRIPTEN" = "x"],[
 # define __SSE2__
 #endif
 #include <emmintrin.h>
-]], [[ __m128d x = _mm_setzero_pd(); ]])],
+]], [[ __m128d x = _mm_setzero_pd();
+       __m128i y = _mm_srli_epi64(_mm_setzero_si128(), 26); ]])],
     [AC_MSG_RESULT(yes)
      AC_DEFINE([HAVE_EMMINTRIN_H], [1], [sse2 is available])
      AX_CHECK_COMPILE_FLAG([-msse2], [CFLAGS_SSE2="-msse2"])],
@@ -353,6 +371,29 @@ AS_IF([test "x$EMSCRIPTEN" = "x"],[
   CFLAGS="$oldcflags"
 
   oldcflags="$CFLAGS"
+  AX_CHECK_COMPILE_FLAG([-mavx2], [CFLAGS="$CFLAGS -mavx2"])
+  AC_MSG_CHECKING(for AVX2 instructions set)
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#pragma GCC target("avx2")
+#include <immintrin.h>
+]], [[ __m256i x = _mm256_abs_epi8(_mm256_setzero_si256()); ]])],
+    [AC_MSG_RESULT(yes)
+     AC_DEFINE([HAVE_AVX2INTRIN_H], [1], [AVX2 is available])
+     AX_CHECK_COMPILE_FLAG([-mavx2], [CFLAGS_AVX="-mavx2"])
+     AC_MSG_CHECKING(if _mm256_broadcastsi128_si256 is correctly defined)
+     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#pragma GCC target("avx2")
+#include <immintrin.h>
+     ]], [[ __m256i y = _mm256_broadcastsi128_si256(_mm_setzero_si128()); ]])],
+       [AC_MSG_RESULT(yes)],
+       [AC_MSG_RESULT(no)
+        AC_DEFINE([_mm256_broadcastsi128_si256], [_mm_broadcastsi128_si256],
+                  [Define to the local name of _mm256_broadcastsi128_si256])])
+     ],
+    [AC_MSG_RESULT(no)])
+  CFLAGS="$oldcflags"
+
+  oldcflags="$CFLAGS"
   AX_CHECK_COMPILE_FLAG([-maes], [CFLAGS="$CFLAGS -maes"])
   AX_CHECK_COMPILE_FLAG([-mpclmul], [CFLAGS="$CFLAGS -mpclmul"])
   AC_MSG_CHECKING(for AESNI instructions set and PCLMULQDQ)
@@ -377,6 +418,8 @@ AC_SUBST(CFLAGS_SSE2)
 AC_SUBST(CFLAGS_SSE3)
 AC_SUBST(CFLAGS_SSSE3)
 AC_SUBST(CFLAGS_SSE41)
+AC_SUBST(CFLAGS_AVX)
+AC_SUBST(CFLAGS_AVX2)
 AC_SUBST(CFLAGS_AESNI)
 AC_SUBST(CFLAGS_PCLMUL)
 
@@ -385,11 +428,15 @@ AC_CHECK_HEADERS([sys/mman.h])
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 AC_C_INLINE
+AS_CASE([$host_cpu],
+  [i?86|amd64|x86_64],
+    [ac_cv_c_bigendian=no]
+)
 AC_C_BIGENDIAN(
   AC_DEFINE(NATIVE_BIG_ENDIAN, 1, [machine is bigendian]),
   AC_DEFINE(NATIVE_LITTLE_ENDIAN, 1, [machine is littleendian]),
-  AC_MSG_ERROR([unknown endianess]),
-  AC_MSG_ERROR([universal endianess is not supported - compile separately and use lipo(1)])
+  AC_MSG_ERROR([unknown endianness]),
+  AC_MSG_ERROR([universal endianness is not supported - compile separately and use lipo(1)])
 )
 
 AC_MSG_CHECKING(whether __STDC_LIMIT_MACROS is required)
@@ -510,6 +557,47 @@ __asm__ __volatile__ ("xchgl %%ebx, %k1; cpuid; xchgl %%ebx, %k1" :
   ])
 AC_SUBST(HAVE_CPUID_V)
 
+asm_hide_symbol="unsupported"
+AS_IF([test "$enable_asm" != "no"],[
+  AC_MSG_CHECKING(if the .private_extern asm directive is supported)
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[ ]], [[
+__asm__ __volatile__ (".private_extern dummy_symbol \n"
+                      ".private_extern _dummy_symbol \n"
+                      ".globl dummy_symbol \n"
+                      ".globl _dummy_symbol \n"
+                      "dummy_symbol: \n"
+                      "_dummy_symbol: \n"
+                      "    nop \n"
+);
+  ]])],
+  [AC_MSG_RESULT(yes)
+   asm_hide_symbol=".private_extern"],
+  [AC_MSG_RESULT(no)])
+
+  AC_MSG_CHECKING(if the .hidden asm directive is supported)
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[ ]], [[
+__asm__ __volatile__ (".hidden dummy_symbol \n"
+                      ".hidden _dummy_symbol \n"
+                      ".globl dummy_symbol \n"
+                      ".globl _dummy_symbol \n"
+                      "dummy_symbol: \n"
+                      "_dummy_symbol: \n"
+                      "    nop \n"
+);
+  ]])],
+  [AC_MSG_RESULT(yes)
+   AS_IF([test "$asm_hide_symbol" = "unsupported"],
+          [asm_hide_symbol=".hidden"],
+          [AC_MSG_NOTICE([unable to reliably tag symbols as private])
+           asm_hide_symbol="unsupported"])
+  ],
+  [AC_MSG_RESULT(no)])
+
+  AS_IF([test "$asm_hide_symbol" != "unsupported"],[
+    AC_DEFINE_UNQUOTED([ASM_HIDE_SYMBOL], [$asm_hide_symbol], [directive to hide symbols])
+  ])
+])
+
 AC_MSG_CHECKING(if weak symbols are supported)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 __attribute__((weak)) void __dummy(void *x) { }
@@ -523,7 +611,7 @@ void f(void *x) { __dummy(x); }
 AC_MSG_CHECKING(if data alignment is required)
 aligned_access_required=yes
 AS_CASE([$host_cpu],
-  [i*86 | x86_64 | powerpc* | s390*],
+  [i?86|amd64|x86_64|powerpc*|s390*],
     [aligned_access_required=no],
   [arm*],
     [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
@@ -550,7 +638,7 @@ AC_SUBST([LIBTOOL_EXTRA_FLAGS])
 TEST_LDFLAGS=''
 AS_IF([test "x$EMSCRIPTEN" != "x"],[
   EXEEXT=.js
-  TEST_LDFLAGS='--memory-init-file 0 --pre-js pre.js.inc -s NO_BROWSER=1 -s RESERVED_FUNCTION_POINTERS=8'
+  TEST_LDFLAGS='--memory-init-file 0 --pre-js pre.js.inc -s RESERVED_FUNCTION_POINTERS=8'
 ])
 AC_SUBST(TEST_LDFLAGS)
 AM_CONDITIONAL([EMSCRIPTEN], [test "x$EMSCRIPTEN" != "x"])

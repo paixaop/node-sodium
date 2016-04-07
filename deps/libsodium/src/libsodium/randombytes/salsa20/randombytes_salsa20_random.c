@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 # include <unistd.h>
 #endif
 
@@ -36,6 +36,10 @@ extern "C"
 # endif
 BOOLEAN NTAPI RtlGenRandom(PVOID RandomBuffer, ULONG RandomBufferLength);
 # pragma comment(lib, "advapi32.lib")
+# ifdef __BORLANDC__
+#  define _ftime ftime
+#  define _timeb timeb
+# endif
 #endif
 
 #define SALSA20_RANDOM_BLOCK_SIZE crypto_core_salsa20_OUTPUTBYTES

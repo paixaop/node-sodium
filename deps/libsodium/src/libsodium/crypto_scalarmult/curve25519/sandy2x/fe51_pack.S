@@ -8,6 +8,10 @@
 #include "consts_namespace.h"
 .p2align 5
 
+#ifdef ASM_HIDE_SYMBOL
+ASM_HIDE_SYMBOL fe51_pack
+ASM_HIDE_SYMBOL _fe51_pack
+#endif
 .globl fe51_pack
 .globl _fe51_pack
 #ifdef __ELF__
