@@ -13,6 +13,7 @@ List of all functions ported by node-sodium
   * memcmp
   * crypto_verify_16
   * crypto_verify_32
+  * crypto_verify_64
   * sodium_increment
   * sodium_compare
   * sodium_add
