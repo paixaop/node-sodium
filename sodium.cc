@@ -1901,6 +1901,8 @@ void RegisterModule(Handle<Object> target) {
         return Nan::ThrowError("libsodium cannot be initialized!");
     }
 
+    randombytes_stir();
+    
     // Register version functions
     NEW_METHOD(sodium_version_string);
 
