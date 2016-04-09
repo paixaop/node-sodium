@@ -145,7 +145,6 @@ crypto_onetimeauth_poly1305_update
 crypto_onetimeauth_poly1305_verify
 crypto_onetimeauth_statebytes
 
-crypto_pwhash
 crypto_pwhash_alg_argon2i13
 crypto_pwhash_alg_default
 crypto_pwhash_argon2i
@@ -161,21 +160,8 @@ crypto_pwhash_argon2i_str
 crypto_pwhash_argon2i_str_verify
 crypto_pwhash_argon2i_strbytes
 crypto_pwhash_argon2i_strprefix
-crypto_pwhash_memlimit_interactive
-crypto_pwhash_memlimit_moderate
-crypto_pwhash_memlimit_sensitive
-crypto_pwhash_opslimit_interactive
-crypto_pwhash_opslimit_moderate
-crypto_pwhash_opslimit_sensitive
-crypto_pwhash_primitive
-crypto_pwhash_saltbytes
-
-crypto_pwhash_scryptsalsa208sha256_ll
-
 crypto_pwhash_str
 crypto_pwhash_str_verify
-crypto_pwhash_strbytes
-crypto_pwhash_strprefix
 
 crypto_scalarmult_curve25519
 crypto_scalarmult_curve25519_base
@@ -251,9 +237,6 @@ crypto_stream_xsalsa20_keybytes
 crypto_stream_xsalsa20_noncebytes
 crypto_stream_xsalsa20_xor
 crypto_stream_xsalsa20_xor_ic
-
-crypto_verify_64
-crypto_verify_64_bytes
 
 randombytes_implementation_name
 randombytes_set_implementation

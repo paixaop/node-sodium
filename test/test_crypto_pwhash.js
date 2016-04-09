@@ -9,32 +9,34 @@ var toBuffer = require('../lib/toBuffer');
 
 describe('PWHash', function() {
     it('should verify the generated hash with same password', function(done) {
-         
+        var password = new Buffer('this is a test password','utf8');
+    
         var out = sodium.crypto_pwhash_scryptsalsa208sha256_str(
-                    new Buffer("this is a test password"),
+                    password,
                     sodium.crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE,                                            
                     sodium.crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
-        
-        assert(sodium.crypto_pwhash_scryptsalsa208sha256_str_verify(out,new Buffer("this is a test password"))); 
+        assert(sodium.crypto_pwhash_scryptsalsa208sha256_str_verify(out, password)); 
         
         done();
     });
     
     it('should not verify the generated hash with different passwords', function(done) {
-         
+        var password = new Buffer('this is a test password','utf8');
+        var badPassword = new Buffer('this is a bad password','utf8');
+        
         var out = sodium.crypto_pwhash_scryptsalsa208sha256_str(
-                    new Buffer("this is a test password"),
+                    password,
                     sodium.crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE,                                            
                     sodium.crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
         
-        assert(sodium.crypto_pwhash_scryptsalsa208sha256_str_verify(out,new Buffer("that is a test password"))==false); 
+        assert(sodium.crypto_pwhash_scryptsalsa208sha256_str_verify(out, badPassword)==false); 
         
         done();
     });
     
     it('should generate pwhash using low level scrypt API', function(done) {
-        var password = new Buffer("pleaseletmein");
-        var salt = new Buffer("SodiumChloride");
+        var password = new Buffer("pleaseletmein",'utf8');
+        var salt = new Buffer('SodiumChloride','utf8');
         
         var result = toBuffer("7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887");
         

@@ -7,14 +7,101 @@
  */
 #include "node_sodium.h"
 
+/*
+    int crypto_pwhash(unsigned char * const out, unsigned long long outlen,
+                  const char * const passwd, unsigned long long passwdlen,
+                  const unsigned char * const salt,
+                  unsigned long long opslimit, size_t memlimit, int alg)
+                  
+    Buffer out
+    Buffer password
+    Buffer salt
+    Number oppsLimit
+    Number memLimit
+    Number algorithm
+
+*/
+NAN_METHOD(bind_crypto_pwhash) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(6,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit, algorithm");
+    
+    ARG_TO_BUFFER_TYPE(out, unsigned char*);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_SALTBYTES);
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_POSITIVE_NUMBER(alg);
+    
+    if (crypto_pwhash(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
+}
+
+
 /**
- * “int crypto_pwhash_scryptsalsa208sha256(unsigned char * const out,
+ * int crypto_pwhash_str(char out[crypto_pwhash_STRBYTES],
+                      const char * const passwd, unsigned long long passwdlen,
+                      unsigned long long opslimit, size_t memlimit)
+                      
+    Buffer out
+    Buffer passwd
+    Number oppsLimit
+    Number memLimit
+*/
+NAN_METHOD(bind_crypto_pwhash_str) {
+    Nan::EscapableHandleScope scope;
+    
+    std::ostringstream oss;
+
+    ARGS(4,"arguments must be: output buffer, password buffer, oLimit, memLimit");
+    
+    ARG_TO_BUFFER_TYPE_LEN(out, crypto_pwhash_STRBYTES, char*);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
+    
+    if (crypto_pwhash_str(out, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::False());
+}
+
+/**
+ * int crypto_pwhash_str_verify(const char str[crypto_pwhash_STRBYTES],
+                             const char * const passwd,
+                             unsigned long long passwdlen)
+                             
+    Buffer hash String
+    Buffer password
+ */
+NAN_METHOD(bind_crypto_pwhash_str_verify) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(2,"arguments must be: pwhash string, password");
+    
+    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_STRBYTES);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    
+    if (crypto_pwhash_str_verify((char*)hash, passwd, passwd_size) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::False()); 
+}
+
+
+/**
+ * int crypto_pwhash_scryptsalsa208sha256(unsigned char * const out,
                                        unsigned long long outlen,
                                        const char * const passwd,
                                        unsigned long long passwdlen,
                                        const unsigned char * const salt,
                                        unsigned long long opslimit,
-                                       size_t memlimit);”
+                                       size_t memlimit);
 
     number out length
     buffer passwd
@@ -25,21 +112,19 @@
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(5,"arguments must be: output length, password buffer, salt buffer, oLimit, memLimit");
+    ARGS(5,"arguments must be: output length, password buffer, salt buffer, oLimit, memLimit");
     
-    GET_ARG_POSITIVE_NUMBER(0, out_size);
-    GET_ARG_AS(1, passwd, char*);
-    GET_ARG_AS_UCHAR_LEN(2, salt, crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
-    GET_ARG_POSITIVE_NUMBER(3, oppLimit);
-    GET_ARG_POSITIVE_NUMBER(4, memLimit);
+    ARG_TO_BUFFER_TYPE(out, unsigned char*);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
     
-    NEW_BUFFER_AND_PTR(hash, out_size);
+    if (crypto_pwhash_scryptsalsa208sha256(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
     
-    if (crypto_pwhash_scryptsalsa208sha256(hash_ptr, out_size, passwd, passwd_size, salt, oppLimit, memLimit) == 0) {
-        return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    return info.GetReturnValue().Set(Nan::False());
 }
 
 /**
@@ -57,20 +142,20 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_ll) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p");
+    ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p");
     
-    GET_ARG_AS(0, passwd, uint8_t*);
-    GET_ARG_AS(1, salt, uint8_t*);
-    GET_ARG_POSITIVE_NUMBER(2, N);
-    GET_ARG_POSITIVE_NUMBER(3, r);
-    GET_ARG_POSITIVE_NUMBER(4, p);
-    GET_ARG_AS(5, out, uint8_t*);
+    ARG_TO_BUFFER_TYPE(passwd, uint8_t*);
+    ARG_TO_BUFFER_TYPE(salt, uint8_t*);
+    ARG_TO_POSITIVE_NUMBER(N);
+    ARG_TO_POSITIVE_NUMBER(r);
+    ARG_TO_POSITIVE_NUMBER(p);
+    ARG_TO_BUFFER_TYPE(out, uint8_t*);
     
     if (crypto_pwhash_scryptsalsa208sha256_ll(passwd, passwd_size, salt, salt_size, N, r, p, out, out_size) == 0) {
         return info.GetReturnValue().Set(Nan::True());
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::False());
 }
 
 /**
@@ -85,19 +170,19 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_ll) {
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
+    ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
     
-    GET_ARG_AS(0, passwd, char*);
-    GET_ARG_POSITIVE_NUMBER(1, oppLimit);
-    GET_ARG_POSITIVE_NUMBER(2, memLimit);
+    ARG_TO_BUFFER_TYPE(passwd, char*); 
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
     
     NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
     
     if (crypto_pwhash_scryptsalsa208sha256_str((char*)hash_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
         return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
@@ -108,16 +193,16 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: pwhash string, password");
+    ARGS(2,"arguments must be: pwhash string, password");
     
-    GET_ARG_AS_UCHAR_LEN(0, hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
-    GET_ARG_AS(1, passwd, char*);
+    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
     
     if (crypto_pwhash_scryptsalsa208sha256_str_verify((char*)hash, passwd, passwd_size) == 0) {
         return info.GetReturnValue().Set(Nan::True());
-    } else {
-        return info.GetReturnValue().Set(Nan::False());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::False()); 
 }
 
 
@@ -127,6 +212,9 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
 void register_pwhash(Handle<Object> target) {
     
     // Methods
+    NEW_METHOD(crypto_pwhash);
+    NEW_METHOD(crypto_pwhash_str);
+    NEW_METHOD(crypto_pwhash_str_verify);
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256);
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_ll);
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str);
@@ -149,5 +237,17 @@ void register_pwhash(Handle<Object> target) {
     NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
     NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
     NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);   
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
+    
+    NEW_INT_PROP(crypto_pwhash_ALG_DEFAULT);
+    NEW_INT_PROP(crypto_pwhash_SALTBYTES);
+    NEW_INT_PROP(crypto_pwhash_STRBYTES);
+    NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
+    NEW_STRING_PROP(crypto_pwhash_PRIMITIVE);
 }

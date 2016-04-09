@@ -84,9 +84,22 @@ using namespace v8;
         return Nan::ThrowError("argument size must be a positive number"); \
     }
 
+#define ARG_TO_BUFFER_TYPE(NAME, TYPE)              GET_ARG_AS(_arg, NAME, TYPE); _arg++
+#define ARG_TO_BUFFER_TYPE_LEN(NAME, MAXLEN, TYPE)  GET_ARG_AS_LEN(_arg, NAME, MAXLEN, TYPE); _arg++
+#define ARG_TO_POSITIVE_NUMBER(NAME)                GET_ARG_POSITIVE_NUMBER(_arg, NAME); _arg++
+#define ARG_TO_NUMBER(NAME)                         GET_ARG_NUMBER(_arg, NAME); _arg++
+#define ARG_TO_VOID_BUFFER_LEN(NAME, MAXLEN)        GET_ARG_AS_VOID_LEN(_arg, NAME, MAXLEN); _arg++
+#define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++
+#define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
+#define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
+
+#define ARGS(n, message) \
+    int _arg = 0;        \
+    NUMBER_OF_MANDATORY_ARGS(n, message)
+
 #define NUMBER_OF_MANDATORY_ARGS(n, message) \
     if (info.Length() < (n)) {               \
-        return Nan::ThrowError(message);       \
+        return Nan::ThrowError(message);     \
     }
 
 #define TO_REAL_BUFFER(slowBuffer, actualBuffer) \
