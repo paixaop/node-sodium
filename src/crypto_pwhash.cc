@@ -7,6 +7,75 @@
  */
 #include "node_sodium.h"
 
+/* int crypto_pwhash_argon2i(unsigned char * const out,
+                          unsigned long long outlen,
+                          const char * const passwd,
+                          unsigned long long passwdlen,
+                          const unsigned char * const salt,
+                          unsigned long long opslimit, size_t memlimit,
+                          int alg)
+*/
+NAN_METHOD(bind_crypto_pwhash_argon2i) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(6,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit, algorithm");
+    
+    ARG_TO_BUFFER_TYPE(out, unsigned char*);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_argon2i_SALTBYTES);
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_POSITIVE_NUMBER(alg);
+    
+    if (crypto_pwhash_argon2i(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
+}
+
+/* int crypto_pwhash_argon2i_str(char out[crypto_pwhash_argon2i_STRBYTES],
+                              const char * const passwd,
+                              unsigned long long passwdlen,
+                              unsigned long long opslimit, size_t memlimit)
+*/
+NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
+    Nan::EscapableHandleScope scope;
+    
+    ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
+    
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    ARG_TO_POSITIVE_NUMBER(oppLimit);
+    ARG_TO_POSITIVE_NUMBER(memLimit);
+    
+    NEW_BUFFER_AND_PTR(out, crypto_pwhash_argon2i_STRBYTES); 
+    
+    if (crypto_pwhash_argon2i_str((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(out);
+    }
+    
+    return info.GetReturnValue().Set(Nan::False());
+}
+
+/* int crypto_pwhash_argon2i_str_verify(const char str[crypto_pwhash_argon2i_STRBYTES],
+                                     const char * const passwd,
+                                     unsigned long long passwdlen)
+*/
+NAN_METHOD(bind_crypto_pwhash_argon2i_str_verify) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(2,"arguments must be: pwhash string, password");
+    
+    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_argon2i_STRBYTES);
+    ARG_TO_BUFFER_TYPE(passwd, char*);
+    
+    if (crypto_pwhash_argon2i_str_verify((char*)hash, passwd, passwd_size) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::False()); 
+}
+
 /*
     int crypto_pwhash(unsigned char * const out, unsigned long long outlen,
                   const char * const passwd, unsigned long long passwdlen,
@@ -54,17 +123,16 @@ NAN_METHOD(bind_crypto_pwhash) {
 NAN_METHOD(bind_crypto_pwhash_str) {
     Nan::EscapableHandleScope scope;
     
-    std::ostringstream oss;
-
-    ARGS(4,"arguments must be: output buffer, password buffer, oLimit, memLimit");
+    ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
     
-    ARG_TO_BUFFER_TYPE_LEN(out, crypto_pwhash_STRBYTES, char*);
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_POSITIVE_NUMBER(oppLimit);
     ARG_TO_POSITIVE_NUMBER(memLimit);
     
-    if (crypto_pwhash_str(out, passwd, passwd_size, oppLimit, memLimit) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+    NEW_BUFFER_AND_PTR(out, crypto_pwhash_STRBYTES); 
+    
+    if (crypto_pwhash_str((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        return info.GetReturnValue().Set(out);
     }
     
     return info.GetReturnValue().Set(Nan::False());
@@ -219,6 +287,9 @@ void register_pwhash(Handle<Object> target) {
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_ll);
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str);
     NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str_verify);
+    NEW_METHOD(crypto_pwhash_argon2i);
+    NEW_METHOD(crypto_pwhash_argon2i_str);
+    NEW_METHOD(crypto_pwhash_argon2i_str_verify);
     
     // Properties
     NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
@@ -250,4 +321,15 @@ void register_pwhash(Handle<Object> target) {
     NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
     NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
     NEW_STRING_PROP(crypto_pwhash_PRIMITIVE);
+    
+    NEW_INT_PROP(crypto_pwhash_argon2i_ALG_ARGON2I13);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_SALTBYTES);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_STRBYTES);
+    NEW_STRING_PROP(crypto_pwhash_argon2i_STRPREFIX);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
+    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);    
 }

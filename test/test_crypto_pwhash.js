@@ -7,7 +7,7 @@ var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 var toBuffer = require('../lib/toBuffer');
 
-describe('PWHash', function() {
+describe('PWHash scryptsalsa208sha256', function() {
     it('should verify the generated hash with same password', function(done) {
         var password = new Buffer('this is a test password','utf8');
     
@@ -49,6 +49,61 @@ describe('PWHash', function() {
         assert(sodium.compare(result,output)==0);
         done(); 
     });
+});
+
+describe('PWHash', function() {
+    it('should verify the generated hash with same password', function(done) {
+        var password = new Buffer('this is a test password','utf8');
     
+        var out = sodium.crypto_pwhash_str(
+                    password,
+                    sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,                                            
+                    sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE);
+        assert(sodium.crypto_pwhash_str_verify(out, password)); 
+        
+        done();
+    });
+    
+    it('should not verify the generated hash with different passwords', function(done) {
+        var password = new Buffer('this is a test password','utf8');
+        var badPassword = new Buffer('this is a bad password','utf8');
+        
+        var out = sodium.crypto_pwhash_str(
+                    password,
+                    sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,                                            
+                    sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE);
+        
+        assert(sodium.crypto_pwhash_str_verify(out, badPassword)==false); 
+        
+        done();
+    });
+});
+    
+describe('PWHash argon2i', function() {
+    it('should verify the generated hash with same password', function(done) {
+        var password = new Buffer('this is a test password','utf8');
+    
+        var out = sodium.crypto_pwhash_argon2i_str(
+                    password,
+                    sodium.crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE,                                            
+                    sodium.crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+        assert(sodium.crypto_pwhash_argon2i_str_verify(out, password)); 
+        
+        done();
+    });
+    
+    it('should not verify the generated hash with different passwords', function(done) {
+        var password = new Buffer('this is a test password','utf8');
+        var badPassword = new Buffer('this is a bad password','utf8');
+        
+        var out = sodium.crypto_pwhash_argon2i_str(
+                    password,
+                    sodium.crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE,                                            
+                    sodium.crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+        
+        assert(sodium.crypto_pwhash_argon2i_str_verify(out, badPassword)==false); 
+        
+        done();
+    });
 });
     
