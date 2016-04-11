@@ -12,5 +12,6 @@ void register_crypto_hash_sha512(Handle<Object> target);
 void register_crypto_shorthash(Handle<Object> target);
 void register_crypto_shorthash_siphash24(Handle<Object> target);
 void register_crypto_generichash(Handle<Object> target);
+void register_crypto_generichash_blake2b(Handle<Object> target);
 
 #endif
