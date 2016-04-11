@@ -7,6 +7,8 @@
       'target_name': 'sodium',
       'sources': [
         './src/sodium.cc',
+        './src/crypto_stream.cc',
+        './src/crypto_streams.cc',
         './src/helpers.cc',
         './src/randombytes.cc',
         './src/crypto_pwhash.cc',

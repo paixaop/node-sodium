@@ -15,86 +15,6 @@ Local<Object> globalObj = Nan::GetCurrentContext()->Global();
 Local<Function> bufferConstructor =
        Local<Function>::Cast(globalObj->Get(Nan::New<String>("Buffer").ToLocalChecked()));
 
-/**
- * int crypto_stream(
- *    unsigned char * stream,
- *    unsigned long long slen,
- *    const unsigned char * nonce,
- *    const unsigned char * key)
- *
- * Generates a stream using the given secret key and nonce.
- *
- * Parameters:
- *    [out] stream  the generated stream.
- *    [out]  slen    the length of the generated stream.
- *    [in]  nonce   the nonce used to generate the stream.
- *    [in]  key     the key used to generate the stream.
- *
- * Returns:
- *    0 if operation successful
- */
-NAN_METHOD(bind_crypto_stream) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(3,"argument length must be a positive number, arguments nonce, and key must be buffers");
-
-    if (!info[0]->IsUint32())
-        return Nan::ThrowError("argument length must be positive number");
-
-    unsigned long long slen = info[0]->ToUint32()->Value();
-
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_stream_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_stream_KEYBYTES);
-
-    NEW_BUFFER_AND_PTR(stream, slen);
-
-    if (crypto_stream(stream_ptr, slen, nonce, key) == 0) {
-        return info.GetReturnValue().Set(stream);
-    } else {
-        return;
-    }
-}
-
-/**
- * int crypto_stream_xor(
- *    unsigned char *c,
- *    const unsigned char *m,
- *    unsigned long long mlen,
- *    const unsigned char *n,
- *    const unsigned char *k)
- *
- * Parameters:
- *    [out] ctxt 	buffer for the resulting ciphertext.
- *    [in] 	msg 	the message to be encrypted.
- *    [in] 	mlen 	the length of the message.
- *    [in] 	nonce 	the nonce used during encryption.
- *    [in] 	key 	secret key used during encryption.
- *
- * Returns:
- *    0 if operation successful.
- *
- * Precondition:
- *    ctxt must have length minimum mlen.
- *    nonce must have length minimum crypto_stream_NONCEBYTES.
- *    key must have length minimum crpyto_stream_KEYBYTES
- */
-NAN_METHOD(bind_crypto_stream_xor) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_stream_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_stream_KEYBYTES);
-
-    NEW_BUFFER_AND_PTR(ctxt, message_size);
-
-    if (crypto_stream_xor(ctxt_ptr, message, message_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(ctxt);
-    } else {
-        return;
-    }
-}
 
 /**
  * Encrypts and authenticates a message using the given secret key, and nonce.
@@ -1124,13 +1044,8 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_auth(target);
     register_crypto_onetimeauth(target);
     register_crypto_onetimeauth_poly1305(target);
-
-    // Stream
-    NEW_METHOD(crypto_stream);
-    NEW_METHOD(crypto_stream_xor);
-    NEW_INT_PROP(crypto_stream_KEYBYTES);
-    NEW_INT_PROP(crypto_stream_NONCEBYTES);
-    NEW_STRING_PROP(crypto_stream_PRIMITIVE);
+    register_crypto_stream(target);
+    register_crypto_streams(target);
 
     // Secret Box
     NEW_METHOD(crypto_secretbox);
