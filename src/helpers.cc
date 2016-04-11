@@ -7,6 +7,29 @@
  */
 #include "node_sodium.h"
 
+// Lib Sodium Version Functions
+NAN_METHOD(bind_sodium_version_string) {
+    Nan::EscapableHandleScope scope;
+
+    return info.GetReturnValue().Set(Nan::New<String>(sodium_version_string()).ToLocalChecked());
+}
+
+NAN_METHOD(bind_sodium_library_version_minor) {
+    Nan::EscapableHandleScope scope;
+
+    return info.GetReturnValue().Set(
+        Nan::New(sodium_library_version_minor())
+    );
+}
+
+NAN_METHOD(bind_sodium_library_version_major) {
+    Nan::EscapableHandleScope scope;
+
+    return info.GetReturnValue().Set(
+        Nan::New(sodium_library_version_major())
+    );
+}
+
 // Lib Sodium Utils
 NAN_METHOD(bind_memzero) {
     Nan::EscapableHandleScope scope;
@@ -164,8 +187,11 @@ NAN_METHOD(bind_is_zero) {
  * Register function calls in node binding
  */
 void register_helpers(Handle<Object> target) {
-    // Helpers
-
+    // Register version functions
+    NEW_METHOD(sodium_version_string);
+    NEW_METHOD(sodium_library_version_minor);
+    NEW_METHOD(sodium_library_version_major);
+    
     // Constant-time test for equality
     NEW_METHOD(memcmp);
     NEW_METHOD(memzero);

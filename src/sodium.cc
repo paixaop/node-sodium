@@ -16,30 +16,6 @@ Local<Function> bufferConstructor =
        Local<Function>::Cast(globalObj->Get(Nan::New<String>("Buffer").ToLocalChecked()));
 
 
-// Lib Sodium Version Functions
-NAN_METHOD(bind_sodium_version_string) {
-    Nan::EscapableHandleScope scope;
-
-    return info.GetReturnValue().Set(Nan::New<String>(sodium_version_string()).ToLocalChecked());
-}
-
-NAN_METHOD(bind_sodium_library_version_minor) {
-    Nan::EscapableHandleScope scope;
-
-    return info.GetReturnValue().Set(
-        Nan::New(sodium_library_version_minor())
-    );
-}
-
-NAN_METHOD(bind_sodium_library_version_major) {
-    Nan::EscapableHandleScope scope;
-
-    return info.GetReturnValue().Set(
-        Nan::New(sodium_library_version_major())
-    );
-}
-
-
 /**
  * int crypto_shorthash(
  *    unsigned char *out,
@@ -1453,13 +1429,6 @@ void RegisterModule(Handle<Object> target) {
     }
 
     randombytes_stir();
-    
-    // Register version functions
-    NEW_METHOD(sodium_version_string);
-
-    //NEW_METHOD(version);
-    NEW_METHOD(sodium_library_version_minor);
-    NEW_METHOD(sodium_library_version_major);
     
     register_helpers(target);
     register_randombytes(target);
