@@ -277,7 +277,7 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
 /**
  * Register function calls in node binding
  */
-void register_pwhash(Handle<Object> target) {
+void register_crypto_pwhash(Handle<Object> target) {
     
     // Methods
     NEW_METHOD(crypto_pwhash);
@@ -299,20 +299,10 @@ void register_pwhash(Handle<Object> target) {
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
     NEW_STRING_PROP(crypto_pwhash_scryptsalsa208sha256_STRPREFIX);
+    
     NEW_NUMBER_PROP(crypto_pwhash_ALG_DEFAULT);
     NEW_NUMBER_PROP(crypto_pwhash_SALTBYTES);
     NEW_NUMBER_PROP(crypto_pwhash_STRBYTES);
-    NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
-    
-    NEW_INT_PROP(crypto_pwhash_ALG_DEFAULT);
-    NEW_INT_PROP(crypto_pwhash_SALTBYTES);
-    NEW_INT_PROP(crypto_pwhash_STRBYTES);
     NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
     NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
     NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
