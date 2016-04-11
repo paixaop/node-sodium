@@ -194,4 +194,3 @@ sodium_runtime_has_sse2
 sodium_runtime_has_sse3
 sodium_runtime_has_sse41
 sodium_runtime_has_ssse3
-sodium_version_string
