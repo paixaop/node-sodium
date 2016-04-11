@@ -3,6 +3,12 @@
 
 #include <node.h>
 
-void register_pwhash(Handle<Object> target);
+void register_helpers(Handle<Object> target);
+void register_randombytes(Handle<Object> target);
+void register_crypto_pwhash(Handle<Object> target);
+void register_crypto_hash(Handle<Object> target);
+void register_crypto_hash_sha256(Handle<Object> target);
+void register_crypto_hash_sha512(Handle<Object> target);
+
 
 #endif

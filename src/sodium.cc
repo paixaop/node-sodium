@@ -39,225 +39,6 @@ NAN_METHOD(bind_sodium_library_version_major) {
     );
 }
 
-// Lib Sodium Utils
-NAN_METHOD(bind_memzero) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
-
-    GET_ARG_AS_VOID(0, buffer);
-    sodium_memzero(buffer, buffer_size);
-
-    return info.GetReturnValue().Set(Nan::Null());
-}
-
-/**
- * int sodium_memcmp(const void * const b1_, const void * const b2_, size_t size);
- */
-NAN_METHOD(bind_memcmp) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: buffer, buffer, positive number");
-
-    GET_ARG_AS_VOID(0, buffer_1);
-    GET_ARG_AS_VOID(1, buffer_2);
-
-    GET_ARG_POSITIVE_NUMBER(2, size);
-    
-    size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
-
-    if( s < size ) {
-        size = s;
-    }
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(sodium_memcmp(buffer_1, buffer_2, size))
-    );
-}
-
-/**
- * char *sodium_bin2hex(char * const hex, const size_t hexlen,
- *                    const unsigned char *bin, const size_t binlen);
- */
-NAN_METHOD(bind_bin2hex) {
-    Nan::HandleScope scope;
-
-    return Nan::ThrowError("use node's native Buffer.toString()");
-}
-
-NAN_METHOD(bind_hex2bin) {
-    Nan::HandleScope scope;
-
-    return Nan::ThrowError("use node's native Buffer.toString()");
-}
-
-/**
- * void sodium_increment(unsigned char *n, const size_t nlen);
- *
- */
-NAN_METHOD(bind_increment) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
-
-    GET_ARG_AS_UCHAR(0, buffer);
-    sodium_increment(buffer, buffer_size);
-
-    return info.GetReturnValue().Set(Nan::Null());
-}
-
-/**
- * int sodium_compare(const unsigned char *b1_, const unsigned char *b2, size_t len);
- */
-NAN_METHOD(bind_compare) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
-
-    GET_ARG_AS_UCHAR(0, buffer_1);
-    GET_ARG_AS_UCHAR(1, buffer_2);
-
-    if( buffer_1_size != buffer_2_size ) {
-        return Nan::ThrowError("buffers need to be the same size");
-    }
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(sodium_compare(buffer_1, buffer_2, buffer_1_size))
-    );
-}
-
-/**
- * void sodium_add(unsigned char *a, const unsigned char *b, const size_t len);
- */
-NAN_METHOD(bind_add) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"argument must be a buffer");
-
-    GET_ARG_AS_UCHAR(0, buffer_1);
-    GET_ARG_AS_UCHAR(1, buffer_2);
-
-    if( buffer_1_size != buffer_2_size ) {
-        return Nan::ThrowError("buffers need to be the same size");
-    }
-    sodium_add(buffer_1, buffer_2, buffer_1_size);
-    return info.GetReturnValue().Set(Nan::Null());
-}
-
-/**
- * `int sodium_is_zero(const unsigned char *n, const size_t nlen);
- */
-NAN_METHOD(bind_is_zero) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
-
-    GET_ARG_AS_UCHAR(0, buffer_1);
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(sodium_is_zero(buffer_1, buffer_1_size))
-    );
-}
-
-// Lib Sodium Random
-
-// void randombytes_buf(void *const buf, const size_t size)
-NAN_METHOD(bind_randombytes_buf) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
-
-    GET_ARG_AS_VOID(0, buffer);
-    randombytes_buf(buffer, buffer_size);
-
-    return info.GetReturnValue().Set(Nan::Null());
-}
-
-// void randombytes_stir()
-NAN_METHOD(bind_randombytes_stir) {
-    Nan::EscapableHandleScope scope;
-    randombytes_stir();
-
-    return info.GetReturnValue().Set(Nan::Null());
-}
-
-NAN_METHOD(bind_randombytes_close) {
-    Nan::EscapableHandleScope scope;
-
-    // int randombytes_close()
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(randombytes_close())
-    );
-}
-
-NAN_METHOD(bind_randombytes_random) {
-    Nan::EscapableHandleScope scope;
-
-    // uint_32 randombytes_random()
-    return info.GetReturnValue().Set(
-        Nan::New<Int32>(randombytes_random())
-    );
-}
-
-NAN_METHOD(bind_randombytes_uniform) {
-    Nan::EscapableHandleScope scope;
-    uint32_t upper_bound;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument size must be a positive number");
-
-    if (info[0]->IsUint32()) {
-        upper_bound = info[0]->Int32Value();
-    } else {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
-
-    // uint32_t randombytes_uniform(const uint32_t upper_bound)
-    return info.GetReturnValue().Set(
-        Nan::New<Int32>(randombytes_uniform(upper_bound))
-    );
-}
-
-
-NAN_METHOD(bind_crypto_verify_16) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_16_BYTES);
-    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_16_BYTES);
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(crypto_verify_16(string1, string2))
-    );
-}
-
-// int crypto_verify_16(const unsigned char * string1, const unsigned char * string2)
-NAN_METHOD(bind_crypto_verify_32) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_32_BYTES);
-    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_32_BYTES);
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(crypto_verify_32(string1, string2))
-    );
-}
-
-// int crypto_verify_64(const unsigned char * string1, const unsigned char * string2)
-NAN_METHOD(bind_crypto_verify_64) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be two buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0,string1, crypto_verify_64_BYTES);
-    GET_ARG_AS_UCHAR_LEN(1,string2, crypto_verify_64_BYTES);
-
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(crypto_verify_64(string1, string2))
-    );
-}
 
 /**
  * int crypto_shorthash(
@@ -298,69 +79,6 @@ NAN_METHOD(bind_crypto_shorthash) {
     }
 }
 
-/**
- * int crypto_hash(
- *    unsigned char * hbuf,
- *    const unsigned char * msg,
- *    unsigned long long mlen)
- */
-NAN_METHOD(bind_crypto_hash) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-
-    GET_ARG_AS_UCHAR(0,msg);
-
-    NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);
-
-    if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
-        return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    }
-}
-
-/**
- * int crypto_hash_sha256(
- *    unsigned char * hbuf,
- *    const unsigned char * msg,
- *    unsigned long long mlen)
- */
-NAN_METHOD(bind_crypto_hash_sha256) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-    GET_ARG_AS_UCHAR(0, msg);
-    NEW_BUFFER_AND_PTR(hash, 32);
-
-    if( crypto_hash_sha256(hash_ptr, msg, msg_size) == 0 ) {
-        return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    }
-}
-
-/**
- * int crypto_hash_sha512(
- *    unsigned char * hbuf,
- *    const unsigned char * msg,
- *    unsigned long long mlen)
- */
-NAN_METHOD(bind_crypto_hash_sha512) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-
-    GET_ARG_AS_UCHAR(0, msg);
-
-    NEW_BUFFER_AND_PTR(hash, 64);
-
-    if( crypto_hash_sha512(hash_ptr, msg, msg_size) == 0 ) {
-        return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    }
-}
 
 
 /**
@@ -1742,50 +1460,13 @@ void RegisterModule(Handle<Object> target) {
     //NEW_METHOD(version);
     NEW_METHOD(sodium_library_version_minor);
     NEW_METHOD(sodium_library_version_major);
-
-    // Helpers
-    // Docs: https://download.libsodium.org/doc/helpers/index.html
-
-    // Constant-time test for equality
-    NEW_METHOD(memcmp);
-    NEW_METHOD(memzero);
-
-    // Hexadecimal encoding/decoding
-    NEW_METHOD(bin2hex);
-    NEW_METHOD(hex2bin);
-
-    // Large Numbers
-    NEW_METHOD(increment);
-    NEW_METHOD(add);
-    NEW_METHOD(compare);
-    NEW_METHOD(is_zero);
-
-    // Generating Random Data
-    // Docs: https://download.libsodium.org/doc/generating_random_data/index.html
-    NEW_METHOD(randombytes_buf);
-    Nan::SetMethod(target, "randombytes", bind_randombytes_buf);
-    NEW_METHOD(randombytes_close);
-    NEW_METHOD(randombytes_stir);
-    NEW_METHOD(randombytes_random);
-    NEW_METHOD(randombytes_uniform);
-
-    // String comparisons
-    NEW_METHOD(crypto_verify_16);
-    NEW_METHOD(crypto_verify_32);
-    NEW_METHOD(crypto_verify_64);
-    NEW_INT_PROP(crypto_verify_16_BYTES);
-    NEW_INT_PROP(crypto_verify_32_BYTES);
-    NEW_INT_PROP(crypto_verify_64_BYTES);
-
-    // Hash
-    NEW_METHOD(crypto_hash);
-    NEW_METHOD(crypto_hash_sha512);
-    NEW_METHOD(crypto_hash_sha256);
-    NEW_INT_PROP(crypto_hash_BYTES);
-    NEW_INT_PROP(crypto_hash_sha256_BYTES);
-    NEW_INT_PROP(crypto_hash_sha512_BYTES);
-    //NEW_INT_PROP(crypto_hash_BLOCKBYTES);
-    NEW_STRING_PROP(crypto_hash_PRIMITIVE);
+    
+    register_helpers(target);
+    register_randombytes(target);
+    register_crypto_pwhash(target);
+    register_crypto_hash(target);
+    register_crypto_hash_sha256(target);
+    register_crypto_hash_sha512(target);
 
     // Auth
     NEW_METHOD(crypto_auth);
@@ -1807,14 +1488,6 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_stream_KEYBYTES);
     NEW_INT_PROP(crypto_stream_NONCEBYTES);
     NEW_STRING_PROP(crypto_stream_PRIMITIVE);
-
-    /*
-     * Not implemented in the default crypto_stream, only in the AES variations which are not
-     * ported yet
-    NEW_METHOD(crypto_stream_beforenm);
-    NEW_METHOD(crypto_stream_afternm);
-    NEW_METHOD(crypto_stream_xor_afternm);
-    */
 
     // Secret Box
     NEW_METHOD(crypto_secretbox);
@@ -1880,8 +1553,6 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_generichash_KEYBYTES);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MIN);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MAX);
-    
-    register_pwhash(target);
 
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult);
