@@ -1395,6 +1395,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_hash_sha256(target);
     register_crypto_hash_sha512(target);
     register_crypto_shorthash(target);
+    register_crypto_shorthash_siphash24(target);
 
     // Auth
     NEW_METHOD(crypto_auth);
