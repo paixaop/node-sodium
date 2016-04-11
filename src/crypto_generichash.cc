@@ -24,34 +24,12 @@ NAN_METHOD(bind_crypto_generichash) {
 
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_POSITIVE_NUMBER(out_size);
-    
-    if( out_size > crypto_generichash_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( out_size < crypto_generichash_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);
     
-    if( key_size > crypto_generichash_KEYBYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);    
+    CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
     
-    if( key_size != 0 && key_size < crypto_generichash_KEYBYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-
     NEW_BUFFER_AND_PTR(hash, out_size);
     sodium_memzero(hash_ptr, out_size);
 
@@ -76,37 +54,13 @@ NAN_METHOD(bind_crypto_generichash_init) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: key buffer, output size");
-    
-    NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U)
-                        & ~(size_t) 63U);
-    
     ARG_TO_UCHAR_BUFFER(key);
-    
-    if( key_size > crypto_generichash_KEYBYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( key_size != 0 && key_size < crypto_generichash_KEYBYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
     ARG_TO_POSITIVE_NUMBER(out_size);
     
-    if( out_size > crypto_generichash_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);    
+    CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
     
-    if( out_size < crypto_generichash_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
     
     if (crypto_generichash_init((crypto_generichash_state *)state_ptr, key, key_size, out_size) == 0) {
         return info.GetReturnValue().Set(state);
@@ -147,18 +101,7 @@ NAN_METHOD(bind_crypto_generichash_final) {
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_POSITIVE_NUMBER(out_size);
     
-    if( out_size > crypto_generichash_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( out_size < crypto_generichash_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
+    CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
     NEW_BUFFER_AND_PTR(hash, out_size);
     
     if (crypto_generichash_final((crypto_generichash_state *)state, hash_ptr, out_size) == 0) {

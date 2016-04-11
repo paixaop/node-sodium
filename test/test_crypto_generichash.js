@@ -869,7 +869,7 @@ describe('Generic Hash', function() {
             () => {
                 var out = sodium.crypto_generichash(sodium.crypto_generichash_BYTES_MAX + 1, testMessage, testKey);
             },
-            /generichash output size cannot be bigger than/
+            /size cannot be bigger than/
         );
         
         done();
@@ -883,7 +883,7 @@ describe('Generic Hash', function() {
             () => {
                 var out = sodium.crypto_generichash(sodium.crypto_generichash_BYTES_MIN - 1, testMessage, testKey);
             },
-            /generichash output size cannot be smaller than/
+            /size cannot be smaller than/
         );
         
         done();
@@ -898,7 +898,7 @@ describe('Generic Hash', function() {
             () => {
                 var out = sodium.crypto_generichash(sodium.crypto_generichash_BYTES_MIN, testMessage, testKey);
             },
-            /generichash key size cannot be bigger than/
+            /size cannot be bigger than/
         );
         
         done();
@@ -913,7 +913,7 @@ describe('Generic Hash', function() {
             () => {
                 var out = sodium.crypto_generichash(sodium.crypto_generichash_BYTES_MIN, testMessage, testKey);
             },
-            /generichash key size cannot be smaller than/
+            /size cannot be smaller than/
         );
         
         done();
