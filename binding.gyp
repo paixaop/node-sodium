@@ -14,7 +14,8 @@
         './src/crypto_hash_sha256.cc',
         './src/crypto_hash_sha512.cc',
         './src/crypto_shorthash.cc',
-        './src/crypto_shorthash_siphash24.cc'
+        './src/crypto_shorthash_siphash24.cc',
+        './src/crypto_generichash.cc'
       ],
       'include_dirs': [
         './src/include',
