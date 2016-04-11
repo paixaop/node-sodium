@@ -139,4 +139,7 @@ using namespace v8;
 #define NEW_METHOD(NAME) \
     Nan::SetMethod(target, #NAME, bind_ ## NAME)
 
+#define NEW_METHOD_ALIAS(NAME, LINKTO) \
+    Nan::SetMethod(target, #NAME, bind_ ## LINKTO)
+
 #endif

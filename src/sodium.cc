@@ -1123,6 +1123,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_generichash_blake2b(target);
     register_crypto_auth(target);
     register_crypto_onetimeauth(target);
+    register_crypto_onetimeauth_poly1305(target);
 
     // Stream
     NEW_METHOD(crypto_stream);

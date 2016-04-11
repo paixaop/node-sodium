@@ -18,7 +18,8 @@
         './src/crypto_generichash.cc',
         './src/crypto_generichash_blake2b.cc',
         './src/crypto_auth.cc',
-        './src/crypto_onetimeauth.cc'
+        './src/crypto_onetimeauth.cc',
+        './src/crypto_onetimeauth_poly1305.cc'
       ],
       'include_dirs': [
         './src/include',
