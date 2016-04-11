@@ -24,33 +24,11 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
 
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_POSITIVE_NUMBER(out_size);
-    
-    if( out_size > crypto_generichash_blake2b_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_blake2b_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( out_size < crypto_generichash_blake2b_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_blake2b_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);
     
-    if( key_size > crypto_generichash_blake2b_KEYBYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be bigger than " << crypto_generichash_blake2b_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( key_size != 0 && key_size < crypto_generichash_blake2b_KEYBYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be smaller than " << crypto_generichash_blake2b_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+    CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
 
     NEW_BUFFER_AND_PTR(hash, out_size);
     sodium_memzero(hash_ptr, out_size);
@@ -76,37 +54,13 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: key buffer, output size");
-    
-    NEW_BUFFER_AND_PTR(state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U)
-                        & ~(size_t) 63U);
-    
-    ARG_TO_UCHAR_BUFFER(key);
-    
-    if( key_size > crypto_generichash_blake2b_KEYBYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be bigger than " << crypto_generichash_blake2b_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( key_size != 0 && key_size < crypto_generichash_blake2b_KEYBYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash key size cannot be smaller than " << crypto_generichash_blake2b_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
+    ARG_TO_UCHAR_BUFFER(key);  
     ARG_TO_POSITIVE_NUMBER(out_size);
     
-    if( out_size > crypto_generichash_blake2b_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_blake2b_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+    CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
     
-    if( out_size < crypto_generichash_blake2b_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_blake2b_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    NEW_BUFFER_AND_PTR(state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
     
     if (crypto_generichash_blake2b_init((crypto_generichash_blake2b_state *)state_ptr, key, key_size, out_size) == 0) {
         return info.GetReturnValue().Set(state);
@@ -147,17 +101,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_POSITIVE_NUMBER(out_size);
     
-    if( out_size > crypto_generichash_blake2b_BYTES_MAX ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be bigger than " << crypto_generichash_blake2b_BYTES_MAX << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
-    
-    if( out_size < crypto_generichash_blake2b_BYTES_MIN ) {
-        std::ostringstream oss;
-        oss << "generichash output size cannot be smaller than " << crypto_generichash_blake2b_BYTES_MIN << " bytes"; 
-        return Nan::ThrowError(oss.str().c_str());
-    }
+    CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
     
     NEW_BUFFER_AND_PTR(hash, out_size);
     
@@ -176,7 +120,33 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
                                              size_t keylen,
                                              const unsigned char *salt,
                                              const unsigned char *personal);
+                                             
+    Buffer out
+    Buffer in
+    Buffer key
+    Buffer salt
+    Buffer personal
  */
+NAN_METHOD(bind_crypto_generichash_blake2b_salt_personal) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(5,"arguments must five buffers: output, message, key, salt, personal");
+    ARG_TO_UCHAR_BUFFER(out);
+    ARG_TO_UCHAR_BUFFER(in);
+    ARG_TO_UCHAR_BUFFER(key);
+    ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_generichash_blake2b_SALTBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(personal, crypto_generichash_blake2b_PERSONALBYTES);
+    
+    CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+
+    sodium_memzero(out, out_size);
+    if (crypto_generichash_blake2b_salt_personal(out, out_size, in, in_size, key, key_size, salt, personal) == 0) {
+        return info.GetReturnValue().Set(Nan::True());
+    }
+    
+    return info.GetReturnValue().Set(Nan::False()); 
+}
 
 /**
  * Register function calls in node binding
@@ -187,6 +157,7 @@ void register_crypto_generichash_blake2b(Handle<Object> target) {
     NEW_METHOD(crypto_generichash_blake2b_init);
     NEW_METHOD(crypto_generichash_blake2b_update);
     NEW_METHOD(crypto_generichash_blake2b_final);
+    NEW_METHOD(crypto_generichash_blake2b_salt_personal);
     
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES);
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MIN);
@@ -196,5 +167,4 @@ void register_crypto_generichash_blake2b(Handle<Object> target) {
     NEW_INT_PROP(crypto_generichash_blake2b_KEYBYTES_MAX);
     NEW_INT_PROP(crypto_generichash_blake2b_SALTBYTES);
     NEW_INT_PROP(crypto_generichash_blake2b_PERSONALBYTES);
-    NEW_INT_PROP(crypto_generichash_blake2b_STATEBYTES);
 }

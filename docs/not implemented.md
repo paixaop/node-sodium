@@ -101,7 +101,6 @@ crypto_core_salsa20_CONSTBYTES
 crypto_core_salsa20_INPUTBYTES
 crypto_core_salsa20_KEYBYTES
 crypto_core_salsa20_OUTPUTBYTES
-crypto_generichash_blake2b_salt_personal
 crypto_onetimeauth_final
 crypto_onetimeauth_init
 crypto_onetimeauth_update

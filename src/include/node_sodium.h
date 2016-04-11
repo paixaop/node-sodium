@@ -93,6 +93,24 @@ using namespace v8;
 #define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
 
+#define CHECK_MAX_SIZE(NAME, MAX_SIZE)  \
+    if( NAME > MAX_SIZE ) {     \
+        std::ostringstream oss; \
+        oss << #NAME << " size cannot be bigger than " << MAX_SIZE << " bytes";  \
+        return Nan::ThrowError(oss.str().c_str()); \
+    }
+
+#define CHECK_MIN_SIZE(NAME, MIN_SIZE)  \
+    if( NAME < MIN_SIZE ) {     \
+        std::ostringstream oss; \
+        oss << #NAME << " size cannot be smaller than " << MIN_SIZE << " bytes";  \
+        return Nan::ThrowError(oss.str().c_str()); \
+    }
+
+#define CHECK_SIZE(NAME, MIN_SIZE, MAX_SIZE) \
+    CHECK_MIN_SIZE(NAME, MIN_SIZE); \
+    CHECK_MAX_SIZE(NAME, MAX_SIZE)
+
 #define ARGS(n, message) \
     int _arg = 0;        \
     NUMBER_OF_MANDATORY_ARGS(n, message)

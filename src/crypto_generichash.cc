@@ -184,5 +184,4 @@ void register_crypto_generichash(Handle<Object> target) {
     NEW_INT_PROP(crypto_generichash_KEYBYTES);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MIN);
     NEW_INT_PROP(crypto_generichash_KEYBYTES_MAX);
-    NEW_INT_PROP(crypto_generichash_STATEBYTES);
 }
