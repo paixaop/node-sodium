@@ -15,48 +15,6 @@ Local<Object> globalObj = Nan::GetCurrentContext()->Global();
 Local<Function> bufferConstructor =
        Local<Function>::Cast(globalObj->Get(Nan::New<String>("Buffer").ToLocalChecked()));
 
-
-/**
- * int crypto_shorthash(
- *    unsigned char *out,
- *    const unsigned char *in,
- *    unsigned long long inlen,
- *    const unsigned char *key)
- *
- * Parameters:
- *    [out] out    result of hash
- *    [in]  in     input buffer
- *    [in]  inlen  size of input buffer
- *    [in]  key    key buffer
- *
- * A lot of applications and programming language implementations have been
- * recently found to be vulnerable to denial-of-service attacks when a hash
- * function with weak security guarantees, like Murmurhash 3, was used to
- * construct a hash table.
- * In order to address this, Sodium provides the �shorthash� function,
- * currently implemented using SipHash-2-4. This very fast hash function
- * outputs short, but unpredictable (without knowing the secret key) values
- * suitable for picking a list in a hash table for a given key.
- */
-NAN_METHOD(bind_crypto_shorthash) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-
-    GET_ARG_AS_UCHAR(0,message);
-    GET_ARG_AS_UCHAR_LEN(1, key, crypto_shorthash_KEYBYTES);
-
-    NEW_BUFFER_AND_PTR(hash, crypto_shorthash_BYTES);
-
-    if( crypto_shorthash(hash_ptr, message, message_size, key) == 0 ) {
-        return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    }
-}
-
-
-
 /**
  * int crypto_auth(
  *       unsigned char*  tok,
@@ -1436,6 +1394,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_hash(target);
     register_crypto_hash_sha256(target);
     register_crypto_hash_sha512(target);
+    register_crypto_shorthash(target);
 
     // Auth
     NEW_METHOD(crypto_auth);
@@ -1503,12 +1462,6 @@ void RegisterModule(Handle<Object> target) {
     NEW_INT_PROP(crypto_box_SEEDBYTES);
     NEW_INT_PROP(crypto_box_SEALBYTES);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
-
-    // Short Hash
-    NEW_METHOD(crypto_shorthash);
-    NEW_INT_PROP(crypto_shorthash_BYTES);
-    NEW_INT_PROP(crypto_shorthash_KEYBYTES);
-    NEW_STRING_PROP(crypto_shorthash_PRIMITIVE);
     
     // Generic Hash
     NEW_METHOD(crypto_generichash);

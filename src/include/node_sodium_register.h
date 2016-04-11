@@ -9,6 +9,6 @@ void register_crypto_pwhash(Handle<Object> target);
 void register_crypto_hash(Handle<Object> target);
 void register_crypto_hash_sha256(Handle<Object> target);
 void register_crypto_hash_sha512(Handle<Object> target);
-
+void register_crypto_shorthash(Handle<Object> target);
 
 #endif
