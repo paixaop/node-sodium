@@ -22,9 +22,8 @@
 NAN_METHOD(bind_crypto_generichash) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments must be: hash size, message, key");
-    
-    GET_ARG_POSITIVE_NUMBER(0, out_size);
+    ARGS(3,"arguments must be: hash size, message, key");
+    ARG_TO_POSITIVE_NUMBER(out_size);
     
     if( out_size > crypto_generichash_BYTES_MAX ) {
         std::ostringstream oss;
@@ -38,8 +37,8 @@ NAN_METHOD(bind_crypto_generichash) {
         return Nan::ThrowError(oss.str().c_str());
     }
     
-    GET_ARG_AS_UCHAR(1, in);
-    GET_ARG_AS_UCHAR(2, key);
+    ARG_TO_UCHAR_BUFFER(in);
+    ARG_TO_UCHAR_BUFFER(key);
     
     if( key_size > crypto_generichash_KEYBYTES_MAX ) {
         std::ostringstream oss;
@@ -54,13 +53,13 @@ NAN_METHOD(bind_crypto_generichash) {
     }
 
     NEW_BUFFER_AND_PTR(hash, out_size);
-    memset(hash_ptr, 0, out_size);
+    sodium_memzero(hash_ptr, out_size);
 
     if (crypto_generichash(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
         return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null()); 
 }
 
 /*
@@ -76,12 +75,12 @@ int crypto_generichash_init(crypto_generichash_state *state,
 NAN_METHOD(bind_crypto_generichash_init) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: key, out_size");
+    ARGS(2,"arguments must be: key buffer, output size");
     
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U)
                         & ~(size_t) 63U);
     
-    GET_ARG_AS_UCHAR(0, key);
+    ARG_TO_UCHAR_BUFFER(key);
     
     if( key_size > crypto_generichash_KEYBYTES_MAX ) {
         std::ostringstream oss;
@@ -95,7 +94,7 @@ NAN_METHOD(bind_crypto_generichash_init) {
         return Nan::ThrowError(oss.str().c_str());
     }
     
-    GET_ARG_POSITIVE_NUMBER(1, out_size);
+    ARG_TO_POSITIVE_NUMBER(out_size);
     
     if( out_size > crypto_generichash_BYTES_MAX ) {
         std::ostringstream oss;
@@ -111,9 +110,9 @@ NAN_METHOD(bind_crypto_generichash_init) {
     
     if (crypto_generichash_init((crypto_generichash_state *)state_ptr, key, key_size, out_size) == 0) {
         return info.GetReturnValue().Set(state);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null()); 
 }
 
 
@@ -128,10 +127,10 @@ int crypto_generichash_update(crypto_generichash_state *state,
 NAN_METHOD(bind_crypto_generichash_update) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: state, message");
+    ARGS(2,"arguments must be: state buffer, message buffer");
     
-    GET_ARG_AS_VOID(0, state);
-    GET_ARG_AS_UCHAR(1, message);
+    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(message);
     
     crypto_generichash_update((crypto_generichash_state *)state, message, message_size);
     return info.GetReturnValue().Set(Nan::Null()); 
@@ -144,10 +143,9 @@ int crypto_generichash_final(crypto_generichash_state *state,
 NAN_METHOD(bind_crypto_generichash_final) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be: state, out_size");
-    
-    GET_ARG_AS_VOID(0, state);
-    GET_ARG_POSITIVE_NUMBER(1, out_size);
+    ARGS(2,"arguments must be: state buffer, output size");
+    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_POSITIVE_NUMBER(out_size);
     
     if( out_size > crypto_generichash_BYTES_MAX ) {
         std::ostringstream oss;
@@ -165,9 +163,9 @@ NAN_METHOD(bind_crypto_generichash_final) {
     
     if (crypto_generichash_final((crypto_generichash_state *)state, hash_ptr, out_size) == 0) {
         return info.GetReturnValue().Set(hash);
-    } else {
-        return info.GetReturnValue().Set(Nan::Null());
-    } 
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null()); 
 }
 
 /**
