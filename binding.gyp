@@ -6,6 +6,7 @@
     {
       'target_name': 'sodium',
       'sources': [
+        './src/crypto_secretbox.cc',
         './src/sodium.cc',
         './src/crypto_stream.cc',
         './src/crypto_streams.cc',
