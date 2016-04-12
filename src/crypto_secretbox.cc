@@ -37,11 +37,10 @@
 NAN_METHOD(bind_crypto_secretbox) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(pmb, message_size + crypto_secretbox_ZEROBYTES);
 
@@ -59,9 +58,9 @@ NAN_METHOD(bind_crypto_secretbox) {
 
     if( crypto_secretbox(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
         return info.GetReturnValue().Set(ctxt);
-    } else {
-        return;
-    }
+    } 
+    
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
@@ -98,11 +97,10 @@ NAN_METHOD(bind_crypto_secretbox) {
 NAN_METHOD(bind_crypto_secretbox_open) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments cipherText, nonce, and key must be buffers");
-
-    GET_ARG_AS_UCHAR(0, cipher_text);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    ARGS(3,"arguments cipherText, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER(cipher_text);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(message, cipher_text_size);
 
@@ -161,24 +159,23 @@ NAN_METHOD(bind_crypto_secretbox_open) {
  * Postcondition:
  *    first mlen + crypto_secretbox_MACLENGTH bytes of ctxt will contain the ciphertext.
  */
-
 NAN_METHOD(bind_crypto_secretbox_easy) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(c, message_size + crypto_secretbox_MACBYTES);
 
     if (crypto_secretbox_easy(c_ptr, message, message_size, nonce, key) == 0) {
         return info.GetReturnValue().Set(c);
-    } else {
-        return;
-    }
+    } 
+    
+    return info.GetReturnValue().Set(Nan::Null());
 }
+
 /**
  * int crypto_secretbox_open_easy(
  *    unsigned char *msg,
@@ -209,19 +206,70 @@ NAN_METHOD(bind_crypto_secretbox_easy) {
 NAN_METHOD(bind_crypto_secretbox_open_easy) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce, and key must be buffers");
-
-    GET_ARG_AS_UCHAR(0, cipher_text);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_secretbox_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, key, crypto_secretbox_KEYBYTES);
+    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER(cipher_text);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(c, cipher_text_size - crypto_secretbox_MACBYTES);
 
     if (crypto_secretbox_open_easy(c_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
         return info.GetReturnValue().Set(c);
-    } else {
-        return;
     }
+    
+    return info.GetReturnValue().Set(Nan::Null());
+}
+
+/*
+int crypto_secretbox_detached(unsigned char *c,
+                              unsigned char *mac,
+                              const unsigned char *m,
+                              unsigned long long mlen,
+                              const unsigned char *n,
+                              const unsigned char *k);
+*/
+NAN_METHOD(bind_crypto_secretbox_detached) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(4,"arguments mac, message, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
+
+    NEW_BUFFER_AND_PTR(c, message_size);
+
+    if (crypto_secretbox_detached(c_ptr, mac, message, message_size, nonce, key) == 0) {
+        return info.GetReturnValue().Set(c);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
+}
+
+/*
+int crypto_secretbox_open_detached(unsigned char *m,
+                                   const unsigned char *c,
+                                   const unsigned char *mac,
+                                   unsigned long long clen,
+                                   const unsigned char *n,
+                                   const unsigned char *k)
+*/
+NAN_METHOD(bind_crypto_secretbox_open_detached) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(4,"arguments encrypted message, mac, nonce, and key must be buffers");
+    ARG_TO_UCHAR_BUFFER(c);
+    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
+
+    NEW_BUFFER_AND_PTR(m, c_size);
+
+    if (crypto_secretbox_open_detached(m_ptr, c, mac, c_size, nonce, key) == 0) {
+        return info.GetReturnValue().Set(m);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
@@ -233,6 +281,9 @@ void register_crypto_secretbox(Handle<Object> target) {
     NEW_METHOD(crypto_secretbox_open);
     NEW_METHOD(crypto_secretbox_easy);
     NEW_METHOD(crypto_secretbox_open_easy);
+    NEW_METHOD(crypto_secretbox_detached);
+    NEW_METHOD(crypto_secretbox_open_detached);
+    
     NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
     NEW_INT_PROP(crypto_secretbox_MACBYTES);
     NEW_INT_PROP(crypto_secretbox_KEYBYTES);

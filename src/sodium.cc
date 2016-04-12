@@ -829,6 +829,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_stream(target);
     register_crypto_streams(target);
     register_crypto_secretbox(target);
+    register_crypto_secretbox_xsalsa20poly1305(target);
 
     // Sign
     NEW_METHOD(crypto_sign);

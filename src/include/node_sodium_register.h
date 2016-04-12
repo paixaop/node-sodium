@@ -19,5 +19,6 @@ void register_crypto_onetimeauth_poly1305(Handle<Object> target);
 void register_crypto_stream(Handle<Object> target);
 void register_crypto_streams(Handle<Object> target);
 void register_crypto_secretbox(Handle<Object> target);
+void register_crypto_secretbox_xsalsa20poly1305(Handle<Object> target);
 
 #endif
