@@ -34,6 +34,22 @@
         return info.GetReturnValue().Set(Nan::Null()); \
     }
 
+#define CRYPTO_STREAM_DEF_IC(ALGO) \
+    NAN_METHOD(bind_crypto_stream_ ## ALGO ## _xor_ic) { \
+        Nan::EscapableHandleScope scope; \
+        ARGS(4,"arguments message, nonce, and key must be buffers"); \
+        ARG_TO_UCHAR_BUFFER(message); \
+        ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
+        ARG_TO_POSITIVE_NUMBER(ic); \
+        ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_ ## ALGO ## _KEYBYTES); \
+        NEW_BUFFER_AND_PTR(ctxt, message_size); \
+        if (crypto_stream_ ## ALGO ## _xor_ic(ctxt_ptr, message, message_size, nonce, ic, key) == 0) { \
+            return info.GetReturnValue().Set(ctxt); \
+        } \
+        return info.GetReturnValue().Set(Nan::Null()); \
+    }
+
+
 #define METHODS(ALGO) \
     NEW_METHOD(crypto_stream_ ## ALGO); \
     NEW_METHOD(crypto_stream_ ## ALGO ## _xor);
