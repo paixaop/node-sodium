@@ -5,8 +5,8 @@
  * @email paixaop at gmail dot com
  * @License MIT
  */
-#ifndef __CRYPTO_ONETIMEAUTH_POLY1305_H__
-#define __CRYPTO_ONETIMEAUTH_POLY1305_H__
+#ifndef __CRYPTO_STREAMS_H__
+#define __CRYPTO_STREAMS_H__
 
 #define CRYPTO_STREAM_DEF(ALGO) \
     NAN_METHOD(bind_crypto_stream_##ALGO) { \

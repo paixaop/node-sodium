@@ -6,6 +6,7 @@
     {
       'target_name': 'sodium',
       'sources': [
+        './src/crypto_core.cc',
         './src/crypto_scalarmult_curve25519.cc',
         './src/crypto_scalarmult.cc',
         './src/crypto_box.cc',

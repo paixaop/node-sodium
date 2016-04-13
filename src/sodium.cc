@@ -37,6 +37,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_box( target);
     register_crypto_scalarmult(target);
     register_crypto_scalarmult_curve25519(target);
+    register_crypto_core(target);
 }
 
 NODE_MODULE(sodium, RegisterModule);

@@ -77,32 +77,6 @@
   * crypto_box_seal
   * crypto_box_seal_open
   * crypto_box_seed_keypair
-  
-  * crypto_core_hchacha20
-  * crypto_core_hchacha20_CONSTBYTES
-  * crypto_core_hchacha20_INPUTBYTES
-  * crypto_core_hchacha20_KEYBYTES
-  * crypto_core_hchacha20_OUTPUTBYTES
-  * crypto_core_hsalsa20
-  * crypto_core_hsalsa20_CONSTBYTES
-  * crypto_core_hsalsa20_INPUTBYTES
-  * crypto_core_hsalsa20_KEYBYTES
-  * crypto_core_hsalsa20_OUTPUTBYTES
-  * crypto_core_salsa20
-  * crypto_core_salsa2012
-  * crypto_core_salsa2012_CONSTBYTES
-  * crypto_core_salsa2012_INPUTBYTES
-  * crypto_core_salsa2012_KEYBYTES
-  * crypto_core_salsa2012_OUTPUTBYTES
-  * crypto_core_salsa208
-  * crypto_core_salsa208_CONSTBYTES
-  * crypto_core_salsa208_INPUTBYTES
-  * crypto_core_salsa208_KEYBYTES
-  * crypto_core_salsa208_OUTPUTBYTES
-  * crypto_core_salsa20_CONSTBYTES
-  * crypto_core_salsa20_INPUTBYTES
-  * crypto_core_salsa20_KEYBYTES
-  * crypto_core_salsa20_OUTPUTBYTES
   * crypto_sign_ed25519
   * crypto_sign_ed25519_BYTES
   * crypto_sign_ed25519_detached
