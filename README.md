@@ -7,7 +7,7 @@ Uses Libsodium 1.0.10
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
 This is a work in progress but most of Lib Sodium has been ported already.
-Missing are the `generichash` functions, and the alternative primitives, like `crypto_box_curve25519xsalsa20poly1305`, or `crypto_stream_aes128ctr`.
+Missing are the functions are listed in [`docs/not implemented.md`](https://github.com/paixaop/node-sodium/blob/split-sodium/docs/not%20implemented.md). You are encouraged to support this effor by creating a pull request for a function that you really need, that hasn't been ported yet.
 
 There's a "low level" native module that gives you access directly to Lib Sodium, and a friendlier high level API that makes the library a bit easier to use.
 
