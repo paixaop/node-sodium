@@ -53,6 +53,7 @@
   * crypto_auth_hmacsha512_STATEBYTES
   * crypto_auth_hmacsha512_update
   * crypto_auth_hmacsha512_verify
+  
   * crypto_box_curve25519xsalsa20poly1305
   * crypto_box_curve25519xsalsa20poly1305_afternm
   * crypto_box_curve25519xsalsa20poly1305_beforenm
@@ -76,6 +77,7 @@
   * crypto_box_seal
   * crypto_box_seal_open
   * crypto_box_seed_keypair
+  
   * crypto_core_hchacha20
   * crypto_core_hchacha20_CONSTBYTES
   * crypto_core_hchacha20_INPUTBYTES

@@ -15,46 +15,6 @@ Local<Object> globalObj = Nan::GetCurrentContext()->Global();
 Local<Function> bufferConstructor =
        Local<Function>::Cast(globalObj->Get(Nan::New<String>("Buffer").ToLocalChecked()));
 
-
-/**
- * int crypto_scalarmult_base(unsigned char *q, const unsigned char *n)
- */
-NAN_METHOD(bind_crypto_scalarmult_base) {
-    Nan::EscapableHandleScope scope;
-
-    ARGS(1,"argument must be a buffer");
-    ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_SCALARBYTES);
-    
-    NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);
-
-    if (crypto_scalarmult_base(q_ptr, n) == 0) {
-        return info.GetReturnValue().Set(q);
-    } else {
-        return;
-    }
-}
-
-
-/**
- * int crypto_scalarmult(unsigned char *q, const unsigned char *n,
- *                  const unsigned char *p)
- */
-NAN_METHOD(bind_crypto_scalarmult) {
-    Nan::EscapableHandleScope scope;
-
-    ARGS(2,"arguments must be buffers");
-    ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_SCALARBYTES);
-    ARG_TO_UCHAR_BUFFER_LEN(p, crypto_scalarmult_BYTES);
-
-    NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);
-
-    if (crypto_scalarmult(q_ptr, n, p) == 0) {
-        return info.GetReturnValue().Set(q);
-    } else {
-        return;
-    }
-}
-
 void RegisterModule(Handle<Object> target) {
     // init sodium library before we do anything
     if( sodium_init() == -1 ) {
@@ -82,14 +42,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_secretbox_xsalsa20poly1305(target);
     register_crypto_sign(target);
     register_crypto_box( target);
-
-    // Scalar Mult
-    NEW_METHOD(crypto_scalarmult);
-    NEW_METHOD(crypto_scalarmult_base);
-    NEW_INT_PROP(crypto_scalarmult_SCALARBYTES);
-    NEW_INT_PROP(crypto_scalarmult_BYTES);
-    NEW_STRING_PROP(crypto_scalarmult_PRIMITIVE);
-
+    register_crypto_box(target);
 }
 
 NODE_MODULE(sodium, RegisterModule);
