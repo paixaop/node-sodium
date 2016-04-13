@@ -17,6 +17,7 @@ void RegisterModule(Handle<Object> target) {
     randombytes_stir();
     
     register_helpers(target);
+    register_runtime(target);
     register_randombytes(target);
     register_crypto_pwhash(target);
     register_crypto_hash(target);

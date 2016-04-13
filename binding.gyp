@@ -6,6 +6,7 @@
     {
       'target_name': 'sodium',
       'sources': [
+        './src/sodium_runtime.cc',
         './src/crypto_auth.cc',
         './src/crypto_auth_algos.cc',
         './src/crypto_core.cc',
