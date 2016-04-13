@@ -6,6 +6,7 @@
     {
       'target_name': 'sodium',
       'sources': [
+        './src/crypto_box.cc',
         './src/crypto_box_curve25519xsalsa20poly1305.cc',
         './src/sodium_runtime.cc',
         './src/crypto_auth.cc',
@@ -13,7 +14,6 @@
         './src/crypto_core.cc',
         './src/crypto_scalarmult_curve25519.cc',
         './src/crypto_scalarmult.cc',
-        './src/crypto_box.cc',
         './src/crypto_sign.cc',
         './src/crypto_secretbox_xsalsa20poly1305.cc',
         './src/crypto_secretbox.cc',
