@@ -17,329 +17,6 @@ Local<Function> bufferConstructor =
 
 
 /**
- * Signs a given message using the signer's signing key.
- *
- * int crypto_sign(
- *    unsigned char * sig,
- *    unsigned long long * slen,
- *    const unsigned char * msg,
- *    unsigned long long mlen,
- *    const unsigned char * sk)
- *
- * Parameters:
- *    [out] sig     the resulting signature.
- *    [out] slen    the length of the signature.
- *    [in] 	msg     the message to be signed.
- *    [in] 	mlen    the length of the message.
- *    [in] 	sk 	    the signing key.
- *
- * Returns:
- *    0 if operation successful
- *
- * Precondition:
- *    sig must be of length mlen+crypto_sign_BYTES
- *    sk must be of length crypto_sign_SECRETKEYBYTES
- */
-NAN_METHOD(bind_crypto_sign) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_sign_SECRETKEYBYTES);
-
-    NEW_BUFFER_AND_PTR(sig, message_size + crypto_sign_BYTES);
-
-    unsigned long long slen = 0;
-
-    if (crypto_sign(sig_ptr, &slen, message, message_size, secretKey) == 0) {
-        return info.GetReturnValue().Set(sig);
-    } else {
-        return;
-    }
-}
-
-/**
- * Signs a given message using the signer's signing key (detached mode).
- *
- * int crypto_sign_detached(
- *    unsigned char * sig,
- *    unsigned long long * slen,
- *    const unsigned char * msg,
- *    unsigned long long mlen,
- *    const unsigned char * sk)
- *
- * Parameters:
- *    [out] sig     the resulting signature.
- *    [out] slen    the length of the signature.
- *    [in]  msg     the message to be signed.
- *    [in]  mlen    the length of the message.
- *    [in]  sk      the signing key.
- *
- * Returns:
- *    0 if operation successful
- *
- * Precondition:
- *    sig must be of length crypto_sign_BYTES
- *    sk must be of length crypto_sign_SECRETKEYBYTES
- */
-NAN_METHOD(bind_crypto_sign_detached) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments message, and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_sign_SECRETKEYBYTES);
-
-    NEW_BUFFER_AND_PTR(sig, crypto_sign_BYTES);
-
-    unsigned long long slen = 0;
-
-    if (crypto_sign_detached(sig_ptr, &slen, message, message_size, secretKey) == 0) {
-        return info.GetReturnValue().Set(sig);
-    } else {
-        return info.GetReturnValue().Set(Nan::Undefined());
-    }
-}
-
-/**
- * Generates a signing/verification key pair.
- *
- * int crypto_sign_keypair(
- *    unsigned char * vk,
- *    unsigned char * sk)
- *
- * Parameters:
- *    [out] vk 	the verification key.
- *    [out] sk 	the signing key.
- *
- * Returns:
- *    0 if operation successful.
- *
- * Precondition:
- *    the buffer for vk must be at least crypto_sign_PUBLICKEYBYTES in length
- *    the buffer for sk must be at least crypto_sign_SECRETKEYTBYTES in length
- *
- * Postcondition:
- *    first crypto_sign_PUBLICKEYTBYTES of vk will be the key data.
- *    first crypto_sign_SECRETKEYTBYTES of sk will be the key data.
- */
-NAN_METHOD(bind_crypto_sign_keypair) {
-    Nan::EscapableHandleScope scope;
-
-    NEW_BUFFER_AND_PTR(vk, crypto_sign_PUBLICKEYBYTES);
-    NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
-
-    if (crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
-        Local<Object> result = Nan::New<Object>();
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
-
-        return info.GetReturnValue().Set(result);
-    } else {
-        return;
-    }
-}
-
-/**
- * Deterministically generate a signing/verification key pair from a seed.
- *
- * int crypto_sign_keypair(
- *    unsigned char * vk,
- *    unsigned char * sk,
- *    const unsigned char * ps)
- *
- * Parameters:
- *    [out] vk  the verification key.
- *    [out] sk  the signing key.
- *    [in]  sd  the seed for the key-pair.
- *
- * Returns:
- *    0 if operation successful.
- *
- * Precondition:
- *    the buffer for vk must be at least crypto_sign_PUBLICKEYBYTES in length
- *    the buffer for sk must be at least crypto_sign_SECRETKEYTBYTES in length
- *    the buffer for sd must be at least crypto_sign_SEEDBYTES in length
- *
- * Postcondition:
- *    first crypto_sign_PUBLICKEYTBYTES of vk will be the key data.
- *    first crypto_sign_SECRETKEYTBYTES of sk will be the key data.
- */
-NAN_METHOD(bind_crypto_sign_seed_keypair) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1,"the argument seed must be a buffer");
-
-    GET_ARG_AS_UCHAR_LEN(0, sd, crypto_sign_SEEDBYTES);
-
-    NEW_BUFFER_AND_PTR(vk, crypto_sign_PUBLICKEYBYTES);
-    NEW_BUFFER_AND_PTR(sk, crypto_sign_SECRETKEYBYTES);
-
-    if (crypto_sign_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
-        Local<Object> result = Nan::New<Object>();
-
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
-
-        return info.GetReturnValue().Set(result);
-    } else {
-        return;
-    }
-}
-
-/**
- * Verifies the signed message sig using the signer's verification key.
- *
- * int crypto_sign_open(
- *    unsigned char * msg,
- *    unsigned long long * mlen,
- *    const unsigned char * sig,
- *    unsigned long long smlen,
- *    const unsigned char * vk)
- *
- * Parameters:
- *
- *    [out] msg     the resulting message.
- *    [out] mlen    the length of msg.
- *    [in] 	sig     the signed message.
- *    [in] 	smlen   length of the signed message.
- *    [in] 	vk 	    the verification key.
- *
- * Returns:
- *    0 if successful, -1 if verification fails.
- *
- * Precondition:
- *    length of msg must be at least smlen
- *
- * Warning:
- *    if verification fails msg may contain data from the computation.
- */
-NAN_METHOD(bind_crypto_sign_open) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments signedMessage and verificationKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, signedMessage);
-    GET_ARG_AS_UCHAR_LEN(1, publicKey, crypto_sign_PUBLICKEYBYTES);
-
-    unsigned long long mlen = 0;
-    NEW_BUFFER_AND_PTR(msg, signedMessage_size);
-
-    if (crypto_sign_open(msg_ptr, &mlen, signedMessage, signedMessage_size, publicKey) == 0) {
-        NEW_BUFFER_AND_PTR(m, mlen);
-        memcpy(m_ptr, msg_ptr, mlen);
-
-        return info.GetReturnValue().Set(m);
-    } else {
-        return;
-    }
-}
-
-/**
- * Verifies the signed message sig using the signer's verification key.
- *
- * int crypto_sign_verify_detached(
- *    const unsigned char * sig,
- *    const unsigned char * msg,
- *    unsigned long long mlen,
- *    const unsigned char * vk)
- *
- * Parameters:
- *
- *    [in]  sig     the signature
- *    [in] msg     the message.
- *    [in] mlen    the length of msg.
- *    [in]  vk      the verification key.
- *
- * Returns:
- *    0 if successful, -1 if verification fails.
- *
- * Precondition:
- *    length of sig must be crypto_sign_BYTES
- *
- * Warning:
- *    if verification fails msg may contain data from the computation.
- */
-NAN_METHOD(bind_crypto_sign_verify_detached) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments signedMessage and verificationKey must be buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0, signature, crypto_sign_BYTES);
-    GET_ARG_AS_UCHAR(1, message);
-    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_sign_PUBLICKEYBYTES);
-
-    if (crypto_sign_verify_detached(signature, message, message_size, publicKey) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
-    } else {
-        return info.GetReturnValue().Set(Nan::False());
-    }
-}
-
-/**
- * Convert a ed25519 signing public key to a curve25519 exchange key.
- *
- * Parameters:
- *    [out] curve25519_pk the public exchange key.
- *    [in]  ed25519_pk    the public signing key.
- *
- * Returns:
- *    0
- *
- * Precondition:
- *    ed25519_pk must be a ed25519 public key.
- */
-
-NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1, "argument ed25519_pk must be a buffer")
-
-    GET_ARG_AS_UCHAR_LEN(0, ed25519_pk, crypto_sign_PUBLICKEYBYTES);
-    NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
-
-    if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
-    }
-
-    return info.GetReturnValue().Set(curve25519_pk);
-}
-
-
-/**
- * Convert a ed25519 signing secret key to a curve25519 exchange key.
- *
- * Parameters:
- *    [out] curve25519_sk the secret exchange key.
- *    [in]  ed25519_sk    the secret signing key.
- *
- * Returns:
- *    0
- *
- * Precondition:
- *    ed25519_sk must be a ed25519 secret key.
- */
-
-
-NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
-
-    NUMBER_OF_MANDATORY_ARGS(1, "argument ed25519_sk must be a buffer");
-
-    GET_ARG_AS_UCHAR_LEN(0, ed25519_sk, crypto_sign_SECRETKEYBYTES);
-    NEW_BUFFER_AND_PTR(curve25519_sk, crypto_box_SECRETKEYBYTES);
-
-    if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
-    }
-
-    return info.GetReturnValue().Set(curve25519_sk);
-}
-
-
-
-/**
  * Encrypts a message given the senders secret key, and receivers public key.
  * int crypto_box	(
  *    unsigned char * ctxt,
@@ -371,12 +48,11 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
 NAN_METHOD(bind_crypto_box) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
-    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
+    ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
     NEW_BUFFER_AND_PTR(msg, message_size + crypto_box_ZEROBYTES);
 
@@ -429,12 +105,11 @@ NAN_METHOD(bind_crypto_box) {
 NAN_METHOD(bind_crypto_box_easy) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
-    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
+    ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
     NEW_BUFFER_AND_PTR(ctxt, message_size + crypto_box_MACBYTES);
 
@@ -519,12 +194,11 @@ NAN_METHOD(bind_crypto_box_keypair) {
 NAN_METHOD(bind_crypto_box_open) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, cipherText);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
-    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
+    ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    ARG_TO_UCHAR_BUFFER(cipherText);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
     // API requires that the first crypto_box_BOXZEROBYTES of msg be 0 so lets check
     if (cipherText_size < crypto_box_BOXZEROBYTES) {
@@ -590,12 +264,11 @@ NAN_METHOD(bind_crypto_box_open) {
 NAN_METHOD(bind_crypto_box_open_easy) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR(0, cipherText);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, publicKey, crypto_box_PUBLICKEYBYTES);
-    GET_ARG_AS_UCHAR_LEN(3, secretKey, crypto_box_SECRETKEYBYTES);
+    ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    ARG_TO_UCHAR_BUFFER(cipherText);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
     // cipherText should have crypto_box_MACBYTES + encrypted message chars so lets check
     if (cipherText_size < crypto_box_MACBYTES) {
@@ -633,10 +306,9 @@ NAN_METHOD(bind_crypto_box_open_easy) {
 NAN_METHOD(bind_crypto_box_beforenm) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments publicKey, and secretKey must be buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0, publicKey, crypto_box_PUBLICKEYBYTES);
-    GET_ARG_AS_UCHAR_LEN(1, secretKey, crypto_box_SECRETKEYBYTES);
+    ARGS(2,"arguments publicKey, and secretKey must be buffers");
+    ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
     NEW_BUFFER_AND_PTR(k, crypto_box_BEFORENMBYTES);
 
@@ -670,11 +342,10 @@ NAN_METHOD(bind_crypto_box_beforenm) {
 NAN_METHOD(bind_crypto_box_afternm) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments message, nonce and k must be buffers");
-
-    GET_ARG_AS_UCHAR(0, message);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, k, crypto_box_BEFORENMBYTES);
+    ARGS(3,"arguments message, nonce and k must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
     // Pad the message with crypto_box_ZEROBYTES zeros
     NEW_BUFFER_AND_PTR(msg, message_size + crypto_box_ZEROBYTES);
@@ -727,11 +398,10 @@ NAN_METHOD(bind_crypto_box_afternm) {
 NAN_METHOD(bind_crypto_box_open_afternm) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(3,"arguments cipherText, nonce, k");
-
-    GET_ARG_AS_UCHAR(0, cipherText);
-    GET_ARG_AS_UCHAR_LEN(1, nonce, crypto_box_NONCEBYTES);
-    GET_ARG_AS_UCHAR_LEN(2, k, crypto_box_BEFORENMBYTES);
+    ARGS(3,"arguments cipherText, nonce, k");
+    ARG_TO_UCHAR_BUFFER(cipherText);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
     // API requires that the first crypto_box_BOXZEROBYTES of msg be 0 so lets check
     if (cipherText_size < crypto_box_BOXZEROBYTES) {
@@ -771,9 +441,9 @@ NAN_METHOD(bind_crypto_box_open_afternm) {
 NAN_METHOD(bind_crypto_scalarmult_base) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
-
-    GET_ARG_AS_UCHAR_LEN(0, n, crypto_scalarmult_SCALARBYTES);
+    ARGS(1,"argument must be a buffer");
+    ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_SCALARBYTES);
+    
     NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);
 
     if (crypto_scalarmult_base(q_ptr, n) == 0) {
@@ -791,10 +461,9 @@ NAN_METHOD(bind_crypto_scalarmult_base) {
 NAN_METHOD(bind_crypto_scalarmult) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(2,"arguments must be buffers");
-
-    GET_ARG_AS_UCHAR_LEN(0, n, crypto_scalarmult_SCALARBYTES);
-    GET_ARG_AS_UCHAR_LEN(1, p, crypto_scalarmult_BYTES);
+    ARGS(2,"arguments must be buffers");
+    ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_SCALARBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(p, crypto_scalarmult_BYTES);
 
     NEW_BUFFER_AND_PTR(q, crypto_scalarmult_BYTES);
 
@@ -830,20 +499,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_streams(target);
     register_crypto_secretbox(target);
     register_crypto_secretbox_xsalsa20poly1305(target);
-
-    // Sign
-    NEW_METHOD(crypto_sign);
-    NEW_METHOD(crypto_sign_detached);
-    NEW_METHOD(crypto_sign_keypair);
-    NEW_METHOD(crypto_sign_seed_keypair);
-    NEW_METHOD(crypto_sign_open);
-    NEW_METHOD(crypto_sign_verify_detached);
-    NEW_METHOD(crypto_sign_ed25519_pk_to_curve25519);
-    NEW_METHOD(crypto_sign_ed25519_sk_to_curve25519);
-    NEW_INT_PROP(crypto_sign_BYTES);
-    NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
-    NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
-    NEW_STRING_PROP(crypto_sign_PRIMITIVE);
+    register_crypto_sign(target);
 
     // Box
     NEW_METHOD(crypto_box);
