@@ -24,6 +24,7 @@ node-sodium.sublime-workspace
 *.so
 *.dylib
 *.dll
+*.lai
 .npm
 .node_repl_history
 coverage/
