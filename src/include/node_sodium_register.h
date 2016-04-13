@@ -25,5 +25,6 @@ void register_crypto_box(Handle<Object> target);
 void register_crypto_scalarmult(Handle<Object> target);
 void register_crypto_scalarmult_curve25519(Handle<Object> target);
 void register_crypto_core(Handle<Object> target);
+void register_crypto_auth_algos(Handle<Object> target);
 
 #endif

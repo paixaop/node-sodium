@@ -6,6 +6,8 @@
     {
       'target_name': 'sodium',
       'sources': [
+        './src/crypto_auth.cc',
+        './src/crypto_auth_algos.cc',
         './src/crypto_core.cc',
         './src/crypto_scalarmult_curve25519.cc',
         './src/crypto_scalarmult.cc',
@@ -26,7 +28,6 @@
         './src/crypto_shorthash_siphash24.cc',
         './src/crypto_generichash.cc',
         './src/crypto_generichash_blake2b.cc',
-        './src/crypto_auth.cc',
         './src/crypto_onetimeauth.cc',
         './src/crypto_onetimeauth_poly1305.cc'
       ],

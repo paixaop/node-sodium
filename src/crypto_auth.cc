@@ -6,7 +6,7 @@
  * @License MIT
  */
 #include "node_sodium.h"
-
+#include "crypto_auth_algos.h"
 /**
  * int crypto_auth(
  *       unsigned char*  tok,
@@ -67,8 +67,9 @@ NAN_METHOD(bind_crypto_auth_verify) {
  */
 void register_crypto_auth(Handle<Object> target) {
     // Auth
-    NEW_METHOD(crypto_auth);
-    NEW_METHOD(crypto_auth_verify);
+    NEW_METHOD_ALIAS(crypto_auth, crypto_auth_hmacsha512256);
+    NEW_METHOD_ALIAS(crypto_auth_verify, crypto_auth_hmacsha512256_verify);
+    
     NEW_INT_PROP(crypto_auth_BYTES);
     NEW_INT_PROP(crypto_auth_KEYBYTES);
     NEW_STRING_PROP(crypto_auth_PRIMITIVE);   
