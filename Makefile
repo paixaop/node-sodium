@@ -51,6 +51,9 @@ endif
 ec:
 	@echo ${OSX_VERSION_MIN}
 	
+	
+all: sodium
+	
 # If a static libsodium is found then compile against it
 # instead of trying to compile from source
 libsodium:
@@ -106,8 +109,5 @@ clean:
 	-rm -fr coverage.html
 	-rm -fr *.o
 	-rm -fr ${INSTALL_DIR}
-
-all:
-	sodium
 
 .PHONY: test-cov site docs test docclean

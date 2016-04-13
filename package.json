@@ -16,8 +16,7 @@
   },
   "scripts": {
     "test": "make test",
-    "preinstall": "make",
-    "install": "node-gyp rebuild"
+    "install": "make sodium"
   },
   "repository": {
     "type": "git",
