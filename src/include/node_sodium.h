@@ -99,16 +99,13 @@ using namespace v8;
 #define GET_ARG_NUMBER(i, NAME) \
     size_t NAME; \
     if (info[i]->IsUint32()) { \
-        NAME = info[i]->Int32Value(); \
+        NAME = info[i]->Uint32Value()(); \
     } else { \
         return Nan::ThrowError("argument size must be a number"); \
     }
 
 #define GET_ARG_POSITIVE_NUMBER(i, NAME) \
-    GET_ARG_NUMBER(i, NAME); \
-    if( NAME < 0 ) { \
-        return Nan::ThrowError("argument size must be a positive number"); \
-    }
+    GET_ARG_NUMBER(i, NAME);
 
 #define ARG_TO_BUFFER_TYPE(NAME, TYPE)              GET_ARG_AS(_arg, NAME, TYPE); _arg++
 #define ARG_TO_BUFFER_TYPE_LEN(NAME, MAXLEN, TYPE)  GET_ARG_AS_LEN(_arg, NAME, MAXLEN, TYPE); _arg++
