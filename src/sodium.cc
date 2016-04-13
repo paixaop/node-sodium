@@ -8,13 +8,6 @@
 #include "node_sodium.h"
 #include "node_sodium_register.h"
 
-// get handle to the global object
-Local<Object> globalObj = Nan::GetCurrentContext()->Global();
-
-// Retrieve the buffer constructor function
-Local<Function> bufferConstructor =
-       Local<Function>::Cast(globalObj->Get(Nan::New<String>("Buffer").ToLocalChecked()));
-
 void RegisterModule(Handle<Object> target) {
     // init sodium library before we do anything
     if( sodium_init() == -1 ) {
