@@ -103,10 +103,6 @@
   * crypto_core_salsa20_INPUTBYTES
   * crypto_core_salsa20_KEYBYTES
   * crypto_core_salsa20_OUTPUTBYTES
-  * crypto_scalarmult_curve25519
-  * crypto_scalarmult_curve25519_BASE
-  * crypto_scalarmult_curve25519_BYTES
-  * crypto_scalarmult_curve25519_SCALARBYTES
   * crypto_sign_ed25519
   * crypto_sign_ed25519_BYTES
   * crypto_sign_ed25519_detached
