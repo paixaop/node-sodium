@@ -550,24 +550,130 @@ NAN_METHOD(bind_crypto_box_seed_keypair) {
     return info.GetReturnValue().Set(Nan::Null());
 }
 
+/*
+int crypto_box_detached_afternm(unsigned char *c, unsigned char *mac,
+                                const unsigned char *m, unsigned long long mlen,
+                                const unsigned char *n, const unsigned char *k);
+*/
+NAN_METHOD(bind_crypto_box_detached_afternm) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(4,"arguments message, nonce and k must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_box_MACBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
+
+    // Pad the message with crypto_box_ZEROBYTES zeros
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
+
+    if (crypto_box_detached_afternm(ctxt_ptr, mac, message, message_size, nonce, k) == 0) {
+        return info.GetReturnValue().Set(ctxt);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());   
+}
+
+/*
+int crypto_box_open_detached_afternm(unsigned char *m, const unsigned char *c,
+                                     const unsigned char *mac,
+                                     unsigned long long clen, const unsigned char *n,
+                                     const unsigned char *k)
+*/
+NAN_METHOD(bind_crypto_box_open_detached_afternm) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(4,"arguments message, nonce and k must be buffers");
+    ARG_TO_UCHAR_BUFFER(ctxt);
+    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_box_MACBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
+
+    // Pad the message with crypto_box_ZEROBYTES zeros
+    NEW_BUFFER_AND_PTR(message, ctxt_size);
+
+    if (crypto_box_open_detached_afternm(message_ptr, ctxt, mac, ctxt_size, nonce, k) == 0) {
+        return info.GetReturnValue().Set(message);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());   
+}
+
+/*
+ int crypto_box_easy_afternm(unsigned char *c, const unsigned char *m,
+                            unsigned long long mlen, const unsigned char *n,
+                            const unsigned char *k);
+*/
+NAN_METHOD(bind_crypto_box_easy_afternm) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(3,"arguments message, nonce and k must be buffers");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
+
+    // Pad the message with crypto_box_ZEROBYTES zeros
+    NEW_BUFFER_AND_PTR(ctxt, message_size);
+
+    if (crypto_box_easy_afternm(ctxt_ptr, message, message_size, nonce, k) == 0) {
+        return info.GetReturnValue().Set(ctxt);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());   
+}
+
+/*
+int crypto_box_open_easy_afternm(unsigned char *m, const unsigned char *c,
+                                 unsigned long long clen, const unsigned char *n,
+                                 const unsigned char *k)
+*/
+NAN_METHOD(bind_crypto_box_open_easy_afternm) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(3,"arguments message, nonce and k must be buffers");
+    ARG_TO_UCHAR_BUFFER(ctxt);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
+
+    // Pad the message with crypto_box_ZEROBYTES zeros
+    NEW_BUFFER_AND_PTR(message, ctxt_size);
+
+    if (crypto_box_open_easy_afternm(message_ptr, ctxt, ctxt_size, nonce, k) == 0) {
+        return info.GetReturnValue().Set(message);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());   
+}
+
+
+
 /**
  * Register function calls in node binding
  */
 void register_crypto_box(Handle<Object> target) {
      // Box
     NEW_METHOD(crypto_box);
-    NEW_METHOD(crypto_box_detached);
-    NEW_METHOD(crypto_box_easy);
     NEW_METHOD(crypto_box_keypair);
-    NEW_METHOD(crypto_box_open);
-    NEW_METHOD(crypto_box_open_detached);
-    NEW_METHOD(crypto_box_open_easy);
+    
+    NEW_METHOD(crypto_box_easy);
+    NEW_METHOD(crypto_box_easy_afternm);
+    
     NEW_METHOD(crypto_box_beforenm);
     NEW_METHOD(crypto_box_afternm);
+    NEW_METHOD(crypto_box_seed_keypair);
+    
+    NEW_METHOD(crypto_box_detached);
+    NEW_METHOD(crypto_box_detached_afternm);
+    
+    NEW_METHOD(crypto_box_open);
     NEW_METHOD(crypto_box_open_afternm);
+    NEW_METHOD(crypto_box_open_easy);
+    NEW_METHOD(crypto_box_open_detached);
+    NEW_METHOD(crypto_box_open_detached_afternm);
+    NEW_METHOD(crypto_box_open_easy_afternm);
+    
     NEW_METHOD(crypto_box_seal);
     NEW_METHOD(crypto_box_seal_open);
-    NEW_METHOD(crypto_box_seed_keypair);
     
     NEW_INT_PROP(crypto_box_NONCEBYTES);
     NEW_INT_PROP(crypto_box_MACBYTES);

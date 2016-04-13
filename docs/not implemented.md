@@ -23,10 +23,6 @@ If you really need them please create a pull request and I will merge it in. Tha
   * crypto_aead_chacha20poly1305_ietf_encrypt
   * crypto_aead_chacha20poly1305_ietf_encrypt_detached
   
-  * crypto_box_detached_afternm
-  * crypto_box_easy_afternm
-  * crypto_box_open_easy_afternm
-  
   * crypto_sign_ed25519
   * crypto_sign_ed25519_open
   * crypto_sign_ed25519_detached
