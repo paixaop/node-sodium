@@ -1,4 +1,6 @@
-  
+This functions from Libsodium have not yet been implemented in node-sodium
+If you really need them please create a pull request and I will merge it in. Thank you for supporting the effort!
+
   * crypto_aead_aes256gcm_decrypt
   * crypto_aead_aes256gcm_decrypt_detached
   * crypto_aead_aes256gcm_encrypt
@@ -89,12 +91,3 @@
   * sodium_mprotect_readonly
   * sodium_mprotect_readwrite
   * sodium_munlock
-  * sodium_runtime_has_aesni
-  * sodium_runtime_has_avx
-  * sodium_runtime_has_avx2
-  * sodium_runtime_has_neon
-  * sodium_runtime_has_pclmul
-  * sodium_runtime_has_sse2
-  * sodium_runtime_has_sse3
-  * sodium_runtime_has_sse41
-  * sodium_runtime_has_ssse3
