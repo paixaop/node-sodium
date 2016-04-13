@@ -60,7 +60,7 @@ libsodium:
 ifeq (,$(wildcard ${STATIC_LIB}.*))
 	@echo Static libsodium was not found at ${STATIC_LIB} so compiling libsodium from source.
 	@cd $(LIBSODIUM_DIR)/ && ./configure  \
-		--enable-static --prefix="$(INSTALL_DIR)"
+		--enable-static --enable-shared --prefix="$(INSTALL_DIR)"
 	@cd $(LIBSODIUM_DIR)/ && make clean > /dev/null
 	@cd $(LIBSODIUM_DIR)/ && make -j3 check
 	@cd $(LIBSODIUM_DIR)/ && make -j3 install
