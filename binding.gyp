@@ -39,6 +39,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags!': [ '-fno-exceptions -fPIC' ],
+      "cflags_cc": [ "-fPIC -m32" ],
       "conditions": [
         ['OS=="mac"', {
           "libraries": [
@@ -49,7 +50,7 @@
           },
           "xcode_settings": {
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
-              "OTHER_CFLAGS": ["-arch x86_64 -O2 -g -flto -mmacosx-version-min=<(osx_min_version)"],
+              "OTHER_CFLAGS": ["-arch x86_64 -O2 -g -flto -mmacosx-version-min=<(osx_min_version) -fPIC"],
               "OTHER_LDFLAGS": ["-arch x86_64 -mmacosx-version-min=<(osx_min_version) -flto"]
           }
         }],
