@@ -118,6 +118,7 @@ using namespace v8;
 #define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
+
 #define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
     GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); \
     if( NAME ## _size != 0 && NAME ## _size != MAXLEN ) { \
