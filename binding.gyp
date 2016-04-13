@@ -46,9 +46,10 @@
               '../deps/build/lib/libsodium.a'
           ],
           "variables": {
-            "osx_min_version": "<!(sw_vers -productVersion | awk -F \'.\' \'{print $1 \".\" $2}\')>"
+            "osx_min_version": "<!(sw_vers -productVersion | awk -F \'.\' \'{print $1 \".\" $2}\')"
           },
           "xcode_settings": {
+              "MACOSX_DEPLOYMENT_TARGET" : "<(osx_min_version)",
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
               "OTHER_CFLAGS": ["-arch x86_64 -O2 -g -flto -mmacosx-version-min=<(osx_min_version) -fPIC"],
               "OTHER_LDFLAGS": ["-arch x86_64 -mmacosx-version-min=<(osx_min_version) -flto"]
