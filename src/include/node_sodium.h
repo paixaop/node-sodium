@@ -99,7 +99,7 @@ using namespace v8;
 #define GET_ARG_NUMBER(i, NAME) \
     size_t NAME; \
     if (info[i]->IsUint32()) { \
-        NAME = info[i]->Uint32Value()(); \
+        NAME = info[i]->Uint32Value(); \
     } else { \
         return Nan::ThrowError("argument size must be a number"); \
     }
