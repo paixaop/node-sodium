@@ -37,7 +37,7 @@
         './deps/build/include',
         "<!(node -e \"require('nan')\")"
       ],
-      'cflags!': [ '-fno-exceptions' ],
+      'cflags!': [ '-fno-exceptions -fPIC' ],
       "conditions": [
         ['OS=="mac"', {
           "libraries": [
