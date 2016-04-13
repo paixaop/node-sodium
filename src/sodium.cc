@@ -37,6 +37,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_secretbox_xsalsa20poly1305(target);
     register_crypto_sign(target);
     register_crypto_box( target);
+    register_crypto_box_curve25519xsalsa20poly1305(target);
     register_crypto_scalarmult(target);
     register_crypto_scalarmult_curve25519(target);
     register_crypto_core(target);

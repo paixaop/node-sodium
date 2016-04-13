@@ -28,5 +28,6 @@ void register_crypto_core(Handle<Object> target);
 void register_crypto_auth_algos(Handle<Object> target);
 void register_crypto_aead(Handle<Object> target);
 void register_runtime(Handle<Object> target);
+void register_crypto_box_curve25519xsalsa20poly1305(Handle<Object> target);
 
 #endif

@@ -13,46 +13,15 @@ If you really need them please create a pull request and I will merge it in. Tha
   * crypto_aead_aes256gcm_encrypt_detached_afternm
   * crypto_aead_aes256gcm_is_available
   
-  * crypto_aead_aes256gcm_ABYTES
-  * crypto_aead_aes256gcm_KEYBYTES
-  * crypto_aead_aes256gcm_NPUBBYTES
-  * crypto_aead_aes256gcm_NSECBYTES
-  * crypto_aead_aes256gcm_STATEBYTES
-
   * crypto_aead_chacha20poly1305_decrypt
   * crypto_aead_chacha20poly1305_decrypt_detached
   * crypto_aead_chacha20poly1305_encrypt
   * crypto_aead_chacha20poly1305_encrypt_detached
-  * crypto_aead_chacha20poly1305_ABYTES
-  * crypto_aead_chacha20poly1305_KEYBYTES
-  * crypto_aead_chacha20poly1305_NPUBBYTES
-  * crypto_aead_chacha20poly1305_NSECBYTES
   
   * crypto_aead_chacha20poly1305_ietf_decrypt
   * crypto_aead_chacha20poly1305_ietf_decrypt_detached
   * crypto_aead_chacha20poly1305_ietf_encrypt
   * crypto_aead_chacha20poly1305_ietf_encrypt_detached
-  * crypto_aead_chacha20poly1305_ietf_ABYTES
-  * crypto_aead_chacha20poly1305_ietf_KEYBYTES
-  * crypto_aead_chacha20poly1305_ietf_NPUBBYTES
-  * crypto_aead_chacha20poly1305_ietf_NSECBYTES
-  
-  * crypto_box_curve25519xsalsa20poly1305
-  * crypto_box_curve25519xsalsa20poly1305_afternm
-  * crypto_box_curve25519xsalsa20poly1305_beforenm
-  * crypto_box_curve25519xsalsa20poly1305_keypair
-  * crypto_box_curve25519xsalsa20poly1305_open
-  * crypto_box_curve25519xsalsa20poly1305_open_afternm
-  * crypto_box_curve25519xsalsa20poly1305_seed_keypair
-  
-  * crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES
-  * crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES
-  * crypto_box_curve25519xsalsa20poly1305_MACBYTES
-  * crypto_box_curve25519xsalsa20poly1305_NONCEBYTES
-  * crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES
-  * crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES
-  * crypto_box_curve25519xsalsa20poly1305_SEEDBYTES
-  * crypto_box_curve25519xsalsa20poly1305_ZEROBYTES
   
   * crypto_box_detached
   * crypto_box_detached_afternm
