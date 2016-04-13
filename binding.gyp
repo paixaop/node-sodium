@@ -39,7 +39,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       'cflags!': [ '-fno-exceptions -fPIC' ],
-      "cflags_cc": [ "-fPIC -m32 -arch <(target_arch)" ],
+      "cflags_cc": [ "-fPIC -m32 -march <(target_arch)" ],
       "conditions": [
         ['OS=="mac"', {
           "libraries": [
