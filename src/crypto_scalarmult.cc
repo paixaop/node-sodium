@@ -49,7 +49,7 @@ NAN_METHOD(bind_crypto_scalarmult) {
 /**
  * Register function calls in node binding
  */
-void register_crypto_box(Handle<Object> target) {
+void register_crypto_scalarmult(Handle<Object> target) {
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult);
     NEW_METHOD(crypto_scalarmult_base);

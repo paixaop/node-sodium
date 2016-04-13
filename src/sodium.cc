@@ -42,7 +42,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_secretbox_xsalsa20poly1305(target);
     register_crypto_sign(target);
     register_crypto_box( target);
-    register_crypto_box(target);
+    register_crypto_scalarmult(target);
 }
 
 NODE_MODULE(sodium, RegisterModule);
