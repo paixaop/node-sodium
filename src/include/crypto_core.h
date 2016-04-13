@@ -14,7 +14,7 @@
         ARGS(3,"arguments are: input buffer, key buffer, c constant buffer"); \
         ARG_TO_UCHAR_BUFFER_LEN(in, crypto_core_ ## ALGO ## _INPUTBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_core_ ## ALGO ## _KEYBYTES); \
-        ARG_TO_UCHAR_BUFFER_LEN(c, crypto_core_ ## ALGO ## _CONSTBYTES); \
+        ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(c, crypto_core_ ## ALGO ## _CONSTBYTES); \
         NEW_BUFFER_AND_PTR(out, crypto_core_ ## ALGO ## _OUTPUTBYTES); \
         if (crypto_core_ ## ALGO (out_ptr, in, key, c) == 0) { \
             return info.GetReturnValue().Set(out); \

@@ -35,6 +35,16 @@ using namespace v8;
         return Nan::ThrowError(oss.str().c_str()); \
     }
 
+#define ARG_IS_BUFFER_OR_NULL(i,msg) \
+    if (!Buffer::HasInstance(info[i])) { \
+        if( !info[i]->IsNull() ) { \
+            std::ostringstream oss; \
+            oss << "argument " << msg << " must be a buffer"; \
+            return Nan::ThrowError(oss.str().c_str()); \
+        } \
+    }
+
+
 // Create a new buffer, and get a pointer to it
 #define NEW_BUFFER_AND_PTR(name, size) \
     Local<Object> name = Nan::NewBuffer(size).ToLocalChecked(); \
@@ -48,6 +58,22 @@ using namespace v8;
         std::ostringstream oss; \
         oss << "argument " << #NAME << " length cannot be zero" ; \
         return Nan::ThrowError(oss.str().c_str()); \
+    }
+
+#define GET_ARG_AS_OR_NULL(i, NAME, TYPE) \
+    ARG_IS_BUFFER(i,#NAME); \
+    TYPE NAME; \
+    unsigned long long NAME ## _size = 0; \
+    if( !info[i]->IsNull() ) { \
+        NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
+        NAME ## _size = Buffer::Length(info[i]->ToObject()); \
+        if( NAME ## _size == 0 ) { \
+            std::ostringstream oss; \
+            oss << "argument " << #NAME << " length cannot be zero" ; \
+            return Nan::ThrowError(oss.str().c_str()); \
+        } \
+    } else { \
+        NAME = NULL; \
     }
 
 #define GET_ARG_AS_LEN(i, NAME, MAXLEN, TYPE) \
@@ -92,6 +118,15 @@ using namespace v8;
 #define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
+#define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
+    GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); \
+    if( NAME ## _size != 0 && NAME ## _size != MAXLEN ) { \
+        std::ostringstream oss; \
+        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long or NULL" ; \
+        return Nan::ThrowError(oss.str().c_str()); \
+    } \
+    _arg++
+
 
 #define CHECK_MAX_SIZE(NAME, MAX_SIZE)  \
     if( NAME > MAX_SIZE ) {     \
