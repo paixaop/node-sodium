@@ -525,6 +525,30 @@ NAN_METHOD(bind_crypto_box_seal_open) {
     return info.GetReturnValue().Set(Nan::Null());
 }
 
+/*
+ *int crypto_box_seed_keypair(unsigned char *pk, unsigned char *sk,
+                            const unsigned char *seed);
+ */
+NAN_METHOD(bind_crypto_box_seed_keypair) {
+    Nan::EscapableHandleScope scope;
+
+    ARGS(1,"argument seed must be a buffer");
+    ARG_TO_UCHAR_BUFFER_LEN(seed, crypto_box_SEEDBYTES);
+    
+    NEW_BUFFER_AND_PTR(pk, crypto_box_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(sk, crypto_box_SECRETKEYBYTES);
+
+    if (crypto_box_seed_keypair(pk_ptr, sk_ptr, seed) == 0) {
+        Local<Object> result = Nan::New<Object>();
+
+        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
+        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+
+        return info.GetReturnValue().Set(result);
+    }
+    
+    return info.GetReturnValue().Set(Nan::Null());
+}
 
 /**
  * Register function calls in node binding
@@ -543,6 +567,7 @@ void register_crypto_box(Handle<Object> target) {
     NEW_METHOD(crypto_box_open_afternm);
     NEW_METHOD(crypto_box_seal);
     NEW_METHOD(crypto_box_seal_open);
+    NEW_METHOD(crypto_box_seed_keypair);
     
     NEW_INT_PROP(crypto_box_NONCEBYTES);
     NEW_INT_PROP(crypto_box_MACBYTES);

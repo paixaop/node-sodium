@@ -26,8 +26,6 @@ If you really need them please create a pull request and I will merge it in. Tha
   * crypto_box_detached_afternm
   * crypto_box_easy_afternm
   * crypto_box_open_easy_afternm
-  * crypto_box_seal_open
-  * crypto_box_seed_keypair
   
   * crypto_sign_ed25519
   * crypto_sign_ed25519_open
