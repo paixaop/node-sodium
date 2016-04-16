@@ -66,33 +66,64 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         return info.GetReturnValue().Set(Nan::Undefined()); \
     }
 
+
+/*
+ SODIUM_EXPORT
+int crypto_aead_aes256gcm_encrypt_detached(unsigned char *c,
+                                           unsigned char *mac,
+                                           unsigned long long *maclen_p,
+                                           const unsigned char *m,
+                                           unsigned long long mlen,
+                                           const unsigned char *ad,
+                                           unsigned long long adlen,
+                                           const unsigned char *nsec,
+                                           const unsigned char *npub,
+                                           const unsigned char *k);
+
+int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
+                                           unsigned char *nsec,
+                                           const unsigned char *c,
+                                           unsigned long long clen,
+                                           const unsigned char *mac,
+                                           const unsigned char *ad,
+                                           unsigned long long adlen,
+                                           const unsigned char *npub,
+                                           const unsigned char *k)
+*/
 #define CRYPTO_AEAD_DETACHED_DEF(ALGO) \
     NAN_METHOD(bind_crypto_aead_ ## ALGO ## _encrypt_detached) { \
         Nan::EscapableHandleScope scope; \
-        ARGS(6,"arguments mac, message, additional data, nsec, nonce, and key must be buffers, nsec can be NULL"); \
-        ARG_TO_UCHAR_BUFFER(mac); \
+        ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
-        ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(nsec, crypto_aead_ ## ALGO ## _NSECBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(k, crypto_aead_ ## ALGO ## _KEYBYTES); \
         NEW_BUFFER_AND_PTR(c, m_size); \
-        if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac, &mac_size, m, m_size, ad, ad_size, nsec, npub, k) == 0 ) { \
-            return info.GetReturnValue().Set(c); \
+        NEW_BUFFER_AND_PTR(mac, crypto_aead_ ## ALGO ## _ABYTES); \
+        unsigned long long maclen;\
+        if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac_ptr, &maclen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
+            Local<Object> result = Nan::New<Object>(); \
+            result->ForceSet(Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete); \
+            result->ForceSet(Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete); \
+            return info.GetReturnValue().Set(result); \
         } \
         return info.GetReturnValue().Set(Nan::Undefined()); \
     }\
     NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt_detached) { \
         Nan::EscapableHandleScope scope; \
-        ARGS(6,"arguments cipher message, nsec, mac, additional data, nsec, nonce, and key must be buffers, nsec can be NULL"); \
-        ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(nsec, crypto_aead_ ## ALGO ## _NSECBYTES); \
+        ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         ARG_TO_UCHAR_BUFFER(mac); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
+        if( mac_size > crypto_aead_ ## ALGO ## _ABYTES ) { \
+            std::ostringstream oss; \
+            oss << "argument mac cannot be longer than " <<  crypto_aead_ ## ALGO ## _ABYTES << " bytes" ; \
+            return Nan::ThrowError(oss.str().c_str()); \
+        }\
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(k, crypto_aead_ ## ALGO ## _KEYBYTES); \
         NEW_BUFFER_AND_PTR(m, c_size); \
-        if( crypto_aead_ ## ALGO ## _decrypt_detached (m_ptr, nsec, c, c_size, mac, ad, ad_size, npub, k) == 0 ) { \
+        if( crypto_aead_ ## ALGO ## _decrypt_detached (m_ptr, NULL, c, c_size, mac, ad, ad_size, npub, k) == 0 ) { \
             return info.GetReturnValue().Set(m); \
         } \
         return info.GetReturnValue().Set(Nan::Undefined()); \
