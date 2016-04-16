@@ -25,6 +25,7 @@ else
     ifeq ($(UNAME_S),Linux)
 		THIS_OS = Linux
         CCFLAGS += -D LINUX
+		CCFLAGS += -fPIC
 		
     endif
     ifeq ($(UNAME_S),Darwin)
@@ -51,16 +52,13 @@ endif
 ec:
 	@echo ${OSX_VERSION_MIN}
 	
-	
-all: sodium
-	
 # If a static libsodium is found then compile against it
 # instead of trying to compile from source
 libsodium:
 ifeq (,$(wildcard ${STATIC_LIB}.*))
 	@echo Static libsodium was not found at ${STATIC_LIB} so compiling libsodium from source.
 	@cd $(LIBSODIUM_DIR)/ && ./configure  \
-		--enable-static --enable-shared --prefix="$(INSTALL_DIR)"
+		--enable-static --enable-shared --with-pic --prefix="$(INSTALL_DIR)"
 	@cd $(LIBSODIUM_DIR)/ && make clean > /dev/null
 	@cd $(LIBSODIUM_DIR)/ && make -j3 check
 	@cd $(LIBSODIUM_DIR)/ && make -j3 install
@@ -109,5 +107,8 @@ clean:
 	-rm -fr coverage.html
 	-rm -fr *.o
 	-rm -fr ${INSTALL_DIR}
+
+all:
+	sodium
 
 .PHONY: test-cov site docs test docclean
