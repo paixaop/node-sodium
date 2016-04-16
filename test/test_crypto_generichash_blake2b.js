@@ -7,6 +7,7 @@ var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 var crypto = require('crypto');
 var toBuffer = require('../lib/toBuffer');
+var should = require('should');
 
 var testVectors = [
     {
@@ -865,12 +866,9 @@ describe('Generic Hash', function() {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = toBuffer(testVectors[0].key);
         
-        assert.throws(
-            () => {
-                var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MAX + 1, testMessage, testKey);
-            },
-            /size cannot be bigger than/
-        );
+        (function() {
+            var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MAX + 1, testMessage, testKey);
+        }).should.throw();
         
         done();
     });
@@ -879,12 +877,9 @@ describe('Generic Hash', function() {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = toBuffer(testVectors[0].key);
         
-        assert.throws(
-            () => {
-                var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN - 1, testMessage, testKey);
-            },
-            /size cannot be smaller than/
-        );
+        (function() {
+            var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN - 1, testMessage, testKey);
+        }).should.throw();
         
         done();
     });
@@ -894,12 +889,9 @@ describe('Generic Hash', function() {
         var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MAX + 1);
         testKey.fill(1);
         
-        assert.throws(
-            () => {
-                var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
-            },
-            /size cannot be bigger than/
-        );
+        (function() {
+            var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
+        }).should.throw();
         
         done();
     });
@@ -909,12 +901,9 @@ describe('Generic Hash', function() {
         var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MIN - 1);
         testKey.fill(1);
         
-        assert.throws(
-            () => {
-                var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
-            },
-            /size cannot be smaller than/
-        );
+        (function() {
+            var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
+        }).should.throw();
         
         done();
     });
