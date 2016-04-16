@@ -107,6 +107,7 @@ clean:
 	-rm -fr coverage.html
 	-rm -fr *.o
 	-rm -fr ${INSTALL_DIR}
+	cd ${LIBSODIUM_DIR} && $(MAKE) clean
 
 all:
 	sodium
