@@ -42,7 +42,7 @@ void RegisterModule(Handle<Object> target) {
     register_crypto_scalarmult(target);
     register_crypto_scalarmult_curve25519(target);
     register_crypto_core(target);
-    //register_crypto_aead(target);
+    register_crypto_aead(target);
 }
 
 NODE_MODULE(sodium, RegisterModule);

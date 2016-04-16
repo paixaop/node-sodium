@@ -44,7 +44,6 @@ using namespace v8;
         } \
     }
 
-
 // Create a new buffer, and get a pointer to it
 #define NEW_BUFFER_AND_PTR(name, size) \
     Local<Object> name = Nan::NewBuffer(size).ToLocalChecked(); \
@@ -61,10 +60,10 @@ using namespace v8;
     }
 
 #define GET_ARG_AS_OR_NULL(i, NAME, TYPE) \
-    ARG_IS_BUFFER(i,#NAME); \
     TYPE NAME; \
     unsigned long long NAME ## _size = 0; \
     if( !info[i]->IsNull() ) { \
+        ARG_IS_BUFFER(i,#NAME); \
         NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
         NAME ## _size = Buffer::Length(info[i]->ToObject()); \
         if( NAME ## _size == 0 ) { \
@@ -111,6 +110,8 @@ using namespace v8;
 #define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
 #define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
+#define ARG_TO_BUFFER_OR_NULL(NAME, TYPE)           GET_ARG_AS_OR_NULL(_arg, NAME, TYPE); _arg++
+#define ARG_TO_UCHAR_BUFFER_OR_NULL(NAME)           GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); _arg++
 
 #define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
     GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); \

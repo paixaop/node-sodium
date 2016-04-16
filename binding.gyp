@@ -6,6 +6,7 @@
     {
       'target_name': 'sodium',
       'sources': [
+        'src/crypto_aead.cc',
         'src/crypto_sign.cc',
         'src/crypto_sign_ed25519.cc',
         'src/crypto_box.cc',
