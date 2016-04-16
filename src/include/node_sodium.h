@@ -104,12 +104,8 @@ using namespace v8;
         return Nan::ThrowError("argument size must be a number"); \
     }
 
-#define GET_ARG_POSITIVE_NUMBER(i, NAME) \
-    GET_ARG_NUMBER(i, NAME);
-
 #define ARG_TO_BUFFER_TYPE(NAME, TYPE)              GET_ARG_AS(_arg, NAME, TYPE); _arg++
 #define ARG_TO_BUFFER_TYPE_LEN(NAME, MAXLEN, TYPE)  GET_ARG_AS_LEN(_arg, NAME, MAXLEN, TYPE); _arg++
-#define ARG_TO_POSITIVE_NUMBER(NAME)                GET_ARG_POSITIVE_NUMBER(_arg, NAME); _arg++
 #define ARG_TO_NUMBER(NAME)                         GET_ARG_NUMBER(_arg, NAME); _arg++
 #define ARG_TO_VOID_BUFFER_LEN(NAME, MAXLEN)        GET_ARG_AS_VOID_LEN(_arg, NAME, MAXLEN); _arg++
 #define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++

@@ -51,7 +51,7 @@ NAN_METHOD(bind_memcmp) {
 
     ARG_TO_VOID_BUFFER(buffer_1);
     ARG_TO_VOID_BUFFER(buffer_2);
-    ARG_TO_POSITIVE_NUMBER(size);
+    ARG_TO_NUMBER(size);
     
     size_t s = (buffer_1_size < buffer_2_size)? buffer_1_size : buffer_2_size;
 

@@ -23,7 +23,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
     Nan::EscapableHandleScope scope;
 
     ARGS(3,"arguments must be: hash size, message, key");
-    ARG_TO_POSITIVE_NUMBER(out_size);
+    ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);
     
@@ -55,7 +55,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
 
     ARGS(2,"arguments must be: key buffer, output size");
     ARG_TO_UCHAR_BUFFER(key);  
-    ARG_TO_POSITIVE_NUMBER(out_size);
+    ARG_TO_NUMBER(out_size);
     
     CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
@@ -99,7 +99,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
 
     ARGS(2,"arguments must be: state buffer, output size");
     ARG_TO_VOID_BUFFER(state);
-    ARG_TO_POSITIVE_NUMBER(out_size);
+    ARG_TO_NUMBER(out_size);
     
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
     

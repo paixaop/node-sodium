@@ -12,7 +12,7 @@
     NAN_METHOD(bind_crypto_stream_##ALGO) { \
         Nan::EscapableHandleScope scope; \
         ARGS(3,"argument length must be a positive number, arguments nonce, and key must be buffers"); \
-        ARG_TO_POSITIVE_NUMBER(slen); \
+        ARG_TO_NUMBER(slen); \
         ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_ ## ALGO ## _KEYBYTES); \
         NEW_BUFFER_AND_PTR(stream, slen); \
@@ -40,7 +40,7 @@
         ARGS(4,"arguments message, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(message); \
         ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
-        ARG_TO_POSITIVE_NUMBER(ic); \
+        ARG_TO_NUMBER(ic); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_ ## ALGO ## _KEYBYTES); \
         NEW_BUFFER_AND_PTR(ctxt, message_size); \
         if (crypto_stream_ ## ALGO ## _xor_ic(ctxt_ptr, message, message_size, nonce, ic, key) == 0) { \

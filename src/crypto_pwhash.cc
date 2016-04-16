@@ -23,9 +23,9 @@ NAN_METHOD(bind_crypto_pwhash_argon2i) {
     ARG_TO_BUFFER_TYPE(out, unsigned char*);
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_argon2i_SALTBYTES);
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
-    ARG_TO_POSITIVE_NUMBER(alg);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
+    ARG_TO_NUMBER(alg);
     
     if (crypto_pwhash_argon2i(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
         return info.GetReturnValue().Set(Nan::True());
@@ -45,8 +45,8 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
     ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
     
     ARG_TO_BUFFER_TYPE(passwd, char*);
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
     
     NEW_BUFFER_AND_PTR(out, crypto_pwhash_argon2i_STRBYTES); 
     
@@ -98,9 +98,9 @@ NAN_METHOD(bind_crypto_pwhash) {
     ARG_TO_BUFFER_TYPE(out, unsigned char*);
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_SALTBYTES);
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
-    ARG_TO_POSITIVE_NUMBER(alg);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
+    ARG_TO_NUMBER(alg);
     
     if (crypto_pwhash(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
         return info.GetReturnValue().Set(Nan::True());
@@ -126,8 +126,8 @@ NAN_METHOD(bind_crypto_pwhash_str) {
     ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
     
     ARG_TO_BUFFER_TYPE(passwd, char*);
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
     
     NEW_BUFFER_AND_PTR(out, crypto_pwhash_STRBYTES); 
     
@@ -185,8 +185,8 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
     ARG_TO_BUFFER_TYPE(out, unsigned char*);
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
     
     if (crypto_pwhash_scryptsalsa208sha256(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit) == 0) {
         return info.GetReturnValue().Set(Nan::True());
@@ -214,9 +214,9 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_ll) {
     
     ARG_TO_BUFFER_TYPE(passwd, uint8_t*);
     ARG_TO_BUFFER_TYPE(salt, uint8_t*);
-    ARG_TO_POSITIVE_NUMBER(N);
-    ARG_TO_POSITIVE_NUMBER(r);
-    ARG_TO_POSITIVE_NUMBER(p);
+    ARG_TO_NUMBER(N);
+    ARG_TO_NUMBER(r);
+    ARG_TO_NUMBER(p);
     ARG_TO_BUFFER_TYPE(out, uint8_t*);
     
     if (crypto_pwhash_scryptsalsa208sha256_ll(passwd, passwd_size, salt, salt_size, N, r, p, out, out_size) == 0) {
@@ -241,8 +241,8 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
     ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
     
     ARG_TO_BUFFER_TYPE(passwd, char*); 
-    ARG_TO_POSITIVE_NUMBER(oppLimit);
-    ARG_TO_POSITIVE_NUMBER(memLimit);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
     
     NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
     
