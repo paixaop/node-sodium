@@ -7,7 +7,7 @@ Uses Libsodium 1.0.10
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
 As of libsodium 1.0.10 all functions except memory allocation have been implemented.
-Missing functions are listed in [`docs/not implemented.md`](https://github.com/paixaop/node-sodium/blob/split-sodium/docs/not%20implemented.md).
+Missing functions are listed in [`docs/not implemented.md`](https://github.com/paixaop/node-sodium/blob/master/docs/not%20implemented.md).
 
 
 There's a "low level" native module that gives you access directly to Lib Sodium, and a friendlier high level API that makes the library a bit easier to use.
