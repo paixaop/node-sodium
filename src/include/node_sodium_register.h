@@ -21,6 +21,7 @@ void register_crypto_streams(Handle<Object> target);
 void register_crypto_secretbox(Handle<Object> target);
 void register_crypto_secretbox_xsalsa20poly1305(Handle<Object> target);
 void register_crypto_sign(Handle<Object> target);
+void register_crypto_sign_ed25519(Handle<Object> target);
 void register_crypto_box(Handle<Object> target);
 void register_crypto_scalarmult(Handle<Object> target);
 void register_crypto_scalarmult_curve25519(Handle<Object> target);

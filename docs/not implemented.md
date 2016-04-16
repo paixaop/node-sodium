@@ -23,20 +23,6 @@ If you really need them please create a pull request and I will merge it in. Tha
   * crypto_aead_chacha20poly1305_ietf_encrypt
   * crypto_aead_chacha20poly1305_ietf_encrypt_detached
   
-  * crypto_sign_ed25519
-  * crypto_sign_ed25519_open
-  * crypto_sign_ed25519_detached
-  * crypto_sign_ed25519_keypair
-  * crypto_sign_ed25519_seed_keypair
-  * crypto_sign_ed25519_sk_to_pk
-  * crypto_sign_ed25519_sk_to_seed
-  * crypto_sign_ed25519_verify_detached
-  
-  * crypto_sign_ed25519_BYTES
-  * crypto_sign_ed25519_PUBLICKEYBYTES
-  * crypto_sign_ed25519_SECRETKEYBYTES
-  * crypto_sign_ed25519_SEEDBYTES
-  
   * crypto_sign_edwards25519sha512batch
   * crypto_sign_edwards25519sha512batch_keypair
   * crypto_sign_edwards25519sha512batch_open

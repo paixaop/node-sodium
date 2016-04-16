@@ -6,6 +6,7 @@
  * @License MIT
  */
 #include "node_sodium.h"
+#include "crypto_sign_ed25519.h"
 
 /**
  * Signs a given message using the signer's signing key.
@@ -86,9 +87,9 @@ NAN_METHOD(bind_crypto_sign_detached) {
 
     if (crypto_sign_detached(sig_ptr, &slen, message, message_size, secretKey) == 0) {
         return info.GetReturnValue().Set(sig);
-    } else {
-        return info.GetReturnValue().Set(Nan::Undefined());
     }
+        
+    return info.GetReturnValue().Set(Nan::Undefined());
 }
 
 /**
@@ -218,9 +219,9 @@ NAN_METHOD(bind_crypto_sign_open) {
         memcpy(m_ptr, msg_ptr, mlen);
 
         return info.GetReturnValue().Set(m);
-    } else {
-        return;
     }
+    
+    return info.GetReturnValue().Set(Nan::Undefined());
 }
 
 /**
@@ -258,81 +259,24 @@ NAN_METHOD(bind_crypto_sign_verify_detached) {
 
     if (crypto_sign_verify_detached(signature, message, message_size, publicKey) == 0) {
         return info.GetReturnValue().Set(Nan::True());
-    } else {
-        return info.GetReturnValue().Set(Nan::False());
     }
-}
-
-/**
- * Convert a ed25519 signing public key to a curve25519 exchange key.
- *
- * Parameters:
- *    [out] curve25519_pk the public exchange key.
- *    [in]  ed25519_pk    the public signing key.
- *
- * Returns:
- *    0
- *
- * Precondition:
- *    ed25519_pk must be a ed25519 public key.
- */
-NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
-
-    ARGS(1, "argument ed25519_pk must be a buffer")
-    ARG_TO_UCHAR_BUFFER_LEN(ed25519_pk, crypto_sign_PUBLICKEYBYTES);
     
-    NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
-
-    if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
-    }
-
-    return info.GetReturnValue().Set(curve25519_pk);
+    return info.GetReturnValue().Set(Nan::False());
 }
 
-
-/**
- * Convert a ed25519 signing secret key to a curve25519 exchange key.
- *
- * Parameters:
- *    [out] curve25519_sk the secret exchange key.
- *    [in]  ed25519_sk    the secret signing key.
- *
- * Returns:
- *    0
- *
- * Precondition:
- *    ed25519_sk must be a ed25519 secret key.
- */
-NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
-
-    ARGS(1, "argument ed25519_sk must be a buffer");
-    ARG_TO_UCHAR_BUFFER_LEN(ed25519_sk, crypto_sign_SECRETKEYBYTES);
-    
-    NEW_BUFFER_AND_PTR(curve25519_sk, crypto_box_SECRETKEYBYTES);
-
-    if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
-    }
-
-    return info.GetReturnValue().Set(curve25519_sk);
-}
 
 /**
  * Register function calls in node binding
  */
 void register_crypto_sign(Handle<Object> target) {
      // Sign
-    NEW_METHOD(crypto_sign);
-    NEW_METHOD(crypto_sign_detached);
-    NEW_METHOD(crypto_sign_keypair);
-    NEW_METHOD(crypto_sign_seed_keypair);
-    NEW_METHOD(crypto_sign_open);
-    NEW_METHOD(crypto_sign_verify_detached);
-    NEW_METHOD(crypto_sign_ed25519_pk_to_curve25519);
-    NEW_METHOD(crypto_sign_ed25519_sk_to_curve25519);
+    NEW_METHOD_ALIAS(crypto_sign, crypto_sign_ed25519);
+    NEW_METHOD_ALIAS(crypto_sign_open, crypto_sign_ed25519_open);
+    NEW_METHOD_ALIAS(crypto_sign_detached, crypto_sign_ed25519_detached);
+    NEW_METHOD_ALIAS(crypto_sign_verify_detached, crypto_sign_ed25519_verify_detached);
+    NEW_METHOD_ALIAS(crypto_sign_keypair, crypto_sign_ed25519_keypair);
+    NEW_METHOD_ALIAS(crypto_sign_seed_keypair, crypto_sign_ed25519_seed_keypair);
+    
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
