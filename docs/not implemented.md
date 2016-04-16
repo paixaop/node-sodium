@@ -23,10 +23,6 @@ If you really need them please create a pull request and I will merge it in. Tha
   * crypto_aead_chacha20poly1305_ietf_encrypt
   * crypto_aead_chacha20poly1305_ietf_encrypt_detached
   
-  * crypto_sign_edwards25519sha512batch
-  * crypto_sign_edwards25519sha512batch_keypair
-  * crypto_sign_edwards25519sha512batch_open
-  
   * randombytes_implementation_name
   * randombytes_set_implementation
   * sodium_allocarray
@@ -37,3 +33,10 @@ If you really need them please create a pull request and I will merge it in. Tha
   * sodium_mprotect_readonly
   * sodium_mprotect_readwrite
   * sodium_munlock
+  
+Deprecated Functions
+  
+  * crypto_sign_edwards25519sha512batch
+  * crypto_sign_edwards25519sha512batch_keypair
+  * crypto_sign_edwards25519sha512batch_open
+  
