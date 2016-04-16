@@ -1,6 +1,6 @@
 {
   "name": "sodium",
-  "version": "1.0.22",
+  "version": "1.1.0",
   "author": "Pedro Paixao <paixaop@gmail.com>",
   "license": "MIT",
   "description": "Lib Sodium port for node.js",
@@ -16,8 +16,7 @@
   },
   "scripts": {
     "test": "make test",
-    "preinstall": "make",
-    "install": "node-gyp rebuild"
+    "install": "make sodium"
   },
   "repository": {
     "type": "git",

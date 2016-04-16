@@ -2,12 +2,12 @@
 
 # node-sodium
 
-Uses Libsodium 1.0.3
+Uses Libsodium 1.0.10
 
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
 This is a work in progress but most of Lib Sodium has been ported already.
-Missing are the `generichash` functions, and the alternative primitives, like `crypto_box_curve25519xsalsa20poly1305`, or `crypto_stream_aes128ctr`.
+Missing functions are listed in [`docs/not implemented.md`](https://github.com/paixaop/node-sodium/blob/split-sodium/docs/not%20implemented.md). You are encouraged to support this effort by creating a pull request for a function that you really need, that hasn't been ported yet.
 
 There's a "low level" native module that gives you access directly to Lib Sodium, and a friendlier high level API that makes the library a bit easier to use.
 
@@ -76,11 +76,19 @@ node-sodium depends on lib sodium, so if lib sodium does not compile on your pla
 
 # Manual Build
 
+Node Sodium includes the source of libsodium, so the normal install will try to compile libsodium directly from source, using libsodium's own build tools.
+This is the prefered method of compiling node sodium.
+If you can't compile libsodium from source in your platform you can [download a pre-compiled binary](http://www.libsodium.org/releases) and copy it to the `./deps/build/lib` folder.
+
 Before you run the manual build you must run the `npm install` once to install the required dependencies, like `node-gyp` that are needed to compile `node-sodium`.
 Please note that `npm install` will install the dependencies and compile `node-sodium` as well. After this initial step you can make changes to the source and run the following commands to manually build the module:
 
-    make configure
     make sodium
+
+# SECURITY WARNING: Using a Binary Static libsodium
+
+Node Sodium is a strong encryption library, odds are that a lot of security functions of your application depend on it, so *DO NOT* use binary libsodium distributions that you haven't verified.
+If you use a pre-compiled version of libsodium you MUST be sure that nothing mallicious was added to the compiled version you are using.
 
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.

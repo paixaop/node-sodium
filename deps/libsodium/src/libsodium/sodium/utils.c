@@ -23,6 +23,14 @@
 # include <unistd.h>
 #endif
 
+#ifndef ENOSYS
+# define ENOSYS ENXIO
+#endif
+
+#if defined(_WIN32) && (!defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+# define WINAPI_DESKTOP
+#endif
+
 #define CANARY_SIZE 16U
 #define GARBAGE_VALUE 0xd0
 
@@ -32,13 +40,13 @@
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
 # define MAP_ANON MAP_ANONYMOUS
 #endif
-#if defined(_WIN32) || (defined(MAP_ANON) && defined(HAVE_MMAP)) || defined(HAVE_POSIX_MEMALIGN)
+#if defined(WINAPI_DESKTOP) || (defined(MAP_ANON) && defined(HAVE_MMAP)) || defined(HAVE_POSIX_MEMALIGN)
 # define HAVE_ALIGNED_MALLOC
 #endif
 #if defined(HAVE_MPROTECT) && !(defined(PROT_NONE) && defined(PROT_READ) && defined(PROT_WRITE))
 # undef HAVE_MPROTECT
 #endif
-#if defined(HAVE_ALIGNED_MALLOC) && (defined(_WIN32) || defined(HAVE_MPROTECT))
+#if defined(HAVE_ALIGNED_MALLOC) && (defined(WINAPI_DESKTOP) || defined(HAVE_MPROTECT))
 # define HAVE_PAGE_PROTECTION
 #endif
 
@@ -46,8 +54,8 @@ static size_t page_size;
 static unsigned char canary[CANARY_SIZE];
 
 #ifdef HAVE_WEAK_SYMBOLS
-__attribute__((weak)) void
-_sodium_dummy_symbol_to_prevent_lto(void * const pnt, const size_t len)
+__attribute__ ((weak)) void
+_sodium_dummy_symbol_to_prevent_memzero_lto(void * const pnt, const size_t len)
 {
     (void) pnt;
     (void) len;
@@ -67,10 +75,11 @@ sodium_memzero(void * const pnt, const size_t len)
     explicit_bzero(pnt, len);
 #elif HAVE_WEAK_SYMBOLS
     memset(pnt, 0, len);
-    _sodium_dummy_symbol_to_prevent_lto(pnt, len);
+    _sodium_dummy_symbol_to_prevent_memzero_lto(pnt, len);
 #else
-    volatile unsigned char *pnt_ = (volatile unsigned char *) pnt;
-    size_t                     i = (size_t) 0U;
+    volatile unsigned char *volatile pnt_ =
+        (volatile unsigned char * volatile) pnt;
+    size_t i = (size_t) 0U;
 
     while (i < len) {
         pnt_[i++] = 0U;
@@ -78,18 +87,183 @@ sodium_memzero(void * const pnt, const size_t len)
 #endif
 }
 
+#ifdef HAVE_WEAK_SYMBOLS
+__attribute__ ((weak)) void
+_sodium_dummy_symbol_to_prevent_memcmp_lto(const unsigned char *b1,
+                                           const unsigned char *b2,
+                                           const size_t len)
+{
+    (void) b1;
+    (void) b2;
+    (void) len;
+}
+#endif
+
 int
 sodium_memcmp(const void * const b1_, const void * const b2_, size_t len)
 {
+#ifdef HAVE_WEAK_SYMBOLS
     const unsigned char *b1 = (const unsigned char *) b1_;
     const unsigned char *b2 = (const unsigned char *) b2_;
+#else
+    const volatile unsigned char *volatile b1 =
+        (const volatile unsigned char * volatile) b1_;
+    const volatile unsigned char *volatile b2 =
+        (const volatile unsigned char * volatile) b2_;
+#endif
     size_t               i;
     unsigned char        d = (unsigned char) 0U;
 
+#if HAVE_WEAK_SYMBOLS
+    _sodium_dummy_symbol_to_prevent_memcmp_lto(b1, b2, len);
+#endif
     for (i = 0U; i < len; i++) {
         d |= b1[i] ^ b2[i];
     }
-    return (int) ((1 & ((d - 1) >> 8)) - 1);
+    return (1 & ((d - 1) >> 8)) - 1;
+}
+
+#ifdef HAVE_WEAK_SYMBOLS
+__attribute__ ((weak)) void
+_sodium_dummy_symbol_to_prevent_compare_lto(const unsigned char *b1,
+                                            const unsigned char *b2,
+                                            const size_t len)
+{
+    (void) b1;
+    (void) b2;
+    (void) len;
+}
+#endif
+
+int
+sodium_compare(const unsigned char *b1_, const unsigned char *b2_, size_t len)
+{
+#ifdef HAVE_WEAK_SYMBOLS
+    const unsigned char *b1 = b1_;
+    const unsigned char *b2 = b2_;
+#else
+    const volatile unsigned char * volatile b1 =
+        (const volatile unsigned char * volatile) b1_;
+    const volatile unsigned char * volatile b2 =
+        (const volatile unsigned char * volatile) b2_;
+#endif
+    unsigned char gt = 0U;
+    unsigned char eq = 1U;
+    size_t        i;
+
+#if HAVE_WEAK_SYMBOLS
+    _sodium_dummy_symbol_to_prevent_compare_lto(b1, b2, len);
+#endif
+    i = len;
+    while (i != 0U) {
+        i--;
+        gt |= ((b2[i] - b1[i]) >> 8) & eq;
+        eq &= ((b2[i] ^ b1[i]) - 1) >> 8;
+    }
+    return (int) (gt + gt + eq) - 1;
+}
+
+int
+sodium_is_zero(const unsigned char *n, const size_t nlen)
+{
+    size_t        i;
+    unsigned char d = 0U;
+
+    for (i = 0U; i < nlen; i++) {
+        d |= n[i];
+    }
+    return 1 & ((d - 1) >> 8);
+}
+
+void
+sodium_increment(unsigned char *n, const size_t nlen)
+{
+    size_t        i = 0U;
+    uint_fast16_t c = 1U;
+
+#ifdef HAVE_AMD64_ASM
+    uint64_t      t64, t64_2;
+    uint32_t      t32;
+
+    if (nlen == 12U) {
+        __asm__ __volatile__("xorq %[t64], %[t64] \n"
+                             "xorl %[t32], %[t32] \n"
+                             "stc \n"
+                             "adcq %[t64], (%[out]) \n"
+                             "adcl %[t32], 8(%[out]) \n"
+                             : [t64] "=&r"(t64), [t32] "=&r" (t32)
+                             : [out] "D"(n)
+                             : "memory", "flags", "cc");
+        return;
+    } else if (nlen == 24U) {
+        __asm__ __volatile__("movq $1, %[t64] \n"
+                             "xorq %[t64_2], %[t64_2] \n"
+                             "addq %[t64], (%[out]) \n"
+                             "adcq %[t64_2], 8(%[out]) \n"
+                             "adcq %[t64_2], 16(%[out]) \n"
+                             : [t64] "=&r"(t64), [t64_2] "=&r" (t64_2)
+                             : [out] "D"(n)
+                             : "memory", "flags", "cc");
+        return;
+    } else if (nlen == 8U) {
+        __asm__ __volatile__("incq (%[out]) \n"
+                             :
+                             : [out] "D"(n)
+                             : "memory", "flags", "cc");
+        return;
+    }
+#endif
+    for (; i < nlen; i++) {
+        c += (uint_fast16_t) n[i];
+        n[i] = (unsigned char) c;
+        c >>= 8;
+    }
+}
+
+void
+sodium_add(unsigned char *a, const unsigned char *b, const size_t len)
+{
+    size_t        i = 0U;
+    uint_fast16_t c = 0U;
+
+#ifdef HAVE_AMD64_ASM
+    uint64_t      t64, t64_2, t64_3;
+    uint32_t      t32;
+
+    if (len == 12U) {
+        __asm__ __volatile__("movq (%[in]), %[t64] \n"
+                             "movl 8(%[in]), %[t32] \n"
+                             "addq %[t64], (%[out]) \n"
+                             "adcl %[t32], 8(%[out]) \n"
+                             : [t64] "=&r"(t64), [t32] "=&r" (t32)
+                             : [in] "S"(b), [out] "D"(a)
+                             : "memory", "flags", "cc");
+        return;
+    } else if (len == 24U) {
+        __asm__ __volatile__("movq (%[in]), %[t64] \n"
+                             "movq 8(%[in]), %[t64_2] \n"
+                             "movq 16(%[in]), %[t64_3] \n"
+                             "addq %[t64], (%[out]) \n"
+                             "adcq %[t64_2], 8(%[out]) \n"
+                             "adcq %[t64_3], 16(%[out]) \n"
+                             : [t64] "=&r"(t64), [t64_2] "=&r"(t64_2), [t64_3] "=&r"(t64_3)
+                             : [in] "S"(b), [out] "D"(a)
+                             : "memory", "flags", "cc");
+        return;
+    } else if (len == 8U) {
+        __asm__ __volatile__("movq (%[in]), %[t64] \n"
+                             "addq %[t64], (%[out]) \n"
+                             : [t64] "=&r"(t64)
+                             : [in] "S"(b), [out] "D"(a)
+                             : "memory", "flags", "cc");
+        return;
+    }
+#endif
+    for (; i < len; i++) {
+        c += (uint_fast16_t) a[i] + (uint_fast16_t) b[i];
+        a[i] = (unsigned char) c;
+        c >>= 8;
+    }
 }
 
 /* Derived from original code by CodesInChaos */
@@ -102,7 +276,7 @@ sodium_bin2hex(char * const hex, const size_t hex_maxlen,
     int          b;
     int          c;
 
-    if (bin_len >= SIZE_MAX / 2 || hex_maxlen < bin_len * 2U) {
+    if (bin_len >= SIZE_MAX / 2 || hex_maxlen <= bin_len * 2U) {
         abort(); /* LCOV_EXCL_LINE */
     }
     while (i < bin_len) {
@@ -184,7 +358,7 @@ _sodium_alloc_init(void)
     if (page_size_ > 0L) {
         page_size = (size_t) page_size_;
     }
-# elif defined(_WIN32)
+# elif defined(WINAPI_DESKTOP)
     SYSTEM_INFO si;
     GetSystemInfo(&si);
     page_size = (size_t) si.dwPageSize;
@@ -206,7 +380,7 @@ sodium_mlock(void * const addr, const size_t len)
 #endif
 #ifdef HAVE_MLOCK
     return mlock(addr, len);
-#elif defined(_WIN32)
+#elif defined(WINAPI_DESKTOP)
     return -(VirtualLock(addr, len) == 0);
 #else
     errno = ENOSYS;
@@ -223,7 +397,7 @@ sodium_munlock(void * const addr, const size_t len)
 #endif
 #ifdef HAVE_MLOCK
     return munlock(addr, len);
-#elif defined(_WIN32)
+#elif defined(WINAPI_DESKTOP)
     return -(VirtualUnlock(addr, len) == 0);
 #else
     errno = ENOSYS;
@@ -236,7 +410,7 @@ _mprotect_noaccess(void *ptr, size_t size)
 {
 #ifdef HAVE_MPROTECT
     return mprotect(ptr, size, PROT_NONE);
-#elif defined(_WIN32)
+#elif defined(WINAPI_DESKTOP)
     DWORD old;
     return -(VirtualProtect(ptr, size, PAGE_NOACCESS, &old) == 0);
 #else
@@ -250,7 +424,7 @@ _mprotect_readonly(void *ptr, size_t size)
 {
 #ifdef HAVE_MPROTECT
     return mprotect(ptr, size, PROT_READ);
-#elif defined(_WIN32)
+#elif defined(WINAPI_DESKTOP)
     DWORD old;
     return -(VirtualProtect(ptr, size, PAGE_READONLY, &old) == 0);
 #else
@@ -264,7 +438,7 @@ _mprotect_readwrite(void *ptr, size_t size)
 {
 #ifdef HAVE_MPROTECT
     return mprotect(ptr, size, PROT_READ | PROT_WRITE);
-#elif defined(_WIN32)
+#elif defined(WINAPI_DESKTOP)
     DWORD old;
     return -(VirtualProtect(ptr, size, PAGE_READWRITE, &old) == 0);
 #else
@@ -275,7 +449,7 @@ _mprotect_readwrite(void *ptr, size_t size)
 
 #ifdef HAVE_ALIGNED_MALLOC
 
-static void
+__attribute__ ((noreturn)) static void
 _out_of_bounds(void)
 {
 # ifdef SIGSEGV
@@ -294,7 +468,7 @@ _page_round(const size_t size)
     return (size + page_mask) & ~page_mask;
 }
 
-static __attribute__((malloc)) unsigned char *
+static __attribute__ ((malloc)) unsigned char *
 _alloc_aligned(const size_t size)
 {
     void *ptr;
@@ -308,7 +482,7 @@ _alloc_aligned(const size_t size)
     if (posix_memalign(&ptr, page_size, size) != 0) {
         ptr = NULL; /* LCOV_EXCL_LINE */
     } /* LCOV_EXCL_LINE */
-# elif defined(_WIN32)
+# elif defined(WINAPI_DESKTOP)
     ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 # else
 #  error Bug
@@ -323,7 +497,7 @@ _free_aligned(unsigned char * const ptr, const size_t size)
     (void) munmap(ptr, size);
 # elif defined(HAVE_POSIX_MEMALIGN)
     free(ptr);
-# elif defined(_WIN32)
+# elif defined(WINAPI_DESKTOP)
     VirtualFree(ptr, 0U, MEM_RELEASE);
 # else
 #  error Bug
@@ -331,7 +505,7 @@ _free_aligned(unsigned char * const ptr, const size_t size)
 }
 
 static unsigned char *
-_unprotected_ptr_from_user_ptr(const void *ptr)
+_unprotected_ptr_from_user_ptr(void * const ptr)
 {
     uintptr_t      unprotected_ptr_u;
     unsigned char *canary_ptr;
@@ -349,13 +523,13 @@ _unprotected_ptr_from_user_ptr(const void *ptr)
 #endif /* HAVE_ALIGNED_MALLOC */
 
 #ifndef HAVE_ALIGNED_MALLOC
-static __attribute__((malloc)) void *
+static __attribute__ ((malloc)) void *
 _sodium_malloc(const size_t size)
 {
-    return malloc(size);
+    return malloc(size > (size_t) 0U ? size : (size_t) 1U);
 }
 #else
-static __attribute__((malloc)) void *
+static __attribute__ ((malloc)) void *
 _sodium_malloc(const size_t size)
 {
     void          *user_ptr;
@@ -398,20 +572,20 @@ _sodium_malloc(const size_t size)
 }
 #endif /* !HAVE_ALIGNED_MALLOC */
 
-__attribute__((malloc)) void *
+__attribute__ ((malloc)) void *
 sodium_malloc(const size_t size)
 {
     void *ptr;
 
     if ((ptr = _sodium_malloc(size)) == NULL) {
-        return NULL; /* LCOV_EXCL_LINE */
+        return NULL;
     }
     memset(ptr, (int) GARBAGE_VALUE, size);
 
     return ptr;
 }
 
-__attribute__((malloc)) void *
+__attribute__ ((malloc)) void *
 sodium_allocarray(size_t count, size_t size)
 {
     size_t total_size;

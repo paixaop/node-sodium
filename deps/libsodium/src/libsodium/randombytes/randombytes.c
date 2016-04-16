@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <sys/types.h>
 
 #include <assert.h>
@@ -12,9 +13,21 @@
 #include "randombytes.h"
 #include "randombytes_sysrandom.h"
 
+#ifdef __native_client__
+# include "randombytes_nativeclient.h"
+#endif
+
+/* C++Builder defines a "random" macro */
+#undef random
+
 #ifndef __EMSCRIPTEN__
+#ifdef __native_client__
+static const randombytes_implementation *implementation =
+    &randombytes_nativeclient_implementation;
+#else
 static const randombytes_implementation *implementation =
     &randombytes_sysrandom_implementation;
+#endif
 #else
 static const randombytes_implementation *implementation = NULL;
 #endif
@@ -60,7 +73,8 @@ randombytes_stir(void)
     EM_ASM({
         if (Module.getRandomValue === undefined) {
             try {
-                var crypto_ = ("object" === typeof window ? window : self).crypto,
+                var window_ = "object" === typeof window ? window : self,
+                    crypto_ = typeof window_.crypto !== "undefined" ? window_.crypto : window_.msCrypto,
                     randomValuesStandard = function() {
                         var buf = new Uint32Array(1);
                         crypto_.getRandomValues(buf);
@@ -71,12 +85,12 @@ randombytes_stir(void)
             } catch (e) {
                 try {
                     var crypto = require('crypto'),
-                        randomValueIOJS = function() {
+                        randomValueNodeJS = function() {
                             var buf = crypto.randomBytes(4);
                             return (buf[0] << 24 | buf[1] << 16 | buf[2] << 8 | buf[3]) >>> 0;
                         };
-                    randomValueIOJS();
-                    Module.getRandomValue = randomValueIOJS;
+                    randomValueNodeJS();
+                    Module.getRandomValue = randomValueNodeJS;
                 } catch (e) {
                     throw 'No secure random number generator found';
                 }
@@ -96,9 +110,15 @@ randombytes_uniform(const uint32_t upper_bound)
     uint32_t min;
     uint32_t r;
 
+#ifdef __EMSCRIPTEN__
     if (implementation != NULL && implementation->uniform != NULL) {
         return implementation->uniform(upper_bound);
     }
+#else
+    if (implementation->uniform != NULL) {
+        return implementation->uniform(upper_bound);
+    }
+#endif
     if (upper_bound < 2) {
         return 0;
     }
