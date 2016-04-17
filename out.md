@@ -446,17 +446,17 @@ Dencrypt Message in Detached Mode using ChaCha20-Poly1305
 
 See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
 
-### crypto_aead_chacha20poly1305_ietf_encrypt_detached
+### crypto_aead_chacha20poly1305_ietf_encrypt
 
 Encrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
 
-See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_detached)
+See [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
 
-### crypto_aead_chacha20poly1305_decrypt_detached
+### crypto_aead_chacha20poly1305_decrypt
 
 Dencrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
 
-See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+See [crypto_aead_aes256gcm_decrypt](#crypto_aead_aes256gcm_decrypt)
 
 ### crypto_aead_chacha20poly1305_ietf_encrypt_detached
 
