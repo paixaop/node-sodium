@@ -1,3 +1,18 @@
+## Authenticated Encryption with Additional Data
+
+
+Encrypts a message with a key and a nonce to keep it confidential Computes
+an authentication tag. This tag is used to make sure that the message, as
+well as optional, non-confidential (non-encrypted) data, haven't been
+tampered with.
+
+A typical use case for additional data is to store protocol-specific metadata
+about the message, such as its length and encoding.
+
+### Crypto AEAD AES 256 GCM
+
+
+
 ### crypto_aead_aes256gcm_is_available()
 
 
@@ -5,7 +20,7 @@ Check hardware support for AES 256 GCM
 
 **Returns**:
 
-~ {Boolean} true if hardware supports AES 256 GCM
+* `true` <span class='dash'>&mdash;</span> if hardware supports AES 256 GCM
 
 ### crypto_aead_aes256gcm_beforenm(key)
 
