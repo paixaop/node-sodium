@@ -5,6 +5,7 @@ node_js:
   - "0.11"
   - "0.12"
   -  4
+  - "5.8.0"
 
 env:
   - CXX=g++-4.8
@@ -19,4 +20,3 @@ addons:
 before_install:
   - export JOBS=max
   - export prebuild_compile=true
-
