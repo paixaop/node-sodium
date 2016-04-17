@@ -346,7 +346,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_encrypt_detached_afternm) {
  * ~ message (Buffer): plain text message
  * ~ undefined: if `message` fails to encrypt
  *
- * See: [crypto_aead_aes256gcm_encrypt_detached_afternm][crypto_aead_aes256gcm_encrypt_detached_afternm]
+ * See: [crypto_aead_aes256gcm_encrypt_detached_afternm](#crypto_aead_aes256gcm_encrypt_detached_afternm)
  *
  */
 NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_detached_afternm) {
