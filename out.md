@@ -452,7 +452,7 @@ Encrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
 
 See [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
 
-### crypto_aead_chacha20poly1305_decrypt
+### crypto_aead_chacha20poly1305_ietf_decrypt
 
 Dencrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
 
