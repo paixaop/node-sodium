@@ -54,7 +54,7 @@
  */
 
 /**
- * Crypto AEAD AES-GCM 256:
+ * Crypto AEAD AES-GCM 256 API:
  *
  * The current implementation of this construction is hardware-accelerated and
  * requires the Intel SSSE3 extensions, as well as the aesni and pclmul
@@ -66,8 +66,6 @@
  * [AES-GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
  * If portability is a concern, use ChaCha20-Poly1305 instead.
  */
-
-/** Low Level API: */
 
 /**
  * Precompute API:
@@ -517,6 +515,7 @@ CRYPTO_AEAD_DEF(aes256gcm)
   */
 CRYPTO_AEAD_DETACHED_DEF(aes256gcm)
 
+/** Crypto AEAD ChaCha20-Poly1305 API: */
 /**
  * crypto_aead_chacha20poly1305_encrypt:
  * Encrypt Message in Detached Mode using ChaCha20-Poly1305
@@ -547,6 +546,7 @@ CRYPTO_AEAD_DEF(chacha20poly1305)
  */
 CRYPTO_AEAD_DETACHED_DEF(chacha20poly1305)
 
+/** Crypto AEAD ChaCha20-Poly1305-IETF API: */
 /**
  * crypto_aead_chacha20poly1305_ietf_encrypt:
  * Encrypt Message in Combined Mode using ChaCha20-Poly1305-IETF

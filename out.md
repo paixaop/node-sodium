@@ -44,7 +44,7 @@ Replace `ALGORITHM` with one of the supported algorithms (`aes256gcm`,
 * `crypto_aead_ALGORITHM_NPUBBYTES` <span class='dash'>&mdash;</span> lenght of public nonce
 * `crypto_aead_ALGORITHM_NSECBYTES` <span class='dash'>&mdash;</span> length of secret nonce. Not used
 
-### Crypto AEAD AES-GCM 256
+### Crypto AEAD AES-GCM 256 API
 
 
 The current implementation of this construction is hardware-accelerated and
@@ -56,10 +56,6 @@ Intel Westmere processors (introduced in 2010) and newer meet the requirements.
 There are no plans to support non hardware-accelerated implementations of
 [AES-GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
 If portability is a concern, use ChaCha20-Poly1305 instead.
-
-### Low Level API
-
-
 
 ### Precompute API
 
@@ -422,6 +418,10 @@ Encrypt Message in Detached Mode
 
 **See**: [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
 
+### Crypto AEAD ChaCha20-Poly1305 API
+
+
+
 ### crypto_aead_chacha20poly1305_encrypt
 
 Encrypt Message in Detached Mode using ChaCha20-Poly1305
@@ -445,6 +445,10 @@ See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_deta
 Dencrypt Message in Detached Mode using ChaCha20-Poly1305
 
 See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+
+### Crypto AEAD ChaCha20-Poly1305-IETF API
+
+
 
 ### crypto_aead_chacha20poly1305_ietf_encrypt
 
