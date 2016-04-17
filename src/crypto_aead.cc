@@ -548,17 +548,17 @@ CRYPTO_AEAD_DEF(chacha20poly1305)
 CRYPTO_AEAD_DETACHED_DEF(chacha20poly1305)
 
 /**
- * crypto_aead_chacha20poly1305_ietf_encrypt_detached:
+ * crypto_aead_chacha20poly1305_ietf_encrypt:
  * Encrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
  *
- * See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_detached)
+ * See [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
  */
 
 /**
- * crypto_aead_chacha20poly1305_decrypt_detached:
+ * crypto_aead_chacha20poly1305_decrypt:
  * Dencrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
  *
- * See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+ * See [crypto_aead_aes256gcm_decrypt](#crypto_aead_aes256gcm_decrypt)
  */
 CRYPTO_AEAD_DEF(chacha20poly1305_ietf)
 
