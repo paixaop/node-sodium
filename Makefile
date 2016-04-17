@@ -6,6 +6,8 @@ LIBSODIUM_DIR = ./deps/libsodium
 INSTALL_DIR = $(CURDIR)/deps/build
 STATIC_LIB = ${INSTALL_DIR}/lib/libsodium
 
+.DEFAULT_GOAL := sodium
+
 PLATFORM = ''
 THIS_OS = ''
 
@@ -112,4 +114,4 @@ clean:
 all:
 	sodium
 
-.PHONY: test-cov site docs test docclean
+.PHONY: all test-cov site docs test docclean
