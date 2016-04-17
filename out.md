@@ -262,4 +262,4 @@ Encrypt data in Detached Mode
 * `message` *(Buffer)* <span class='dash'>&mdash;</span> plain text message
 * `undefined` <span class='dash'>&mdash;</span> if `message` fails to encrypt
 
-See: [crypto_aead_aes256gcm_encrypt_detached_afternm][crypto_aead_aes256gcm_encrypt_detached_afternm]
+See: [crypto_aead_aes256gcm_encrypt_detached_afternm](#crypto_aead_aes256gcm_encrypt_detached_afternm)
