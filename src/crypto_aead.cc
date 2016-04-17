@@ -43,6 +43,14 @@
  * ~ cipherText (Buffer): encrypted message
  * ~ mac (Buffer): authentication tag (`crypto_aead_*_ABYTES` long)
  *
+ * ### Constants
+ * Replace `ALGORITHM` with one of the supported algorithms (`aes256gcm`,
+ * `chacha20poly1305`, or `chacha20poly1305-ietf`)
+ *
+ * ~ crypto_aead_ALGORITHM_ABYTES: length of the authentication tag buffer
+ * ~ crypto_aead_ALGORITHM_KEYBYTES: length of secret key
+ * ~ crypto_aead_ALGORITHM_NPUBBYTES: lenght of public nonce
+ * ~ crypto_aead_ALGORITHM_NSECBYTES: length of secret nonce. Not used
  */
 
 /**
@@ -270,7 +278,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_afternm) {
  *
  * **Returns**:
  *
- * ~ object: `cipherText` buffer with ciphered text, and `mac` with the
+ * ~ object: `cipherText` buffer with ciphered text, and `mac` buffer with the
  *   authentication tag
  *
  *    { cipherText: <buffer>, mac: <buffer> }
@@ -368,13 +376,205 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_detached_afternm) {
     return info.GetReturnValue().Set(Nan::Undefined());
 }
 
+/**
+ * crypto_aead_aes256gcm_encrypt:
+ * Encrypt Message in Combined Mode
+ *
+ *    var c = sodium.crypto_aead_aes256gcm_encrypt(
+ *              message,
+ *              additionalData,
+ *              nonce,
+ *              key);
+ *
+ * ~ message (Buffer): plain text buffer
+ * ~ additionalData (Buffer): non-confidential data to add to the cipher text. Can be `null`
+ * ~ nonce (Buffer): a nonce with `sodium.crypto_aead_aes256gcm_NPUBBYTES` in length
+ * ~ key (Buffer): secret key `sodium.crypto_aead_aes256gcm_KEYBYTES` in length
+ *
+ * **Returns**:
+ *
+ * ~ cipherText (Buffer): The encrypted message, as well as a tag authenticating
+ *   both the confidential message `message` and non-confidential data `additionalData`
+ * ~ undefined: if `message` fails to encrypt
+ *
+ * **Sample**:
+ *
+ *     var sodium = require('sodium').api;
+ *
+ *     // Generate a random key
+ *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     sodium.randombytes_buf(key);
+ *
+ *     // Generate random nonce
+ *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     sodium.randombytes_buf(nonce);
+ *
+ *     var message = new Buffer("this is a plain text message");
+ *     var additionalData = new Buffer("metadata");
+ *
+ *     // Encrypt Data
+ *     var cipherText = sodium.crypto_aead_aes256gcm_encrypt(
+ *        message, additionalData, nonce, key);
+ *
+ *     // Get the plain text, i.e., original message back
+ *     var plainText = sodium.crypto_aead_aes256gcm_decrypt(
+ *        cipherText, additionalData, nonce, key);
+ */
+
+ /**
+  * crypto_aead_aes256gcm_decrypt:
+  * Encrypt Message in Combined Mode
+  *
+  *    var m = sodium.crypto_aead_aes256gcm_decrypt(
+  *              cipherText,
+  *              additionalData,
+  *              nonce,
+  *              key);
+  *
+  * ~ cipherText (Buffer): encrypted buffer
+  * ~ additionalData (Buffer): non-confidential data to add to the cipher text. Can be `null`
+  * ~ nonce (Buffer): a nonce with `sodium.crypto_aead_aes256gcm_NPUBBYTES` in length
+  * ~ key (Buffer): secret key `sodium.crypto_aead_aes256gcm_KEYBYTES` in length
+  *
+  * **Returns**:
+  *
+  * ~ plainText (Buffer): The decrypted plain text message
+  * ~ undefined: if `message` fails to encrypt
+  *
+  * **See**: [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
+  */
 CRYPTO_AEAD_DEF(aes256gcm)
+
+/**
+ * crypto_aead_aes256gcm_encrypt_detached:
+ * Encrypt Message in Detached Mode
+ *
+ *    var c = sodium.crypto_aead_aes256gcm_encrypt_detached(
+ *              message,
+ *              additionalData,
+ *              nonce,
+ *              key);
+ *
+ * ~ message (Buffer): plain text buffer
+ * ~ additionalData (Buffer): non-confidential data to add to the cipher text. Can be `null`
+ * ~ nonce (Buffer): a nonce with `sodium.crypto_aead_aes256gcm_NPUBBYTES` in length
+ * ~ key (Buffer): secret key `sodium.crypto_aead_aes256gcm_KEYBYTES` in length
+ *
+ * **Returns**:
+ *
+ * ~ object: `cipherText` buffer with ciphered text, and `mac` buffer with the
+ *   authentication tag
+ *
+ *    { cipherText: <buffer>, mac: <buffer> }
+ *
+ * ~ undefined: if `message` fails to encrypt
+ *
+ * **Sample**:
+ *
+ *     var sodium = require('sodium').api;
+ *
+ *     // Generate a random key
+ *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     sodium.randombytes_buf(key);
+ *
+ *     // Generate random nonce
+ *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     sodium.randombytes_buf(nonce);
+ *
+ *     var message = new Buffer("this is a plain text message");
+ *     var additionalData = new Buffer("metadata");
+ *
+ *     // Encrypt Data
+ *     var c = sodium.crypto_aead_aes256gcm_encrypt_detached(
+ *        message, additionalData, nonce, key);
+ *
+ *     // Get the plain text, i.e., original message back
+ *     var plainText = sodium.crypto_aead_aes256gcm_decrypt_detached(
+ *        c.cipherText, c.mac, nonce, key);
+ */
+
+ /**
+  * crypto_aead_aes256gcm_decrypt_detached:
+  * Encrypt Message in Detached Mode
+  *
+  *    var m = sodium.crypto_aead_aes256gcm_decrypt(
+  *              cipherText,
+  *              mac,
+  *              nonce,
+  *              key);
+  *
+  * ~ cipherText (Buffer): encrypted buffer
+  * ~ mac (Buffer): authentication tag. Can be `null`
+  * ~ nonce (Buffer): a nonce with `sodium.crypto_aead_aes256gcm_NPUBBYTES` in length
+  * ~ key (Buffer): secret key `sodium.crypto_aead_aes256gcm_KEYBYTES` in length
+  *
+  * **Returns**:
+  *
+  * ~ plainText (Buffer): The decrypted plain text message
+  * ~ undefined: if `message` fails to encrypt
+  *
+  * **See**: [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
+  */
 CRYPTO_AEAD_DETACHED_DEF(aes256gcm)
 
+/**
+ * crypto_aead_chacha20poly1305_encrypt:
+ * Encrypt Message in Detached Mode using ChaCha20-Poly1305
+ *
+ * See [crypto_aead_aes256gcm_encrypt](#crypto_aead_aes256gcm_encrypt)
+ */
+
+/**
+ * crypto_aead_chacha20poly1305_decrypt:
+ * Dencrypt Message in Detached Mode using ChaCha20-Poly1305
+ *
+ * See [crypto_aead_aes256gcm_decrypt](#crypto_aead_aes256gcm_decrypt)
+ */
 CRYPTO_AEAD_DEF(chacha20poly1305)
+
+/**
+ * crypto_aead_chacha20poly1305_encrypt_detached:
+ * Encrypt Message in Detached Mode using ChaCha20-Poly1305
+ *
+ * See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_detached)
+ */
+
+/**
+ * crypto_aead_chacha20poly1305_decrypt_detached:
+ * Dencrypt Message in Detached Mode using ChaCha20-Poly1305
+ *
+ * See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+ */
 CRYPTO_AEAD_DETACHED_DEF(chacha20poly1305)
 
+/**
+ * crypto_aead_chacha20poly1305_ietf_encrypt_detached:
+ * Encrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_detached)
+ */
+
+/**
+ * crypto_aead_chacha20poly1305_decrypt_detached:
+ * Dencrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+ */
 CRYPTO_AEAD_DEF(chacha20poly1305_ietf)
+
+/**
+ * crypto_aead_chacha20poly1305_ietf_encrypt_detached:
+ * Encrypt Message in Detached Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_encrypt_detached](#crypto_aead_aes256gcm_encrypt_detached)
+ */
+
+/**
+ * crypto_aead_chacha20poly1305_decrypt_detached:
+ * Dencrypt Message in Detached Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+ */
 CRYPTO_AEAD_DETACHED_DEF(chacha20poly1305_ietf)
 
 /*
