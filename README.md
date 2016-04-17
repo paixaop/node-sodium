@@ -12,7 +12,7 @@ Missing functions are listed in [`docs/not implemented.md`](https://github.com/p
 
 There's a "low level" native module that gives you access directly to Lib Sodium, and a friendlier high level API that makes the library a bit easier to use.
 
-Check [`docs/ported-functions.md`](https://github.com/paixaop/node-sodium/tree/master/docs/ported-functions.md) for a list of all lib sodium functions included in node-sodium.
+Check [`docs/low-level-api.md`](https://github.com/paixaop/node-sodium/tree/master/docs/low-level-api.md) for a list of all lib sodium functions included in node-sodium.
 
 # Usage
 
