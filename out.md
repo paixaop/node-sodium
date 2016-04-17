@@ -5,7 +5,7 @@ Check hardware support for AES 256 GCM
 
 **Returns**:
 
-~ {Boolean} true if hardware supports AES 256 GCM
+* `true` <span class='dash'>&mdash;</span> if hardware supports AES 256 GCM
 
 ### crypto_aead_aes256gcm_beforenm(key)
 
