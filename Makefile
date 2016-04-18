@@ -1,6 +1,8 @@
 MOCHA_OPTS= --check-leaks
 REPORTER = tap
 BINDIR = ./node_modules/.bin
+DOCS = $(subst src,docs,$(patsubst %.cc,%.md,$(wildcard src/*.cc)))
+MDEXTRACT = ${BINDIR}/mdextract
 
 LIBSODIUM_DIR = ./deps/libsodium
 INSTALL_DIR = $(CURDIR)/deps/build
@@ -28,7 +30,7 @@ else
 		THIS_OS = Linux
         CCFLAGS += -D LINUX
 		CCFLAGS += -fPIC
-		
+
     endif
     ifeq ($(UNAME_S),Darwin)
 		THIS_OS = OSX
@@ -53,7 +55,7 @@ endif
 
 ec:
 	@echo ${OSX_VERSION_MIN}
-	
+
 # If a static libsodium is found then compile against it
 # instead of trying to compile from source
 libsodium:
@@ -110,6 +112,13 @@ clean:
 	-rm -fr *.o
 	-rm -fr ${INSTALL_DIR}
 	cd ${LIBSODIUM_DIR} && $(MAKE) clean
+	-rm ${DOCS}
+
+docs/%.md: src/%.cc
+	@echo Doc $@
+	@${MDEXTRACT} $< > $@
+
+docs: ${DOCS}
 
 all:
 	sodium

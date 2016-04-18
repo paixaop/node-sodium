@@ -26,9 +26,10 @@
         ARG_TO_UCHAR_BUFFER_LEN(token, crypto_auth_ ## ALGO ## _BYTES); \
         ARG_TO_UCHAR_BUFFER(message); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_auth_ ## ALGO ## _KEYBYTES); \
-        return info.GetReturnValue().Set( \
-            Nan::New<Integer>(crypto_auth_ ## ALGO ## _verify(token, message, message_size, key))\
-        );\
+        if( crypto_auth_ ## ALGO ## _verify(token, message, message_size, key) == 0 ) { \
+            return info.GetReturnValue().Set(Nan::True()); \
+        } \
+        return info.GetReturnValue().Set(Nan::False()); \
     }\
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _init) { \
         Nan::EscapableHandleScope scope; \
