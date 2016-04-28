@@ -39,7 +39,7 @@
         if( crypto_auth_ ## ALGO ## _init((crypto_auth_ ## ALGO ## _state*) state_ptr, key, key_size) == 0 ) { \
             return info.GetReturnValue().Set(state); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return info.GetReturnValue().Set(Nan::Undefined()); \
     } \
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
         Nan::EscapableHandleScope scope; \
@@ -59,7 +59,7 @@
         if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, hash_ptr) == 0 ) { \
             return info.GetReturnValue().Set(hash); \
         } \
-        return info.GetReturnValue().Set(Nan::False()); \
+        return info.GetReturnValue().Set(Nan::Undefined()); \
     } \
 
 
