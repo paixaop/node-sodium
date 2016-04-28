@@ -5,15 +5,15 @@
   "license": "MIT",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "mdextract": "^1.0.0",
-    "nan": "^2.2.1"
+    "nan": "^2.3.2"
   },
   "devDependencies": {
     "istanbul": ">=0.4.3",
     "mocha": ">=2.4.5",
     "mocha-istanbul": ">=0.2.0",
     "node-gyp": ">=3.3.1",
-    "should": ">=8.3.0"
+    "should": ">=8.3.0",
+    "mdextract": "^1.0.0"
   },
   "scripts": {
     "test": "make test",
