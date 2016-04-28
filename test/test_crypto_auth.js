@@ -26,7 +26,7 @@ describe('Auth', function() {
         var key = crypto.randomBytes(sodium.crypto_auth_KEYBYTES);
         var token = sodium.crypto_auth(buf, key);
         var r = sodium.crypto_auth_verify(token, buf, key);
-        r.should.eql(0);
+        r.should.eql(true);
         done();
     });
 });
