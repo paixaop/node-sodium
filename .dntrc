@@ -6,6 +6,6 @@ OUTPUT_PREFIX="sodium-"
 TEST_CMD="\
   cd /dnt/ && \
   npm install && \
-  node_modules/.bin/node-gyp --nodedir /usr/src/node/ rebuild && \
+  node-gyp --nodedir /usr/src/node/ rebuild && \
   make test; \
 "
