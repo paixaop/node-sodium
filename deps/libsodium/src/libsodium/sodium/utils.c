@@ -14,14 +14,15 @@
 # include <sys/mman.h>
 #endif
 
-#include "utils.h"
-#include "randombytes.h"
 #ifdef _WIN32
 # include <windows.h>
 # include <wincrypt.h>
 #else
 # include <unistd.h>
 #endif
+
+#include "utils.h"
+#include "randombytes.h"
 
 #ifndef ENOSYS
 # define ENOSYS ENXIO
@@ -49,16 +50,24 @@
 #if defined(HAVE_ALIGNED_MALLOC) && (defined(WINAPI_DESKTOP) || defined(HAVE_MPROTECT))
 # define HAVE_PAGE_PROTECTION
 #endif
+#if !defined(MADV_DODUMP) && defined(MADV_CORE)
+# define MADV_DODUMP   MADV_CORE
+# define MADV_DONTDUMP MADV_NOCORE
+#endif
 
 static size_t page_size;
 static unsigned char canary[CANARY_SIZE];
 
 #ifdef HAVE_WEAK_SYMBOLS
 __attribute__ ((weak)) void
-_sodium_dummy_symbol_to_prevent_memzero_lto(void * const pnt, const size_t len)
+_sodium_memzero_as_a_weak_symbol_to_prevent_lto(void * const pnt, const size_t len)
 {
-    (void) pnt;
-    (void) len;
+    unsigned char *pnt_ = (unsigned char *) pnt;;
+    size_t         i = (size_t) 0U;
+
+    while (i < len) {
+        pnt_[i++] = 0U;
+    }
 }
 #endif
 
@@ -68,14 +77,13 @@ sodium_memzero(void * const pnt, const size_t len)
 #ifdef _WIN32
     SecureZeroMemory(pnt, len);
 #elif defined(HAVE_MEMSET_S)
-    if (memset_s(pnt, (rsize_t) len, 0, (rsize_t) len) != 0) {
+    if (len > 0U && memset_s(pnt, (rsize_t) len, 0, (rsize_t) len) != 0) {
         abort(); /* LCOV_EXCL_LINE */
     }
 #elif defined(HAVE_EXPLICIT_BZERO)
     explicit_bzero(pnt, len);
 #elif HAVE_WEAK_SYMBOLS
-    memset(pnt, 0, len);
-    _sodium_dummy_symbol_to_prevent_memzero_lto(pnt, len);
+    _sodium_memzero_as_a_weak_symbol_to_prevent_lto(pnt, len);
 #else
     volatile unsigned char *volatile pnt_ =
         (volatile unsigned char * volatile) pnt;

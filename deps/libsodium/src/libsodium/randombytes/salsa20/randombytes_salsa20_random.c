@@ -7,6 +7,7 @@
 #endif
 #ifdef __linux__
 # include <sys/syscall.h>
+# include <poll.h>
 #endif
 
 #include <assert.h>
@@ -128,6 +129,33 @@ safe_read(const int fd, void * const buf_, size_t size)
 #endif
 
 #ifndef _WIN32
+# if defined(__linux__) && !defined(USE_BLOCKING_RANDOM)
+static int
+randombytes_block_on_dev_random(void)
+{
+    struct pollfd pfd;
+    int           fd;
+    int           pret;
+
+    fd = open("/dev/random", O_RDONLY);
+    if (fd == -1) {
+        return 0;
+    }
+    pfd.fd = fd;
+    pfd.events = POLLIN;
+    pfd.revents = 0;
+    do {
+        pret = poll(&pfd, 1, -1);
+    } while (pret < 0 && (errno == EINTR || errno == EAGAIN));
+    if (pret != 1) {
+        (void) close(fd);
+        errno = EIO;
+        return -1;
+    }
+    return close(fd);
+}
+# endif
+
 # ifndef HAVE_SAFE_ARC4RANDOM
 static int
 randombytes_salsa20_random_random_dev_open(void)
@@ -143,6 +171,11 @@ randombytes_salsa20_random_random_dev_open(void)
     const char **     device = devices;
     int               fd;
 
+# if defined(__linux__) && !defined(USE_BLOCKING_RANDOM)
+    if (randombytes_block_on_dev_random() != 0) {
+        return -1;
+    }
+# endif
     do {
         fd = open(*device, O_RDONLY);
         if (fd != -1) {
@@ -173,7 +206,7 @@ randombytes_salsa20_random_random_dev_open(void)
 }
 # endif
 
-# ifdef SYS_getrandom
+# if defined(SYS_getrandom) && defined(__NR_getrandom)
 static int
 _randombytes_linux_getrandom(void * const buf, const size_t size)
 {
@@ -221,7 +254,7 @@ randombytes_salsa20_random_init(void)
     errno = errno_save;
 # else
 
-#  ifdef SYS_getrandom
+#  if defined(SYS_getrandom) && defined(__NR_getrandom)
     {
         unsigned char fodder[16];
 
@@ -287,7 +320,7 @@ randombytes_salsa20_random_stir(void)
 
 # ifdef HAVE_SAFE_ARC4RANDOM
     arc4random_buf(m0, sizeof m0);
-# elif defined(SYS_getrandom)
+# elif defined(SYS_getrandom) && defined(__NR_getrandom)
     if (stream.getrandom_available != 0) {
         if (randombytes_linux_getrandom(m0, sizeof m0) != 0) {
             abort(); /* LCOV_EXCL_LINE */
@@ -358,7 +391,7 @@ randombytes_salsa20_random_close(void)
     ret = 0;
 # endif
 
-# ifdef SYS_getrandom
+# if defined(SYS_getrandom) && defined(__NR_getrandom)
     if (stream.getrandom_available != 0) {
         ret = 0;
     }

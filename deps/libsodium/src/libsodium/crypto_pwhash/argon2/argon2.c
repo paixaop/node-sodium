@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <limits.h>
 
-
 #include "utils.h"
 
 #include "argon2.h"
@@ -183,6 +182,8 @@ int argon2_verify(const char *encoded, const void *pwd, const size_t pwdlen,
 
     memset(&ctx, 0, sizeof ctx);
 
+    ctx.pwd = NULL;
+    ctx.pwdlen = 0;
     ctx.secret = NULL;
     ctx.secretlen = 0;
 

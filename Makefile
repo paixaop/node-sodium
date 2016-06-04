@@ -109,6 +109,7 @@ clean:
 	-rm -fr coverage
 	-rm -fr coverage.html
 	-rm -fr *.o
+	-rm -fr ./build
 	-rm -fr ${INSTALL_DIR}
 	cd ${LIBSODIUM_DIR} && $(MAKE) clean
 

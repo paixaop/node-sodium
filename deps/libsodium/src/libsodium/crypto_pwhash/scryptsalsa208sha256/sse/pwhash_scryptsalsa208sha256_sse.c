@@ -30,7 +30,7 @@
 
 #if defined(HAVE_EMMINTRIN_H) || \
     (defined(_MSC_VER) && (defined(_M_X64) || defined(_M_AMD64) || defined(_M_IX86)))
-#if __GNUC__
+#ifdef __GNUC__
 # pragma GCC target("sse2")
 #endif
 #include <emmintrin.h>
@@ -210,6 +210,7 @@ blockmix_salsa8_xor(const __m128i * Bin1, const __m128i * Bin2, __m128i * Bout,
 /**
  * integerify(B, r):
  * Return the result of parsing B_{2r-1} as a little-endian integer.
+ * Note that B's layout is permuted compared to the generic implementation.
  */
 static inline uint32_t
 integerify(const void * B, size_t r)
