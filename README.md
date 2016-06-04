@@ -73,7 +73,15 @@ Tested on Mac, Linux and IllumOS Systems
 
     npm install sodium
     
-node-sodium depends on lib sodium, so if lib sodium does not compile on your platform chances are `npm install sodium` will fail.
+node-sodium depends on libsodium, so if libsodium does not compile on your platform chances are `npm install sodium` will fail.
+
+Installation will fail if `node-gyp`is not installed on your system. Please run
+
+    npm install node-gyp -g
+    
+Before you install `node-sodium`. If you run into permission errors while installing `node-gyp` run as Adminstrator on Windows or use `sudo` in other OSes.
+
+	sudo npm install node-gyp -g
 
 # Manual Build
 
