@@ -1,8 +1,9 @@
 {
   "name": "sodium",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "author": "Pedro Paixao <paixaop@gmail.com>",
   "license": "MIT",
+  "main": "index.js",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
     "mdextract": "^1.0.0",
@@ -32,11 +33,5 @@
     "crypto",
     "unique",
     "stamp"
-  ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://opensource.org/licenses/mit-license.php"
-    }
   ]
 }

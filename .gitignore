@@ -1,8 +1,6 @@
 .DS_Store
-build
-coverage/
-html-report/
-lib-cov/
-libtool
-ltmain.sh
+./build/
+./coverage/
+./html-report/
+./deps/build/
 node_modules
