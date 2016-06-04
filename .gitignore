@@ -16,8 +16,7 @@ install-sh
 lib-cov/
 libtool
 ltmain.sh
-man/*.html
-man/Makefile.in
+man
 missing
 node_modules
 stamp-*

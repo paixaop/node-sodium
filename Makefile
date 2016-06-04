@@ -28,7 +28,7 @@ else
 		THIS_OS = Linux
         CCFLAGS += -D LINUX
 		CCFLAGS += -fPIC
-		
+
     endif
     ifeq ($(UNAME_S),Darwin)
 		THIS_OS = OSX
@@ -53,7 +53,7 @@ endif
 
 ec:
 	@echo ${OSX_VERSION_MIN}
-	
+
 # If a static libsodium is found then compile against it
 # instead of trying to compile from source
 libsodium:
@@ -96,11 +96,11 @@ test-cov: clean instrument
 	@echo
 	@echo Open html-report/index.html file in your browser
 
-git-pull:
-	git pull
-	git submodule init
-	git submodule update
-	git submodule status
+# git-pull:
+# 	git pull
+#	git submodule init
+#	git submodule update
+#	git submodule status
 
 clean:
 	-rm -fr lib-cov
