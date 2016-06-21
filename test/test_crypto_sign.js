@@ -28,6 +28,12 @@ describe('Sign', function() {
         done();
     });
 
+    it('should accept a zero length message', function(done) {
+        var keys = sodium.crypto_sign_ed25519_keypair();
+        var signedMsg = sodium.crypto_sign_ed25519_detached(new Buffer(0), keys.secretKey)
+        done();
+    });
+
     it('a detached message signature should verify correctly', function(done) {
         var keys = sodium.crypto_sign_keypair();
         var message = new Buffer("Libsodium is cool", 'utf8');
