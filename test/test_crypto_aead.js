@@ -17,6 +17,7 @@ describe("AEAD", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
@@ -46,6 +47,7 @@ describe("AEAD", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
@@ -155,6 +157,7 @@ describe("AEAD", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
@@ -228,6 +231,7 @@ describe("AEAD Precompute Interface", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
@@ -257,6 +261,7 @@ describe("AEAD Precompute Interface", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
@@ -286,6 +291,7 @@ describe("AEAD Precompute Interface", function () {
         if( !sodium.crypto_aead_aes256gcm_is_available() ) {
             console.log('AES 256 gcm not supported by CPU');
             done();
+            return;
         }
         
         // Encrypt data
