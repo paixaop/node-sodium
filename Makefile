@@ -111,7 +111,29 @@ clean:
 	-rm -fr *.o
 	-rm -fr ./build
 	-rm -fr ${INSTALL_DIR}
+	-rm -fr ${LIBSODIUM_DIR}/autom4te.cache
+	-rm -fr ${LIBSODIUM_DIR}/build-aux
+	-rm -fr ${LIBSODIUM_DIR}/.dirstamp
+	-rm -fr ${LIBSODIUM_DIR}/**/.dirstamp
+	-find ${LIBSODIUM_DIR} -name .dirstamp -delete
+	-find deps/libsodium/ -name .deps -exec rm -fr {} \;
+	-find ${LIBSODIUM_DIR} -name *.res -delete
+	-find ${LIBSODIUM_DIR} -name Makefile.in -delete
+	-find ${LIBSODIUM_DIR} -name *.log -delete
+	-rm ${LIBSODIUM_DIR}/aclocal.m4
+	-rm ${LIBSODIUM_DIR}/config.status
+	-rm ${LIBSODIUM_DIR}/configure
+	-rm ${LIBSODIUM_DIR}/libsodium-uninstalled.pc
+	-rm ${LIBSODIUM_DIR}/libsodium.pc
+	-rm ${LIBSODIUM_DIR}/libtool
+	-rm ${LIBSODIUM_DIR}/m4/libtool.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltoptions.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltsugar.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltversion.m4
+	-rm ${LIBSODIUM_DIR}/m4/lt~obsolete.m4
+	-rm ${LIBSODIUM_DIR}/src/libsodium/include/sodium/version.h
 	cd ${LIBSODIUM_DIR} && $(MAKE) clean
+	-find ${LIBSODIUM_DIR} -name Makefile -delete
 
 all:
 	sodium
