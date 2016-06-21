@@ -94,6 +94,25 @@ Please note that `npm install` will install the dependencies and compile `node-s
 
     make sodium
 
+## Building on Windows
+
+`npm install sodium` might fail in Windows, as the initial build will most
+likely not succeed. In that case, clone this repository and run npm install to
+install dependencies; then copy the pre-compiled binary data (cf. above) into
+the following directories:
+
+* The contents of `include/` to `deps/build/include/`
+(`deps/build/include/sodium.h` must exist)
+* The contents of `x64/Release/v120/dynamic/` to `./deps/build/lib/`
+(`deps/build/lib/libsodium.lib` must exist)
+
+Afterwards, `make sodium` (or manual `node-gyp rebuild`) should work normally.
+`--msvs_version=2013` may need to be configured for node-gyp, too, but this is
+currently unverified.
+
+Note that static compilation is not supported currently, so `libsodium.dll`
+**must** be distributed along with your code.
+
 # SECURITY WARNING: Using a Binary Static libsodium
 
 Node Sodium is a strong encryption library, odds are that a lot of security functions of your application depend on it, so *DO NOT* use binary libsodium distributions that you haven't verified.
