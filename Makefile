@@ -72,6 +72,7 @@ else
 endif
 
 sodium: libsodium
+	echo Build node-sodium module
 	node-gyp rebuild
 
 test: test-unit
@@ -108,9 +109,12 @@ clean:
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
+	-rm -fr *.lo
 	-rm -fr *.o
 	-rm -fr ./build
 	-rm -fr ${INSTALL_DIR}
+	cd ${LIBSODIUM_DIR} && $(MAKE) clean
+	-find ${LIBSODIUM_DIR} -name Makefile -delete
 	-rm -fr ${LIBSODIUM_DIR}/autom4te.cache
 	-rm -fr ${LIBSODIUM_DIR}/build-aux
 	-rm -fr ${LIBSODIUM_DIR}/.dirstamp
@@ -132,8 +136,7 @@ clean:
 	-rm ${LIBSODIUM_DIR}/m4/ltversion.m4
 	-rm ${LIBSODIUM_DIR}/m4/lt~obsolete.m4
 	-rm ${LIBSODIUM_DIR}/src/libsodium/include/sodium/version.h
-	cd ${LIBSODIUM_DIR} && $(MAKE) clean
-	-find ${LIBSODIUM_DIR} -name Makefile -delete
+
 
 all:
 	sodium
