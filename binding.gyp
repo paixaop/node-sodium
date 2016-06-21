@@ -59,7 +59,7 @@
         }],
         ['OS=="win"', {
           "libraries": [
-              '../deps/build/lib/libsodium.a'
+              '../deps/build/lib/libsodium.lib'
           ]
         }],
         ['OS=="linux"', {
