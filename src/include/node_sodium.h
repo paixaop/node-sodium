@@ -53,11 +53,7 @@ using namespace v8;
     ARG_IS_BUFFER(i,#NAME); \
     TYPE NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
     unsigned long long NAME ## _size = Buffer::Length(info[i]->ToObject()); \
-    if( NAME ## _size == 0 ) { \
-        std::ostringstream oss; \
-        oss << "argument " << #NAME << " length cannot be zero" ; \
-        return Nan::ThrowError(oss.str().c_str()); \
-    }
+    if( NAME ## _size == 0 ) { }
 
 #define GET_ARG_AS_OR_NULL(i, NAME, TYPE) \
     TYPE NAME; \
@@ -66,11 +62,7 @@ using namespace v8;
         ARG_IS_BUFFER(i,#NAME); \
         NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
         NAME ## _size = Buffer::Length(info[i]->ToObject()); \
-        if( NAME ## _size == 0 ) { \
-            std::ostringstream oss; \
-            oss << "argument " << #NAME << " length cannot be zero" ; \
-            return Nan::ThrowError(oss.str().c_str()); \
-        } \
+        if( NAME ## _size == 0 ) { } \
     } else { \
         NAME = NULL; \
     }
