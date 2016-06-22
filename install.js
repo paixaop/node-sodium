@@ -287,8 +287,8 @@ function checkMSVSVersion() {
 }
 
 function isPreInstallMode() {
-    if (!process.argv[2] || process.argv[2].search(/^--preinstall|--postinstall/)) {
-        console.log('please call install with --preinstall or --postinstall');
+    if (!process.argv[2] || process.argv[2].search(/^--preinstall|--install/)) {
+        console.log('please call install with --preinstall or --install');
         process.exit();
     }
     if (process.argv[2] === '--preinstall') {
