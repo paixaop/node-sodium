@@ -110,7 +110,8 @@ please don't forget to copy the DLL file as well.
 
 Node Sodium includes the source of libsodium, so the normal install will try to compile libsodium directly from source, using libsodium's own build tools.
 This is the prefered method of compiling node sodium.
-If you can't compile libsodium from source in your platform you can [download a pre-compiled binary](http://www.libsodium.org/releases) and copy it to the `./deps/build/lib` folder.
+If you can't compile libsodium from source in your platform you can [download a pre-compiled binary](http://www.libsodium.org/releases) and copy the libsodium.* library files to `./deps/build/lib` folder.
+and copy all the include files to `./deps/build/include`.
 
 Before you run the manual build you must run the `npm install` once to install the required dependencies, like `node-gyp` that are needed to compile `node-sodium`.
 Please note that `npm install` will install the dependencies and compile `node-sodium` as well. After this initial step you can make changes to the source and run the following commands to manually build the module:
