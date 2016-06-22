@@ -101,12 +101,6 @@ test-cov: clean instrument
 	@echo
 	@echo Open html-report/index.html file in your browser
 
-# git-pull:
-# 	git pull
-#	git submodule init
-#	git submodule update
-#	git submodule status
-
 clean:
 	-rm -fr lib-cov
 	-rm -fr covershot
