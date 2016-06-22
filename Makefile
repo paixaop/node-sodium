@@ -4,7 +4,7 @@ BINDIR = ./node_modules/.bin
 
 LIBSODIUM_DIR = ./deps/libsodium
 INSTALL_DIR = $(CURDIR)/deps/build
-STATIC_LIB = ${INSTALL_DIR}/lib/libsodium
+SODIUM_LIB = ${INSTALL_DIR}/lib/libsodium
 
 .DEFAULT_GOAL := sodium
 
@@ -57,8 +57,8 @@ ec:
 # If a static libsodium is found then compile against it
 # instead of trying to compile from source
 libsodium:
-ifeq (,$(wildcard ${STATIC_LIB}.*))
-	@echo Static libsodium was not found at ${STATIC_LIB} so compiling libsodium from source.
+ifeq (,$(wildcard ${SODIUM_LIB}.*))
+	@echo Static libsodium was not found at ${SODIUM_LIB} so compiling libsodium from source.
 	@cd $(LIBSODIUM_DIR)/ && ./autogen.sh
 	@cd $(LIBSODIUM_DIR)/ && ./configure --enable-static \
            --enable-shared --with-pic --prefix="$(INSTALL_DIR)"
@@ -72,6 +72,10 @@ else
 endif
 
 sodium: libsodium
+	echo Build node-sodium module
+	node-gyp rebuild
+
+nodesodium:
 	echo Build node-sodium module
 	node-gyp rebuild
 

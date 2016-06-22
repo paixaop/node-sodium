@@ -1,6 +1,6 @@
 {
   "name": "sodium",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "author": "Pedro Paixao <paixaop@gmail.com>",
   "license": "MIT",
   "main": "index.js",
@@ -18,8 +18,9 @@
   },
   "scripts": {
     "test": "make test",
-    "preinstall": "make libsodium",
-    "postinstall": "make sodium"
+    "preinstall": "node install.js --preinstall",
+    "install": "node install.js --postinstall",
+    "start": "node install.js"
   },
   "repository": {
     "type": "git",
