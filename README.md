@@ -126,6 +126,7 @@ If you use a pre-compiled version of libsodium you MUST be sure that nothing mal
 The Windows installation uses an official binary distribution that I maintain at [my repo](https://github.com/paixaop/libsodium-bin).
 The files in this repository correspond to the files for the [MSVC libsodium build](http://www.libsodium.org/releases) version supported by node-sodium.
 I will keep them updated as newer versions of libsodium become available and are supported by node-sodium.
+
 These are provided in an attempt to simplify Windows installs and you should verify the file signatures against the originals, to make sure they haven't been
 tampered with. They are provided AS IS and I take no responsibility for their correctness.
 
