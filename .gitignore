@@ -5,3 +5,4 @@ html-report
 deps/build
 node_modules
 *.log
+.vscode
