@@ -147,7 +147,7 @@ cleanbuild: clean
 cleanall: cleanbuild
 	-rm -fr ./node_modules
 
-publish: cleanall
+publish:
 	npm version patch
 	npm publish
 
