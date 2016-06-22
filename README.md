@@ -18,26 +18,26 @@ Check [`docs/low-level-api.md`](https://github.com/paixaop/node-sodium/tree/mast
 
 Just a quick example that uses the same public/secret key pair to encrypt and then decrypt the message.
 
-    var sodium = require('sodium');        
+    var sodium = require('sodium');
     var box = new sodium.Box();     // random key pair, and nonce generated automatically
-    
+
     var cipherText = box.encrypt("This is a secret message", "utf8");
     var plainText = box.decrypt(cipherText);
-    
-    
+
+
 # Low Level API
 A low level API is provided for advanced users. The functions available through the low level API have the exact same names as in lib sodium, and are available via the `sodium.api` object. Here is one example of how to use some of the low level API functions to encrypt/decrypt a message:
 
     var sodium = require('sodium').api;
-    
+
     // Generate keys
     var sender = sodium.crypto_box_keypair();
     var receiver = sodium.crypto_box_keypair();
-    
+
     // Generate random nonce
     var nonce = new Buffer(sodium.crypto_box_NONCEBYTES);
     sodium.randombytes_buf(nonce);
-    
+
     // Encrypt
     var plainText = new Buffer('this is a message');
     var cipherMsg = sodium.crypto_box(plainText, nonce, receiver.publicKey, sender.secretKey);
@@ -49,11 +49,11 @@ A low level API is provided for advanced users. The functions available through 
     if (plainBuffer.toString() == plainText) {
         console.log("Message decrypted correctly");
     }
-    
+
 As you can see the high level API implementation is easier to use, but the low level API will feel just right for those experienced with the C version of lib sodium. It also allows you to bypass any bugs in the high level APIs.
 
 You can find this code sample in `examples\low-level-api.js`.
-    
+
 # Documentation
 Please read the work in progress documentation found under [`docs/`](https://github.com/paixaop/node-sodium/tree/master/docs).
 
@@ -65,23 +65,46 @@ The low level `libsodium` API documentation is now complete. All ported function
 Please be patient as I document the rest of the APIs, or better still: help out! :)
 
 # Lib Sodium Documentation
-Lib Sodium is documented [here](http://doc.libsodium.org/). Node-Sodium follows the same structure and I will keep documenting it as fast as possible. 
+Lib Sodium is documented [here](http://doc.libsodium.org/). Node-Sodium follows the same structure and I will keep documenting it as fast as possible.
 
 # Install
 
 Tested on Mac, Linux and IllumOS Systems
 
     npm install sodium
-    
+
 node-sodium depends on libsodium, so if libsodium does not compile on your platform chances are `npm install sodium` will fail.
 
 Installation will fail if `node-gyp`is not installed on your system. Please run
 
     npm install node-gyp -g
-    
+
 Before you install `node-sodium`. If you run into permission errors while installing `node-gyp` run as Adminstrator on Windows or use `sudo` in other OSes.
 
 	sudo npm install node-gyp -g
+
+## Windows Install
+
+Windows installs will automatically attempt to download LibSodium binary distribution, and include files, from [my repo](https://github.com/paixaop/libsodium-bin).
+You MUST set the `msvs_version` `npm config` variable to the appropriate Microsoft Visual Studio version you have installed before you run `npm install` on Windows.
+
+Example set `msvs_version` for your user only:
+
+    npm config set msvs_version 2015
+
+Example set `msvs_version` for all users:
+
+    npm config set msvs_version 2015 --global
+
+At the moment only 2010, 2012, 2013 and 2015 versions are supported.
+
+Now run
+
+    npm install
+
+At the moment Windows only supports dynamic linking so you must have the `libsodium.dll` in the same directory
+as `sodium.node`. This is done automatically by the install script, but if you move things around manually
+please don't forget to copy the DLL file as well.
 
 # Manual Build
 
@@ -116,12 +139,12 @@ You may need to run it with `sudo` as only the root user has access to Node.js g
 You need to have mocha test suite installed globally then you can run the node-sodium unit tests by
 
     make test
-    
+
 # Coverage Reports
 You need to have mocha and mocha-istanbul installed globally then you can run the node-sodium coverage reports by
-	
+
     make test-cov
-	
+
 
 # License
 This software is licensed through the MIT License. Please read the LICENSE file for more details.
