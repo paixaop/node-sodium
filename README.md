@@ -69,7 +69,7 @@ Lib Sodium is documented [here](http://doc.libsodium.org/). Node-Sodium follows 
 
 # Install
 
-Tested on Mac, Linux and IllumOS Systems
+Tested on Mac, Linux, Windows and IllumOS Systems
 
     npm install sodium
 
