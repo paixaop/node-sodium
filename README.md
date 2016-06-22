@@ -118,10 +118,15 @@ Please note that `npm install` will install the dependencies and compile `node-s
 
     make sodium
 
-# SECURITY WARNING: Using a Binary Static libsodium
+# SECURITY WARNING: Using a Binary LibSodium Library
 
 Node Sodium is a strong encryption library, odds are that a lot of security functions of your application depend on it, so *DO NOT* use binary libsodium distributions that you haven't verified.
-If you use a pre-compiled version of libsodium you MUST be sure that nothing mallicious was added to the compiled version you are using.
+If you use a pre-compiled version of libsodium you MUST be sure that nothing malicious was added to the compiled version you are using.
+The Windows installation uses an official binary distribution that I maintain at [my repo](https://github.com/paixaop/libsodium-bin).
+The files in this repository correspond to the files for the [MSVC libsodium build](http://www.libsodium.org/releases) version supported by node-sodium.
+I will keep them updated as newer versions of libsodium become available and are supported by node-sodium.
+These are provided in an attempt to simplify Windows installs and you should verify the file signatures against the originals, to make sure they haven't been
+tampered with. They are provided AS IS and I take no responsibility for their correctness.
 
 # Code Samples
 Please check the fully documented code samples in `test/test_sodium.js`.
