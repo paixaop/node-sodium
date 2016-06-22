@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 describe('Utils', function() {
@@ -12,7 +12,7 @@ describe('Utils', function() {
         buf.fill(1);
         sodium.memzero(buf);
         for(var i=0; i< buf.length; i++) {
-            buf[i].should.eql(0);
+            assert.equal(buf[i],0);
         }
         done();
     });
@@ -22,16 +22,16 @@ describe("memzero verify parameters", function () {
     var buf = new Buffer(100);
     it('bad param 1 string', function(done) {
         buf = "token";
-        (function() {
+        assert.throws(function() {
             sodium.memzero(buf);
-        }).should.throw();
+        });
         done();
     });
     it('bad param 1 number', function(done) {
         buf = 123;
-        (function() {
+        assert.throws(function() {
             sodium.memzero(buf);
-        }).should.throw();
+        });
         done();
     });
 });

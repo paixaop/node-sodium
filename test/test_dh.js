@@ -1,7 +1,7 @@
-/** 
+/**
  * Test Group Key Exchanges
  */
-var should = require('should');
+var assert = require('assert');
 var Sodium = require('../lib/sodium');
 if (process.env.COVERAGE) {
 	Sodium = require('../lib-cov/sodium');
@@ -18,7 +18,7 @@ describe('DH Group Key Exchange', function () {
 		var abDH = new Sodium.ECDH(b.pk(), a.sk()).secret();
 		var baDH = new Sodium.ECDH(a.pk(), b.sk()).secret();
 
-		abDH.should.eql(baDH);
+		assert.deepEqual(abDH,baDH);
 
 		done();
 	});

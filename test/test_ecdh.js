@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 var ECDH = require('../lib/ecdh');
@@ -15,28 +15,28 @@ describe("ECDH", function () {
     it("should calculate the same secret", function (done) {
         var bob = new DHKey();
         var alice = new DHKey();
-        
+
         var aliceDH = new ECDH(bob.pk().get(), alice.sk().get());
         var bobDH = new ECDH(alice.pk().get(), bob.sk().get());
-        
+
         var bobSecret = bobDH.secret();
         var aliceSecret = aliceDH.secret();
-        
-        bobSecret.should.eql(aliceSecret);
+
+        assert.deepEqual(bobSecret,aliceSecret);
         done();
     });
-    
+
     it("should calculate the same session key", function (done) {
         var bob = new DHKey();
         var alice = new DHKey();
-        
+
         var aliceDH = new ECDH(bob.pk().get(), alice.sk().get());
         var bobDH = new ECDH(alice.pk().get(), bob.sk().get());
-        
+
         var bobSecret = bobDH.sessionKey();
         var aliceSecret = aliceDH.sessionKey();
-        
-        bobSecret.should.eql(aliceSecret);
+
+        assert.deepEqual(bobSecret, aliceSecret);
         done();
     });
 });

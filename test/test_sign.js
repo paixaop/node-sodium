@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 var Sign = require('../lib/sign');
@@ -17,7 +17,7 @@ describe("Sign", function () {
         var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         var checkMsg = Sign.verify(signedMsg);
-        checkMsg.toString('utf8').should.eql("This is a test");
+        assert.equal(checkMsg.toString('utf8'),"This is a test");
         done();
     });
     it("sign/verify with existing key", function(done) {
@@ -29,10 +29,10 @@ describe("Sign", function () {
         var sign = new Sign(key);
         var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
-        signedMsg.publicKey.toString('base64').should.eql(
+        assert.equal(signedMsg.publicKey.toString('base64'),
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');
         var checkMsg = Sign.verify(signedMsg);
-        checkMsg.toString('utf8').should.eql("This is a test");
+        assert.equal(checkMsg.toString('utf8'), "This is a test");
         done();
     });
     it("sign/verify with key from seed", function(done) {
@@ -40,10 +40,10 @@ describe("Sign", function () {
         var sign = new Sign(key);
         var message = new Buffer("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
-        signedMsg.publicKey.toString('base64').should.eql(
+        assert.equal(signedMsg.publicKey.toString('base64'),
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');
         var checkMsg = Sign.verify(signedMsg);
-        checkMsg.toString('utf8').should.eql("This is a test");
+        assert.equal(checkMsg.toString('utf8'), "This is a test");
         done();
     });
 });

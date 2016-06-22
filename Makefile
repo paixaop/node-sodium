@@ -115,7 +115,6 @@ clean:
 	-rm -fr coverage.html
 	-rm -fr *.lo
 	-rm -fr *.o
-	-rm -fr ./build
 	-rm -fr ${INSTALL_DIR}
 	cd ${LIBSODIUM_DIR} && $(MAKE) clean
 	-find ${LIBSODIUM_DIR} -name Makefile -delete
@@ -140,6 +139,16 @@ clean:
 	-rm ${LIBSODIUM_DIR}/m4/ltversion.m4
 	-rm ${LIBSODIUM_DIR}/m4/lt~obsolete.m4
 	-rm ${LIBSODIUM_DIR}/src/libsodium/include/sodium/version.h
+
+cleanbuild: clean
+	-rm -fr ./build
+
+cleanall: cleanbuild
+	-rm -fr ./node_modules
+
+publish: cleanall
+	npm version patch
+	npm publish
 
 
 all:

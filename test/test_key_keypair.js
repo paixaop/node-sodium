@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 
 var Key = require('../lib/keys/keypair');
@@ -12,17 +12,17 @@ if (process.env.COVERAGE) {
 describe("KeyPair", function () {
     it('generate should throw', function(done) {
         var key = new Key();
-        (function() {
+        assert.throws(function() {
             key.init();
-        }).should.throw();
+        });
         done();
     });
 
     it('generate should throw', function(done) {
         var key = new Key();
-        (function() {
+        assert.throws(function() {
             key.generate();
-        }).should.throw();
+        });
         done();
     });
 

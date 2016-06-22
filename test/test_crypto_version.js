@@ -3,23 +3,23 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 describe('Version', function() {
     it('should return a string', function(done) {
         var v = sodium.sodium_version_string();
-        v.should.have.type('string');
+        assert.equal(typeof v,'string');
         done();
     })
 
     it('Minor should return an integer', function(done) {
-        sodium.sodium_library_version_minor().should.have.type('number');
+        assert.equal(typeof sodium.sodium_library_version_minor(),'number');
         done();
     });
 
     it('Major should return an integer', function(done) {
-        sodium.sodium_library_version_major().should.have.type('number');
+        assert.equal(typeof sodium.sodium_library_version_major(),'number');
         done();
     });
 });
