@@ -115,6 +115,7 @@ clean:
 	-rm -fr coverage.html
 	-rm -fr *.lo
 	-rm -fr *.o
+	-rm -fr *.log
 	-rm -fr ${INSTALL_DIR}
 	cd ${LIBSODIUM_DIR} && $(MAKE) clean
 	-find ${LIBSODIUM_DIR} -name Makefile -delete
