@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 // Test all key classes
@@ -21,7 +21,7 @@ function testKey(modName, sizeBuffer) {
             var key = new Key();
             key.generate();
             var k = key.get();
-            key.isValid(k).should.be.ok;
+            assert.ok(key.isValid(k));
             done();
         });
 
@@ -29,38 +29,32 @@ function testKey(modName, sizeBuffer) {
             var k1 = new Key();
             var key = k1.toString();
             var k2 = new Key(key);
-            k2.toString().should.eql(key);
+            assert.equal(k2.toString(), key);
             done();
         });
 
         it("key size should match that of sodium", function (done) {
             var key = new Key();
-            key.size().should.eql(sizeBuffer);
-            done();
-        });
-        
-        it("key bytes should match that of sodium", function (done) {
-            var key = new Key();
-            key.bytes().should.eql(sizeBuffer);
+            assert.equal(key.size(), sizeBuffer);
             done();
         });
 
         it("isValid should return false on bad key", function (done) {
             var key = new Key();
             var k = new Buffer(2);
-            key.isValid(k).should.not.be.ok;
+            assert.ok(!key.isValid(k));
             done();
         });
 
         it("isValid should not be ok on bad hex string", function (done) {
             var key = new Key();
-                key.isValid("123").should.not.be.ok;
+            assert.ok(!key.isValid("123"));
             done();
         });
 
         it("isValid should return false on bad key type", function (done) {
             var key = new Key();
-            key.isValid(123).should.not.be.ok;
+            assert.ok(!key.isValid(123));
             done();
         });
 
@@ -68,7 +62,7 @@ function testKey(modName, sizeBuffer) {
             var key = new Key();
             key.generate();
             var k = key.get();
-            key.isValid(k.toString('hex'),'hex').should.be.ok;
+            assert.ok(key.isValid(k.toString('hex'),'hex'));
             done();
         });
 
@@ -76,9 +70,9 @@ function testKey(modName, sizeBuffer) {
             var key = new Key();
             key.generate();
             var k = key.get();
-            (function() {
-                key.isValid(k.toString('hex'),'sex').should.be.ok;
-            }).should.throw();
+             assert.throws(function() {
+                assert.ok(key.isValid(k.toString('hex'),'sex'));
+            });
             done();
         });
 
@@ -88,16 +82,16 @@ function testKey(modName, sizeBuffer) {
             key.wipe();
             var k = key.get();
             for(var i = 0; i < k.length; i++ ) {
-                k[i].should.eql(0);
+                assert.equal(k[i], 0);
             }
             done();
         });
 
         it("set should throw on bad key length", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 key.set(new Buffer(2));
-            }).should.throw();
+            });
             done();
         });
 
@@ -112,7 +106,7 @@ function testKey(modName, sizeBuffer) {
 
             k2 = key2.get();
 
-            k2.should.eql(k);
+            assert.deepEqual(k2, k);
 
             done();
         });
@@ -120,7 +114,7 @@ function testKey(modName, sizeBuffer) {
         it("toString should return a string!", function (done) {
             var key = new Key();
             key.generate();
-            key.toString().should.have.type('string');
+            assert.equal(typeof key.toString(), 'string');
             done();
         });
 
@@ -128,25 +122,25 @@ function testKey(modName, sizeBuffer) {
             var key = new Key();
             key.generate();
             var k = key.get();
-            key.toString('hex').should.eql(k.toString('hex'));
+            assert.equal(key.toString('hex'), k.toString('hex'));
             done();
         });
 
         it("toString should throw with bad encoding!", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 key.toString('sex');
-            }).should.throw();
+            });
 
             done();
         });
 
         it("key test string encoding utf8 should throw", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 var n = key.toString('utf8');
                 key.set(n, 'utf8');
-            }).should.throw();
+            });
             done();
         });
 
@@ -166,37 +160,37 @@ function testKey(modName, sizeBuffer) {
 
         it("key test string encoding binary", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 var n = key.toString('binary');
                 key.set(n, 'binary');
-            }).should.throw();
+            });
             done();
         });
 
         it("key test string encoding ascii should throw", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 var n = key.toString('ascii');
                 key.set(n, 'ascii');
-            }).should.throw();
+            });
             done();
         });
 
         it("key test string encoding utf16le should throw", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 var n = key.toString('utf16le');
                 key.set(n, 'utf16le');
-            }).should.throw();
+            });
             done();
         });
 
         it("key test string encoding ucs2 should throw", function (done) {
             var key = new Key();
-            (function() {
+             assert.throws(function() {
                 var n = key.toString('ucs2');
                 key.set(n, 'ucs2');
-            }).should.throw();
+            });
             done();
         });
 

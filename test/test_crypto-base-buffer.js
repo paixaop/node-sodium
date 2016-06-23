@@ -1,8 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
-
+var assert = require('assert');
 var CryptoBaseBuffer = require('../lib/crypto-base-buffer');
 if (process.env.COVERAGE) {
     CryptoBaseBuffer = require('../lib-cov/crypto-base-buffer');
@@ -12,25 +11,25 @@ describe("CryptoBaseBuffer", function () {
 
     it('generate should throw', function(done) {
         var cb = new CryptoBaseBuffer();
-        (function() {
+        assert.throws(function() {
             cb.generate();
-        }).should.throw();
+        });
         done();
     });
 
     it('toString should throw', function(done) {
         var cb = new CryptoBaseBuffer();
-        (function() {
+        assert.throws(function() {
             cb.toString();
-        }).should.throw();
+        });
         done();
     });
 
     it('isValid should throw', function(done) {
         var cb = new CryptoBaseBuffer();
-        (function() {
+        assert.throws(function() {
             cb.isValid();
-        }).should.throw();
+        });
         done();
     });
 
@@ -38,12 +37,12 @@ describe("CryptoBaseBuffer", function () {
 
 describe("cb.toBuffer", function () {
     var cb = new CryptoBaseBuffer();
-    
+
     it("should throw on utf8", function (done) {
         var str = "to buffer is cool";
-        (function() {
+        assert.throws(function() {
             cb.toBuffer(str, 'utf8').toString().should.eql("to buffer is cool");
-        }).should.throw();
+        });
         done();
     });
 
@@ -55,37 +54,37 @@ describe("cb.toBuffer", function () {
     it("should return de default encoding", function (done) {
         cb.setEncoding('hex');
         var e = cb.getEncoding();
-        e.should.eql('hex');
+        assert.equal(e, 'hex');
         done();
     });
 
     it("should throw on utf8 encoding", function (done) {
-        (function() {
+        assert.throws(function() {
             cb.setValidEncodings(['hex', 'utf8']);
-        }).should.throw();
+        });
         done();
     });
 
 
     it("should generate a buffer from string with encoding", function (done) {
         var str = "8b166e947343b514c621ac7cfd53b11a9d5c374f507bf102a71b415a5d9e399853d1dc82362d48f47eb1c63889c5ef695ae55793064da563b4d3b26aec64d3e3";
-        cb.toBuffer(str, 'hex').toString('hex').should.eql(str);
+        assert.equal(cb.toBuffer(str, 'hex').toString('hex'), str);
         done();
     });
 
     it("should return undefined on bad param 1", function (done) {
-        (function() {
+        assert.throws(function() {
             var b = cb.toBuffer(123, 'utf8');
-        }).should.throw();
+        });
         done();
 
     });
 
     it("should throw on bad encoding", function (done) {
         var str = "to buffer is cool";
-        (function() {
+        assert.throws(function() {
             cb.toBuffer(str, 'txf');
-        }).should.throw();
+        });
         done();
     });
 
@@ -93,7 +92,7 @@ describe("cb.toBuffer", function () {
         var a = [1, 2, 3, 4, 5];
         var b = cb.toBuffer(a);
         for( var i = 0 ; i < b.length; i++ ) {
-            b[i].should.eql(a[i]);
+            assert.equal(b[i], a[i]);
         }
         done();
     });
@@ -103,7 +102,7 @@ describe("cb.toBuffer", function () {
         a.fill(5);
         var b = cb.toBuffer(a);
         for( var i = 0 ; i < b.length; i++ ) {
-            b[i].should.eql(a[i]);
+            assert.equal(b[i], a[i]);
         }
         done();
     });

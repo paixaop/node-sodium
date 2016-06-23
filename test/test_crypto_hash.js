@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 var crypto = require('crypto');
 
@@ -13,8 +13,8 @@ describe('Hash', function() {
         buf.fill(1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
-        hashString.should.eql("ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
-        hashString.should.eql(crypto.createHash('sha512').update(buf).digest('hex'));
+        assert.equal(hashString, "ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
+        assert.equal(hashString, crypto.createHash('sha512').update(buf).digest('hex'));
         done();
     });
 
@@ -23,7 +23,7 @@ describe('Hash', function() {
         buf.fill(1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
-        hashString.should.eql(crypto.createHash('sha512').update(buf).digest('hex'));
+        assert.equal(hashString, crypto.createHash('sha512').update(buf).digest('hex'));
         done();
     });
 
@@ -32,7 +32,7 @@ describe('Hash', function() {
         buf.fill(1);
         var r = sodium.crypto_hash_sha512(buf);
         var hashString = r.toString('hex');
-        hashString.should.eql("ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
+        assert.equal(hashString, "ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
         done();
     });
 
@@ -41,18 +41,18 @@ describe('Hash', function() {
         buf.fill(1);
         var r = sodium.crypto_hash_sha256(buf);
         var hashString = r.toString('hex');
-        hashString.should.eql(crypto.createHash('sha256').update(buf).digest('hex'));
+        assert.equal(hashString, crypto.createHash('sha256').update(buf).digest('hex'));
         done();
     });
 });
 
 describe('crypto_hash_sha512 verify parameters', function() {
     it('bad param 1', function(done) {
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha512("buf");
         });
 
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha512(1);
         });
         done();
@@ -61,11 +61,11 @@ describe('crypto_hash_sha512 verify parameters', function() {
 
 describe('crypto_hash_sha verify parameters', function() {
     it('bad param 1', function(done) {
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha("buf");
         });
 
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha(1);
         });
         done();
@@ -74,11 +74,11 @@ describe('crypto_hash_sha verify parameters', function() {
 
 describe('crypto_hash_sha256 verify parameters', function() {
     it('bad param 1', function(done) {
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha256("buf");
         });
 
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_hash_sha256(1);
         });
         done();

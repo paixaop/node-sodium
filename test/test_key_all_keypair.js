@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 // Test all KeyPair classes
@@ -20,28 +20,21 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
             var key = new KeyPair();
             key.generate();
             var k = key.get();
-            key.isValid(k).should.be.ok;
+            assert.ok(key.isValid(k));
             done();
         });
 
         it("key size should match that of sodium", function (done) {
             var key = new KeyPair();
-            key.getPublicKey().size().should.eql(sizePkBuffer);
-            key.getSecretKey().size().should.eql(sizeSkBuffer);
+            assert.equal(key.getPublicKey().size(), sizePkBuffer);
+            assert.equal(key.getSecretKey().size(), sizeSkBuffer);
             done();
         });
-        
+
         it("key bytes should match that of sodium", function (done) {
             var key = new KeyPair();
-            key.publicKeyBytes().should.eql(sizePkBuffer);
-            key.secretKeyBytes().should.eql(sizeSkBuffer);
-            done();
-        });
-        
-        it("key bytes should match that of sodium", function (done) {
-            var key = new KeyPair();
-            key.pkBytes().should.eql(sizePkBuffer);
-            key.skBytes().should.eql(sizeSkBuffer);
+            assert.equal(key.pkBytes(), sizePkBuffer);
+            assert.equal(key.skBytes(), sizeSkBuffer);
             done();
         });
 
@@ -51,13 +44,13 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
                 publicKey: new Buffer(2),
                 secretKey: new Buffer(2)
             };
-            key.isValid(k).should.not.be.ok;
+            assert.ok(!key.isValid(k));
             done();
         });
 
         it("toString should return a string!", function (done) {
             var key = new KeyPair();
-            key.toString().should.have.type('string');
+            assert.equal(typeof key.toString(), 'string');
             done();
         });
 
@@ -65,34 +58,34 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
             var key = new KeyPair();
             var k = key.get();
 
-            key.toString('hex').should.match(/[0-9a-f]+,[0-9A-F]+/i);
+            assert.ok(key.toString('hex').match(/[0-9a-f]+,[0-9A-F]+/i));
             done();
         });
 
         it("toString should throw with bad encoding!", function (done) {
             var key = new KeyPair();
-            (function() {
+            assert.throws(function() {
                 key.toString('utf8');
-            }).should.throw();
+            });
 
             done();
         });
 
         it("key test string encoding utf8 should throw", function (done) {
             var key = new KeyPair();
-            (function() {
+            assert.throws(function() {
                 var n = key.toString('utf8');
                 key.set(n, 'utf8');
-            }).should.throw();
+            });
             done();
         });
 
         it("key test string encoding base64 should throw", function (done) {
             var key = new KeyPair();
-            (function() {
+            assert.throws(function() {
                 var n = key.toString('base64');
                 key.set(n, 'base64');
-            }).should.throw();
+            });
             done();
         });
 

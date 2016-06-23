@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 
@@ -113,7 +113,7 @@ describe('crypto_box_easy', function() {
         if( !cipherMsg ) {
             should.fail();
         }
-        cipherMsg.toString('hex').should.eql(cipherText.toString('hex'));
+        assert.equal(cipherMsg.toString('hex'), cipherText.toString('hex'));
         done();
     });
 
@@ -123,14 +123,14 @@ describe('crypto_box_easy', function() {
         var n = nonce;
         var pk = bobpk
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         p = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -139,19 +139,19 @@ describe('crypto_box_easy', function() {
         var n = "nonce";
         var pk = bobpk
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         n = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         n = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -160,19 +160,19 @@ describe('crypto_box_easy', function() {
         var n = nonce;
         var pk = "bobpk"
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         pk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         pk = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -181,19 +181,19 @@ describe('crypto_box_easy', function() {
         var n = nonce;
         var pk = bobpk
         var sk = "alicesk";
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         sk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
 
         sk = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box_easy(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 });
@@ -204,13 +204,13 @@ describe('crypto_box_open_easy', function() {
 
     // Encrypt
     var cipherMsg = sodium.crypto_box_easy(plainText, nonce, receiver.publicKey, sender.secretKey);
-    
+
     it('crypto_box_easy/crypto_box_open_easy should encrypt/decrypt', function(done) {
         // Decrypt
         var plainMsg = sodium.crypto_box_open_easy(cipherMsg,nonce,sender.publicKey, receiver.secretKey);
 
         // We should get the same plainText!
-        plainMsg.should.eql(plainText);
+        assert.deepEqual(plainMsg, plainText);
         done();
     });
 
@@ -221,19 +221,19 @@ describe('crypto_box_open_easy', function() {
         var pk = sender.publicKey;
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         ctxt = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         ctxt = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -244,19 +244,19 @@ describe('crypto_box_open_easy', function() {
         var pk = sender.publicKey;
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         n = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         n = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -267,19 +267,19 @@ describe('crypto_box_open_easy', function() {
         var pk = "sender.publicKey";
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         pk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         pk = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -290,19 +290,19 @@ describe('crypto_box_open_easy', function() {
         var pk = sender.publicKey;
         var sk = "receiver.privateKey";
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         sk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         sk = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open_easy(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });

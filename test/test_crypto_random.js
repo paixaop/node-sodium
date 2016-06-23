@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 describe('Randombytes', function() {
@@ -20,7 +20,7 @@ describe('Randombytes', function() {
         }
 
         // If buf is all zeros then randombytes did not work!
-        zeros.should.not.be.eql(buf.length);
+        assert.notEqual(zeros, buf.length);
         done();
     });
 
@@ -28,7 +28,8 @@ describe('Randombytes', function() {
         // Stir the pot and generate a new seed
         sodium.randombytes_stir();
         var r = sodium.randombytes_random() >>> 0;
-        r.should.have.type('number').above(0);
+        assert.equal(typeof r, 'number');
+        assert.ok(r > 0);
         done();
     });
 
@@ -36,7 +37,8 @@ describe('Randombytes', function() {
         // Stir the pot and generate a new seed
         sodium.randombytes_stir();
         var r = sodium.randombytes_uniform(100) >>> 0;
-        r.should.have.type('number').within(0,100);
+        assert.equal(typeof r, 'number');
+        assert.ok(r >= 0 && r <= 100);
         done();
     });
 
@@ -53,17 +55,17 @@ describe("randombytes_buf verify parameters", function () {
 
     it('bad param 1 string', function(done) {
         buf = "token";
-        (function() {
+         assert.throws(function() {
             sodium.randombytes_buf(buf);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 small number', function(done) {
         buf = 2;
-        (function() {
+         assert.throws(function() {
             sodium.randombytes_buf(buf);
-        }).should.throw();
+        });
         done();
     });
 });

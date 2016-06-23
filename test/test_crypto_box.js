@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 
@@ -115,7 +115,7 @@ describe('crypto_box', function() {
         if( !cipherMsg ) {
             should.fail();
         }
-        cipherMsg.toString('hex').should.eql(cipherText.toString('hex'));
+        assert.equal(cipherMsg.toString('hex'), cipherText.toString('hex'));
         done();
     });
 
@@ -125,14 +125,14 @@ describe('crypto_box', function() {
         var n = nonce;
         var pk = bobpk
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         p = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -141,19 +141,19 @@ describe('crypto_box', function() {
         var n = "nonce";
         var pk = bobpk
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         n = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         n = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -162,19 +162,19 @@ describe('crypto_box', function() {
         var n = nonce;
         var pk = "bobpk"
         var sk = alicesk;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         pk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         pk = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -183,19 +183,19 @@ describe('crypto_box', function() {
         var n = nonce;
         var pk = bobpk
         var sk = "alicesk";
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         sk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
 
         sk = 10;
-        (function() {
+        assert.throws(function() {
             var cipherMsg = sodium.crypto_box(p, n, pk, sk);
-        }).should.throw();
+        });
         done();
     });
 
@@ -205,43 +205,43 @@ describe('crypto_box', function() {
             if( !computed_secret ) {
                 should.fail();
             }
-            computed_secret.toString('hex').should.eql(secret.toString('hex'));
+            assert.equal(computed_secret.toString('hex'), secret.toString('hex'));
             done();
         });
         it('should fail on bad param 1', function(done) {
             var pk = "bobpk";
             var sk = alicesk;
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
 
             pk = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
 
             pk = 10;
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
             done();
         });
         it('should fail on bad param 2', function(done) {
             var pk = bobpk;
             var sk = "alicesk";
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
 
             sk = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
 
             sk = 10;
-            (function() {
+            assert.throws(function() {
                 var computed_secret = sodium.crypto_box_beforenm(pk, sk);
-            }).should.throw();
+            });
             done();
         });
     });
@@ -252,59 +252,59 @@ describe('crypto_box', function() {
             if( !cipherMsg ) {
                 should.fail();
             }
-            cipherMsg.toString('hex').should.eql(cipherText.toString('hex'));
+            assert.equal(cipherMsg.toString('hex'), cipherText.toString('hex'));
             done();
         });
         it('should fail on bad param 1', function(done) {
             var p = "";
             var n = nonce;
             var s = secret;
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
 
             p = 10;
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
             done();
         });
         it('should fail on bad param 2', function(done) {
             var p = plainText;
             var n = "nonce";
             var s = secret;
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
 
             n = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
 
             n = 10;
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
             done();
         });
         it('should fail on bad param 3', function(done) {
             var p = plainText;
             var n = nonce;
             var s = "secret";
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
 
             s = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
 
             s = 10;
-            (function() {
+            assert.throws(function() {
                 var cipherMsg = sodium.crypto_box_afternm(p,n,s);
-            }).should.throw();
+            });
             done();
         });
     });
@@ -324,7 +324,7 @@ describe('crypto_box_open', function() {
         var plainMsg = sodium.crypto_box_open(cipherMsg,nonce,sender.publicKey, receiver.secretKey);
 
         // We should get the same plainText!
-        plainMsg.should.eql(plainText);
+        assert.deepEqual(plainMsg, plainText);
         done();
     });
 
@@ -335,19 +335,19 @@ describe('crypto_box_open', function() {
         var pk = sender.publicKey;
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         ctxt = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         ctxt = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -358,19 +358,19 @@ describe('crypto_box_open', function() {
         var pk = sender.publicKey;
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         n = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         n = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -381,19 +381,19 @@ describe('crypto_box_open', function() {
         var pk = "sender.publicKey";
         var sk = receiver.privateKey;
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         pk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         pk = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -404,19 +404,19 @@ describe('crypto_box_open', function() {
         var pk = sender.publicKey;
         var sk = "receiver.privateKey";
 
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         sk = new Buffer(10);
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         sk = 10;
-        (function() {
+        assert.throws(function() {
             var plainMsg = sodium.crypto_box_open(ctxt,n,pk, sk);
-        }).should.throw();
+        });
 
         done();
     });
@@ -427,7 +427,7 @@ describe('crypto_box_open', function() {
             var plainMsg = sodium.crypto_box_open_afternm(cipherMsg,nonce,secret);
 
             // We should get the same plainText!
-            plainMsg.should.eql(plainText);
+            assert.deepEqual(plainMsg, plainText);
             done();
         });
         it('should fail on bad param 1', function(done) {
@@ -435,19 +435,19 @@ describe('crypto_box_open', function() {
             var n = nonce;
             var s = secret;
 
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             ctxt = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             ctxt = 10;
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             done();
         });
@@ -456,19 +456,19 @@ describe('crypto_box_open', function() {
             var n = "nonce";
             var s = secret;
 
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             nonce = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             nonce = 10;
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             done();
         });
@@ -477,19 +477,19 @@ describe('crypto_box_open', function() {
             var n = nonce;
             var s = "secret";
 
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             secret = new Buffer(10);
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             secret = 10;
-            (function() {
+            assert.throws(function() {
                 var plainMsg = sodium.crypto_box_open_afternm(ctxt,n,s);
-            }).should.throw();
+            });
 
             done();
         });

@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 
@@ -98,25 +98,15 @@ var cipherTextEasy = cipherText.slice(16, cipherText.length);
 describe('Secretbox', function() {
     it('crypto_secretbox should return a buffer', function(done) {
         var r = sodium.crypto_secretbox(plainText,nonce,key);
-        if( !r ) {
-            should.fail();
-        }
-        r.should.eql(cipherText);
+        assert.deepEqual(r, cipherText);
         done();
     });
 
     it('crypto_secretbox/crypto_secretbox_open should encrypt/decrypt', function(done) {
         //var plainMsg = crypto.randomBytes(1000);
         var cipherMsg = sodium.crypto_secretbox(plainText,nonce,key);
-        if( !cipherMsg ) {
-            should.fail();
-        }
         var plainMsg = sodium.crypto_secretbox_open(cipherMsg,nonce,key);
-        if( !plainMsg ) {
-            should.fail();
-        }
-
-        plainMsg.should.eql(plainText);
+        assert.deepEqual(plainMsg, plainText);
         done();
     });
 });
@@ -124,26 +114,15 @@ describe('Secretbox', function() {
 describe('Secretbox_easy', function() {
     it('crypto_secretbox_easy should return a buffer', function(done) {
         var r = sodium.crypto_secretbox_easy(plainText,nonce,key);
-        if( !r ) {
-      	    should.fail();
-        }
-
-        r.should.eql(cipherTextEasy);
+        assert.deepEqual(r, cipherTextEasy);
         done();
     });
 
     it('crypto_secretbox_easy/crypto_secretbox_open_easy should encrypt/decrypt', function(done) {
         //var plainMsg = crypto.randomBytes(1000);
         var cipherMsg = sodium.crypto_secretbox_easy(plainText,nonce,key);
-        if( !cipherMsg ) {
-            should.fail();
-        }
         var plainMsg = sodium.crypto_secretbox_open_easy(cipherMsg,nonce,key);
-        if( !plainMsg ) {
-            should.fail();
-        }
-
-        plainMsg.should.eql(plainText);
+        assert.deepEqual(plainMsg, plainText);
         done();
     });
 });
@@ -156,9 +135,9 @@ function method_parameter_types (name, fn, good, bad) {
                 input[i] = bad
                 it('bad param '+(i+1)+' ' + typeof bad, function (done) {
 
-                    (function() {
+                     assert.throws(function() {
                         var cipherMsg = fn.apply(null, input);
-                    }).should.throw();
+                    });
                     done();
 
                 });

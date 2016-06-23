@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 var SecretBox = require('../lib/secretbox');
@@ -14,7 +14,7 @@ describe("SecretBox", function () {
         var box = new SecretBox();
         box.setEncoding('utf8');
         var cipherBox = box.encrypt("This is a test");
-        box.decrypt(cipherBox).should.eql("This is a test");
+        assert.equal(box.decrypt(cipherBox), "This is a test");
         done();
     });
 
@@ -22,15 +22,17 @@ describe("SecretBox", function () {
         var box = new SecretBox();
         box.setEncoding('utf8');
         var cipherBox = box.encrypt("This is a test");
-        cipherBox.should.have.type('object').with.properties('cipherText', 'nonce');
-        cipherBox.cipherText.should.be.instanceof.Buffer;
-        cipherBox.nonce.should.be.instanceof.Buffer;
+        assert.equal(typeof cipherBox, 'object');
+        assert.notEqual(typeof cipherBox.cipherText, 'undefined');
+        assert.notEqual(typeof cipherBox.nonce, 'undefined');
+        assert.ok(cipherBox.cipherText instanceof Buffer);
+        assert.ok(cipherBox.nonce instanceof Buffer);
         done();
     });
 
     it("key size should match that of sodium", function (done) {
         var box = new SecretBox();
-        box.key().size().should.eql(sodium.crypto_secretbox_KEYBYTES);
+        assert.equal(box.key().size(), sodium.crypto_secretbox_KEYBYTES);
         done();
     });
 
@@ -41,9 +43,9 @@ describe("SecretBox", function () {
         cipherBox.cipherText[0] = 99;
         cipherBox.cipherText[1] = 99;
         cipherBox.cipherText[2] = 99;
-        (function() {
+        assert.throws(function() {
             box.decrypt(cipherBox);
-        }).should.throw();
+        });
         done();
     });
 
@@ -63,9 +65,9 @@ describe("SecretBox", function () {
     it("set bad secretKey should fail", function (done) {
         var box = new SecretBox();
 
-        (function() {
+        assert.throws(function() {
             box.set(new Buffer(2));
-        }).should.throw();
+        });
 
         done();
     });
@@ -81,8 +83,7 @@ describe("SecretBox", function () {
 
         k2 = auth2.key().get();
 
-        k2.should.eql(k);
-
+        assert.deepEqual(k2, k);
         done();
     });
 

@@ -3,10 +3,9 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
-
 
 var keyA = [
     0x1b,0x27,0x55,0x64,0x73,0xe9,0x85,0xd4,
@@ -78,31 +77,24 @@ describe('Stream', function() {
     it('crypto_stream should return a buffer', function(done) {
         var buf = new Buffer(1000);
         var r = sodium.crypto_stream(1000,nonce,key);
-        if( !r ) {
-            should.fail();
-        }
+        assert.ok(r);
         var h = sodium.crypto_hash_sha256(r);
         var sha256 = h.toString('hex');
-        sha256.should.eql("daa587120d5cd7f84d68d76457e4e176cadd8853de1de6136311731057728ba1");
+        assert.equal(sha256, "daa587120d5cd7f84d68d76457e4e176cadd8853de1de6136311731057728ba1");
         done();
     });
 
     it('crypto_stream_xor should encrypt', function(done) {
         var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        if( !r ) {
-            should.fail();
-        }
-        r.toString('hex').should.eql(cipherText.toString('hex'));
-
+        assert.ok(r);
+        assert.equal(r.toString('hex'), cipherText.toString('hex'));
         done();
     });
 
     it('crypto_stream_xor should decrypt', function(done) {
         var r = sodium.crypto_stream_xor(cipherText,nonce,key);
-        if( !r ) {
-            should.fail();
-        }
-        r.toString('hex').should.eql(plainText.toString('hex'));
+        assert.ok(r);
+        assert.equal(r.toString('hex'), plainText.toString('hex'));
 
         done();
     });
@@ -110,14 +102,12 @@ describe('Stream', function() {
     it('crypto_stream_xor should encrypt/decrypt', function(done) {
         var plainMsg = crypto.randomBytes(1000);
         var cipherMsg = sodium.crypto_stream_xor(plainMsg,nonce,key);
-        if( !cipherMsg ) {
-            should.fail();
-        }
+        assert.ok(cipherMsg);
         var plainMsg2 = sodium.crypto_stream_xor(cipherMsg,nonce,key);
         if( !plainMsg2 ) {
             should.fail();
         }
-        plainMsg2.should.eql(plainMsg);
+        assert.deepEqual(plainMsg2, plainMsg);
         done();
     });
 });
@@ -127,73 +117,73 @@ describe("crypto_stream verify parameters", function () {
 
     it('bad param 1 string', function(done) {
         len = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 number', function(done) {
         len = -123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 buffer', function(done) {
         len = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 string', function(done) {
         nonce = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 number', function(done) {
         nonce = -123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 buffer', function(done) {
         nonce = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 string', function(done) {
         key = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 number', function(done) {
         key = -123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 buffer', function(done) {
         key = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
-        }).should.throw();
+        });
         done();
     });
 });
@@ -201,65 +191,65 @@ describe("crypto_stream verify parameters", function () {
 describe("crypto_stream_xor verify parameters", function () {
     it('bad param 1 string', function(done) {
         plainText = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 number', function(done) {
         plainText = 123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 string', function(done) {
         nonce = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 number', function(done) {
         nonce = 123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 small buffer', function(done) {
         nonce = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 string', function(done) {
         key = "123";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 number', function(done) {
         key = 123;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 small buffer', function(done) {
         key = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
-        }).should.throw();
+        });
         done();
     });
 

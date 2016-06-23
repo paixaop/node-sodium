@@ -33,7 +33,7 @@ describe("Auth", function () {
         token[1] = 99;
         token[2] = 99;
 
-        assert.fail(auth.validate(token, "This is a test", 'utf8'));
+        assert.equal(auth.validate(token, "This is a test", 'utf8'), false);
         done();
     });
 

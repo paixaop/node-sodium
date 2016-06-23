@@ -3,7 +3,7 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 
@@ -13,7 +13,7 @@ describe('OneTimeAuth', function() {
         var key = crypto.randomBytes(sodium.crypto_auth_KEYBYTES);
         var token = sodium.crypto_onetimeauth(buf, key);
         var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        r.should.eql(0);
+        assert.equal(r, 0);
         done();
     });
 });
@@ -24,41 +24,41 @@ describe('crypto_onetimeauth verify parameters', function() {
 
     it('bad param 1 string', function(done) {
         buf = "123";
-        (function() {
+         assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 number', function(done) {
         buf = 123;
-        (function() {
+         assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 string', function(done) {
         key = "123";
-        (function() {
+         assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 buffer', function(done) {
         key = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 number', function(done) {
         key = 123;
-        (function() {
+         assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
-        }).should.throw();
+        });
         done();
     });
 });
@@ -70,65 +70,65 @@ describe('crypto_onetimeauth_verify verify parameters', function() {
 
     it('bad param 1 string', function(done) {
         token = "token";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 small buffer', function(done) {
         token = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 1 small number', function(done) {
         token = 2;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 string', function(done) {
         buf = "qweqw";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 2 small number', function(done) {
         buf = 1;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 string', function(done) {
         key = "qweqw";
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 buffer', function(done) {
         key = new Buffer(2);
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 
     it('bad param 3 small number', function(done) {
         key = 1;
-        (function() {
+         assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        }).should.throw();
+        });
         done();
     });
 });

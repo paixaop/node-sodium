@@ -7,7 +7,6 @@ var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 var crypto = require('crypto');
 var toBuffer = require('../lib/toBuffer');
-var should = require('should');
 
 var testVectors = [
     {
@@ -853,87 +852,86 @@ describe('Generic Hash', function() {
         testVectors.forEach(function(vector, i) {
             var testMessage = toBuffer(vector.in);
             var testKey = toBuffer(vector.key);
-            
+
             var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MAX, testMessage, testKey);
             var expectedOut = toBuffer(vector.out);
-            
+
             assert(sodium.compare(out, expectedOut)==0, "Test vector " + i + " failed." );
         });
         done();
     });
-    
+
     it('should throw if output size is too big', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = toBuffer(testVectors[0].key);
-        
-        (function() {
+
+        assert.throws(function() {
             var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MAX + 1, testMessage, testKey);
-        }).should.throw();
-        
+        });
+
         done();
     });
-    
+
     it('should throw if output size is too small', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = toBuffer(testVectors[0].key);
-        
-        (function() {
+
+        assert.throws(function() {
             var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN - 1, testMessage, testKey);
-        }).should.throw();
-        
+        });
+
         done();
     });
-    
+
     it('should throw if key size is too big', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MAX + 1);
         testKey.fill(1);
-        
-        (function() {
+
+        assert.throws(function() {
             var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
-        }).should.throw();
-        
+        });
+
         done();
     });
-    
+
     it('should throw if key size is too small', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
         var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MIN - 1);
         testKey.fill(1);
-        
-        (function() {
+
+        assert.throws(function() {
             var out = sodium.crypto_generichash_blake2b(sodium.crypto_generichash_blake2b_BYTES_MIN, testMessage, testKey);
-        }).should.throw();
-        
+        });
+
         done();
     });
-    
+
     it('should return match all test vectors using the streaming API', function(done) {
         testVectors.forEach(function(vector, i) {
             var halfMessageSize = vector.in.length / 2;
-            
+
             var testMessage = toBuffer(vector.in);
-            
+
             var testKey = toBuffer(vector.key);
-            
+
             var state = sodium.crypto_generichash_blake2b_init(testKey, sodium.crypto_generichash_blake2b_BYTES_MAX);
-            
+
             var m1 = testMessage.slice(0, testMessage.length / 2);
             var m2 = testMessage.slice(testMessage.length / 2);
-            
+
             if( m1.length ) {
                 sodium.crypto_generichash_blake2b_update(state, m1);
             }
             if( m2.length ) {
                 sodium.crypto_generichash_blake2b_update(state, m2);
             }
-            
+
             var out = sodium.crypto_generichash_blake2b_final(state, sodium.crypto_generichash_blake2b_BYTES_MAX);
             var expectedOut = toBuffer(vector.out);
-            
+
             assert(sodium.compare(out, expectedOut)==0, "Test vector " + i + " failed." );
         });
         done();
     });
 });
-    

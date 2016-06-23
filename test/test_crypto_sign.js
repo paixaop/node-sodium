@@ -3,18 +3,18 @@
  */
 "use strict";
 
-var should = require('should');
+var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
-
 
 describe('Sign', function() {
     it('crypto_sign_keypair should return a pair of keys', function(done) {
         var keys = sodium.crypto_sign_keypair();
-        keys.should.have.type('object');
-        keys.should.have.properties('publicKey', 'secretKey');
-        keys.publicKey.should.have.length(sodium.crypto_sign_PUBLICKEYBYTES);
-        keys.secretKey.should.have.length(sodium.crypto_sign_SECRETKEYBYTES);
+        assert.equal(typeof keys, 'object');
+        assert.notEqual(typeof keys.publicKey, 'undefined');
+        assert.notEqual(typeof keys.secretKey, 'undefined');
+        assert.equal(keys.publicKey.length, sodium.crypto_sign_PUBLICKEYBYTES);
+        assert.equal(keys.secretKey.length, sodium.crypto_sign_SECRETKEYBYTES);
         done();
     });
 
@@ -24,7 +24,7 @@ describe('Sign', function() {
         var signedMsg = sodium.crypto_sign(message, keys.secretKey);
 
         var message2 = sodium.crypto_sign_open(signedMsg, keys.publicKey);
-        message2.toString('utf8').should.eql(message.toString('utf8'));
+        assert.equal(message2.toString('utf8'), message.toString('utf8'));
         done();
     });
 
@@ -40,7 +40,7 @@ describe('Sign', function() {
         var signature = sodium.crypto_sign_detached(message, keys.secretKey);
 
         var verified = sodium.crypto_sign_verify_detached(signature, message, keys.publicKey);
-        verified.should.be.exactly(true);
+        assert.strictEqual(verified, true);
         done();
     });
 
@@ -50,7 +50,7 @@ describe('Sign', function() {
         var signature = sodium.crypto_sign_detached(message, keys.secretKey);
         signature.writeFloatLE(Math.random(), 0);
         var verified = sodium.crypto_sign_verify_detached(signature, message, keys.publicKey);
-        verified.should.be.exactly(false);
+        assert.strictEqual(verified, false);
         done();
     });
 
@@ -58,9 +58,9 @@ describe('Sign', function() {
         var keys = sodium.crypto_sign_keypair();
         var message = new Buffer("Libsodium is cool", 'utf8');
 
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign(message);
-        }).should.throw();
+        });
         done();
     });
 
@@ -68,45 +68,45 @@ describe('Sign', function() {
         var keys = sodium.crypto_sign_keypair();
         var message = new Buffer("Libsodium is cool", 'utf8');
 
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign();
-        }).should.throw();
+        });
         done();
     });
 
     it('should throw with a small key', function(done) {
         var message = new Buffer("Libsodium is cool", 'utf8');
 
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign(message, new Buffer(12));
-        }).should.throw();
+        });
         done();
     });
 
     it('should test bad arg 1', function(done) {
         var message = new Buffer("Libsodium is cool", 'utf8');
         var keys = sodium.crypto_sign_keypair();
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign(1, keys.secretKey);
-        }).should.throw();
+        });
         done();
     });
 
     it('should test bad arg 2', function(done) {
         var message = new Buffer("Libsodium is cool", 'utf8');
         var keys = sodium.crypto_sign_keypair();
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign(message, 1);
-        }).should.throw();
+        });
         done();
     });
 
     it('should test bad arg 2', function(done) {
         var message = new Buffer("Libsodium is cool", 'utf8');
         var keys = sodium.crypto_sign_keypair();
-        (function() {
+         assert.throws(function() {
             var signedMsg = sodium.crypto_sign(message, "123");
-        }).should.throw();
+        });
         done();
     });
 });
