@@ -120,7 +120,20 @@ function createFullPath(fullPath) {
         recursePathList(pathList);
 }
 
+function exists(path) {
+    try {
+        fs.accessSync(path, fs.F_OK);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 function download(url, dest, cb) {
+    if(exists(dest)) {
+        console.log('File ' + dest + ' alredy exists, run make clean if you want to download it again.');
+        cb(null);
+    }
     var file = fs.createWriteStream(dest);
     var request = https.get(url, function(response) {
         response.pipe(file);
@@ -227,8 +240,7 @@ function doDownloads(next) {
     console.log('Download libsodium.lib');
     var ver = getPlatformToolsVersion();
     console.log('Platform Tool is ' + ver);
-    var arch = os.arch() == 'x64'? 'x64' : 'Win32';
-    switch(os.arch()) {
+    switch (os.arch()) {
         case 'x64':
             arch = 'x64';
             break;
@@ -249,17 +261,24 @@ function doDownloads(next) {
     });
 }
 
-function run(cmdline, next) {
+function run(cmdline, expectedExitCode, next) {
     var child = exec(cmdline);
+
+    if (typeof expectedExitCode !== 'undefined') {
+        expectedExitCode = 0;
+    }
+
     child.stdout.on('data', function(data) {
         process.stdout.write(data.toString());
     });
     child.stderr.on('data', function(data) {
         process.stdout.write(data.toString());
     });
-    child.on('close', function(code) {
-        console.log('Done!');
-        if (!next) process.exit();
+    child.on('exit', function(code) {
+        if (code !== expectedExitCode) {
+            throw new Error(cmdLine + ' exited with code ' + code);
+        }
+        if (!next) process.exit(0);
         next();
     });
 }
@@ -272,7 +291,7 @@ function errorSetMSVSVersion() {
     console.log('    Global:\n');
     console.log('        npm config set msvs_version 2015 --global\n');
     console.log('Supported values are 2010, 2012, 2013, 2015\n');
-    process.exit();
+    process.exit(1);
 }
 
 function errorInvalidMSVSVersion() {
@@ -284,7 +303,7 @@ function errorInvalidMSVSVersion() {
     console.log('    Global:\n');
     console.log('        npm config set msvs_version 2015 --global\n');
     console.log('Supported values are 2010, 2012, 2013, 2015\n');
-    process.exit();
+    process.exit(1);
 }
 
 function checkMSVSVersion() {
@@ -300,7 +319,7 @@ function checkMSVSVersion() {
 function isPreInstallMode() {
     if (!process.argv[2] || process.argv[2].search(/^--preinstall|--install/)) {
         console.log('please call install with --preinstall or --install');
-        process.exit();
+        process.exit(1);
     }
     if (process.argv[2] === '--preinstall') {
         return true;
@@ -308,7 +327,7 @@ function isPreInstallMode() {
     return false;
 }
 
-if (os.platform() !== 'win32') {
+if (os.platform() === 'win32') {
     if (isPreInstallMode()) {
         run('make libsodium');
     } else {
@@ -323,7 +342,7 @@ if (os.platform() !== 'win32') {
         createFullPath("build/Release");
         doDownloads(function() {
             console.log('Prebuild steps completed. Binary libsodium distribution installed in ./deps/build');
-            process.exit();
+            process.exit(0);
         });
     } else {
         console.log('Install Mode');
@@ -332,7 +351,7 @@ if (os.platform() !== 'win32') {
             files = libFiles.slice(0); // clone array
             copyFiles(files, function() {
                 console.log('Done copying files.');
-                process.exit();
+                process.exit(0);
             });
         });
     }
