@@ -227,7 +227,18 @@ function doDownloads(next) {
     console.log('Download libsodium.lib');
     var ver = getPlatformToolsVersion();
     console.log('Platform Tool is ' + ver);
-    var libURL = baseURL + '/Win32/Release/' + ver + '/dynamic';
+    var arch = os.arch() == 'x64'? 'x64' : 'Win32';
+    switch(os.arch()) {
+        case 'x64':
+            arch = 'x64';
+            break;
+        case 'ia32':
+            arch = 'Win32';
+            break;
+        default:
+            throw new Error('No pre-compiled binary available for this platform ' + os.arch());
+    }
+    var libURL = baseURL + '/' + arch + '/Release/' + ver + '/dynamic';
     files = libFiles.slice(0); // clone array
     downloadAll(files, libURL, 'deps/build/lib', function() {
         console.log('Libs for version ' + ver + ' downloaded.');
