@@ -1,7 +1,7 @@
 /**
  * Created by bmf on 11/2/13.
  */
-var should = require('should');
+var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 var Auth = require('../lib/auth');
@@ -14,13 +14,13 @@ describe("Auth", function () {
         var auth = new Auth();
         var token = auth.generate("This is a test", 'utf8');
 
-        auth.validate(token, "This is a test", 'utf8').should.be.ok;
+        assert.ok(auth.validate(token, "This is a test", 'utf8'));
         done();
     });
 
     it("key size should match that of sodium", function (done) {
         var auth = new Auth();
-        auth.key().size().should.eql(sodium.crypto_auth_KEYBYTES);
+        assert.equal(auth.key().size(), sodium.crypto_auth_KEYBYTES);
         done();
     });
 
@@ -33,16 +33,16 @@ describe("Auth", function () {
         token[1] = 99;
         token[2] = 99;
 
-        auth.validate(token, "This is a test", 'utf8').should.not.be.ok;
+        assert.fail(auth.validate(token, "This is a test", 'utf8'));
         done();
     });
 
     it("set bad secretKey should fail", function (done) {
         var auth = new Auth();
 
-        (function() {
+        assert.throws(function() {
             auth.set(new Buffer(2));
-        }).should.throw();
+        });
 
         done();
     });
@@ -58,35 +58,34 @@ describe("Auth", function () {
 
         k2 = auth2.key().get();
 
-        k2.should.eql(k);
-
+        assert.equal(k2, k);
         done();
     });
 
     it('should fail call generate before having a key', function() {
         var auth = new Auth();
-        (function() {
+        assert.throws(function() {
             auth.generate("123");
-        }).should.throw();
+        });
     });
 
     it('should fail call validate before having a key', function() {
         var auth = new Auth();
-        (function() {
+        assert.throws(function() {
             auth.validate("123123", "123123");
-        }).should.throw();
+        });
     });
 
     it('should set an encoding if a supported encoding is passed to setEncoding', function() {
         var auth = new Auth();
         auth.setEncoding('base64');
-        auth.defaultEncoding.should.equal('base64');
+        assert.equal(auth.defaultEncoding, 'base64');
     });
 
     it('should fail to set an encoding if an unsupported encoding is passed to setEncoding', function() {
         var auth = new Auth();
-        (function () {
+        assert.throws(function () {
             auth.setEncoding('unsupported-encoding');
-        }).should.throw();
+        });
     });
 });
