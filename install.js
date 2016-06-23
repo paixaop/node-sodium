@@ -327,7 +327,7 @@ function isPreInstallMode() {
     return false;
 }
 
-if (os.platform() === 'win32') {
+if (os.platform() !== 'win32') {
     if (isPreInstallMode()) {
         run('make libsodium');
     } else {
