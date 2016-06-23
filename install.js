@@ -348,7 +348,7 @@ if (os.platform() !== 'win32') {
         });
     } else {
         console.log('Install Mode');
-        run('node-gyp rebuild', function() {
+        run('node-gyp rebuild', 0, function() {
             console.log('Copy lib files to Release folder');
             files = libFiles.slice(0); // clone array
             copyFiles(files, function() {
