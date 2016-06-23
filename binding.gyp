@@ -45,14 +45,14 @@
       'Debug': {
         'msvs_settings': {
           'VCCLCompilerTool': {
-            'DisableSpecificWarnings': ['4244']
+            'DisableSpecificWarnings': ['4244', '4267']
           },
         },
       },
       'Release': {
         'msvs_settings': {
           'VCCLCompilerTool': {
-            'DisableSpecificWarnings': ['4244']
+            'DisableSpecificWarnings': ['4244','4267']
           },
         },
       },
