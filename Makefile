@@ -107,6 +107,21 @@ clean:
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
+	-rm -fr ${INSTALL_DIR}
+	-rm -fr ${LIBSODIUM_DIR}/autom4te.cache
+	-rm -fr ${LIBSODIUM_DIR}/build-aux
+	-rm ${LIBSODIUM_DIR}/aclocal.m4
+	-rm ${LIBSODIUM_DIR}/config.status
+	-rm ${LIBSODIUM_DIR}/configure
+	-rm ${LIBSODIUM_DIR}/libsodium-uninstalled.pc
+	-rm ${LIBSODIUM_DIR}/libsodium.pc
+	-rm ${LIBSODIUM_DIR}/libtool
+	-rm ${LIBSODIUM_DIR}/m4/libtool.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltoptions.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltsugar.m4
+	-rm ${LIBSODIUM_DIR}/m4/ltversion.m4
+	-rm ${LIBSODIUM_DIR}/m4/lt~obsolete.m4
+	-rm ${LIBSODIUM_DIR}/src/libsodium/include/sodium/version.h
 	-find . -type f -name *.lo -delete
 	-find ${LIBSODIUM_DIR} -type f -name *.la -delete
 	-find ${LIBSODIUM_DIR} -type f -name *.a -delete
@@ -120,21 +135,7 @@ clean:
 	-find ${LIBSODIUM_DIR} -name Makefile.in -delete
 	-find ${LIBSODIUM_DIR} -name *.trs -delete
 	-find ${LIBSODIUM_DIR}/test/default/ -type f ! -name "*.*" -delete
-	-rm -fr ${INSTALL_DIR}
-	-rm ${LIBSODIUM_DIR}/autom4te.cache
-	-rm ${LIBSODIUM_DIR}/build-aux
-	-rm ${LIBSODIUM_DIR}/aclocal.m4
-	-rm ${LIBSODIUM_DIR}/config.status
-	-rm ${LIBSODIUM_DIR}/configure
-	-rm ${LIBSODIUM_DIR}/libsodium-uninstalled.pc
-	-rm ${LIBSODIUM_DIR}/libsodium.pc
-	-rm ${LIBSODIUM_DIR}/libtool
-	-rm ${LIBSODIUM_DIR}/m4/libtool.m4
-	-rm ${LIBSODIUM_DIR}/m4/ltoptions.m4
-	-rm ${LIBSODIUM_DIR}/m4/ltsugar.m4
-	-rm ${LIBSODIUM_DIR}/m4/ltversion.m4
-	-rm ${LIBSODIUM_DIR}/m4/lt~obsolete.m4
-	-rm ${LIBSODIUM_DIR}/src/libsodium/include/sodium/version.h
+
 
 cleanbuild: clean
 	-rm -fr ./build
