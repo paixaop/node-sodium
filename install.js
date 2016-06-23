@@ -261,10 +261,10 @@ function doDownloads(next) {
     });
 }
 
-function run(cmdline, expectedExitCode, next) {
-    var child = exec(cmdline);
+function run(cmdLine, expectedExitCode, next) {
+    var child = exec(cmdLine);
 
-    if (typeof expectedExitCode !== 'undefined') {
+    if (typeof expectedExitCode === 'undefined') {
         expectedExitCode = 0;
     }
 
