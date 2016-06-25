@@ -25,10 +25,15 @@ var expected = new Buffer(
         0x7b, 0xb1, 0x56, 0xd3, 0xd7, 0xb3, 0x0d, 0x3f
     ]);
 
-describe("Auth2", function() {
-    it("generate token with HMAC-SHA-256", function(done) {
+describe("Auth2 and Auth3", function() {
+    it("generate token with HMAC-SHA256", function(done) {
         var h = sodium.crypto_auth_hmacsha256(c, key);
         assert.deepEqual(h, expected);
+        done();
+    });
+
+    it("verify token with HMAC-SHA256", function(done) {
+        assert.equal(sodium.crypto_auth_hmacsha256_verify(expected, c, key), 0);
         done();
     });
 });
