@@ -3081,8 +3081,9 @@ initVctors.forEach(function(v) {
         nonce: toBuffer(v[1], 'hex'),
         message: toBuffer(v[2], 'hex'),
         ad: toBuffer(v[3], 'hex'),
-        ciphertext: toBuffer(v[4], 'hex'),
+        cipherText: toBuffer(v[4], 'hex'),
         mac: toBuffer(v[5], 'hex'),
+        expectedCipherText: toBuffer(v[4] + v[5], 'hex')
     });
 });
 
@@ -3106,13 +3107,13 @@ describe("AEAD", function() {
                 test.nonce,
                 test.key);
 
-            assert.equal(c.mac.length, sodium.crypto_aead_aes256gcm_ABYTES);
+            assert.equal(c.mac.length, sodium.crypto_aead_aes256gcm_ABYTES, 'Failed mac test ' + test.mac);
             assert.deepEqual(c.mac, test.mac);
-            if(test.message ||
-               c.cipherText ||
-               test.cipherText ) {
-                   assert.deepEqual(c.cipherText, test.cipherText);
-               }
+
+            if (test.message && test.message.length) {
+                assert.deepEqual(c.cipherText, test.cipherText,
+                'Encrypt Detached returned a bad value - message: ' + test.message.toString('hex'));
+            }
 
             var cipherText = sodium.crypto_aead_aes256gcm_encrypt(
                 test.message,
@@ -3120,7 +3121,9 @@ describe("AEAD", function() {
                 test.nonce,
                 test.key);
 
-            assert.deepEqual(cipherText, test.cipherText);
+            assert.equal(cipherText.length, test.message.length + sodium.crypto_aead_aes256gcm_ABYTES);
+
+            assert.deepEqual(cipherText, test.expectedCipherText);
 
             var plainText = sodium.crypto_aead_aes256gcm_decrypt(
                 cipherText,
@@ -3135,11 +3138,16 @@ describe("AEAD", function() {
             plainText = sodium.crypto_aead_aes256gcm_decrypt_detached(
                 c.cipherText,
                 c.mac,
+                test.ad,
                 test.nonce,
                 test.key
             );
-            assert.ok(plainText);
-            assert.deepEqual(plainText, test.message);
+
+            if (test.message && test.message.length) {
+                assert.ok(plainText);
+                assert.deepEqual(plainText, test.message);
+            }
         });
+        done();
     });
-})
+});
