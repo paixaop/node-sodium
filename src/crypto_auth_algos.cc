@@ -16,7 +16,6 @@ CRYPTO_AUTH_DEF(hmacsha512256)
  * Register function calls in node binding
  */
 void register_crypto_auth_algos(Handle<Object> target) {
-    
     METHOD_AND_PROPS(hmacsha256)
     METHOD_AND_PROPS(hmacsha512)
     METHOD_AND_PROPS(hmacsha512256)

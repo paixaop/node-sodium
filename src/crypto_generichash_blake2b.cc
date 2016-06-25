@@ -26,8 +26,8 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
     ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);
-    
-    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
 
     NEW_BUFFER_AND_PTR(hash, out_size);
@@ -36,8 +36,8 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
     if (crypto_generichash_blake2b(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
         return info.GetReturnValue().Set(hash);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /*
@@ -54,19 +54,19 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: key buffer, output size");
-    ARG_TO_UCHAR_BUFFER(key);  
+    ARG_TO_UCHAR_BUFFER(key);
     ARG_TO_NUMBER(out_size);
-    
-    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
-    
+
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-    
+
     if (crypto_generichash_blake2b_init((crypto_generichash_blake2b_state *)state_ptr, key, key_size, out_size) == 0) {
         return info.GetReturnValue().Set(state);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 
@@ -74,7 +74,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
 int crypto_generichash_blake2b_update(crypto_generichash_blake2b_state *state,
                               const unsigned char *in,
                               unsigned long long inlen);
-                              
+
     buffer state
     buffer message
 */
@@ -82,12 +82,15 @@ NAN_METHOD(bind_crypto_generichash_blake2b_update) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: state buffer, message buffer");
-    
+
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_UCHAR_BUFFER(message);
-    
-    crypto_generichash_blake2b_update((crypto_generichash_blake2b_state *)state, message, message_size);
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    NEW_BUFFER_AND_PTR(state2, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
+    memcpy(state2_ptr, state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
+
+    crypto_generichash_blake2b_update((crypto_generichash_blake2b_state *)state2_ptr, message, message_size);
+    return info.GetReturnValue().Set(state2);
 }
 
 /*
@@ -100,16 +103,16 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
     ARGS(2,"arguments must be: state buffer, output size");
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_NUMBER(out_size);
-    
+
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
-    
+
     NEW_BUFFER_AND_PTR(hash, out_size);
-    
+
     if (crypto_generichash_blake2b_final((crypto_generichash_blake2b_state *)state, hash_ptr, out_size) == 0) {
         return info.GetReturnValue().Set(hash);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /*
@@ -120,7 +123,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
                                              size_t keylen,
                                              const unsigned char *salt,
                                              const unsigned char *personal);
-                                             
+
     Buffer out
     Buffer in
     Buffer key
@@ -136,16 +139,16 @@ NAN_METHOD(bind_crypto_generichash_blake2b_salt_personal) {
     ARG_TO_UCHAR_BUFFER(key);
     ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_generichash_blake2b_SALTBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(personal, crypto_generichash_blake2b_PERSONALBYTES);
-    
+
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
-    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);    
+    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
 
     sodium_memzero(out, out_size);
     if (crypto_generichash_blake2b_salt_personal(out, out_size, in, in_size, key, key_size, salt, personal) == 0) {
         return info.GetReturnValue().Set(Nan::True());
     }
-    
-    return info.GetReturnValue().Set(Nan::False()); 
+
+    return info.GetReturnValue().Set(Nan::False());
 }
 
 /**
@@ -158,7 +161,7 @@ void register_crypto_generichash_blake2b(Handle<Object> target) {
     NEW_METHOD(crypto_generichash_blake2b_update);
     NEW_METHOD(crypto_generichash_blake2b_final);
     NEW_METHOD(crypto_generichash_blake2b_salt_personal);
-    
+
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES);
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MIN);
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MAX);

@@ -43,12 +43,14 @@
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
         Nan::EscapableHandleScope scope; \
         ARGS(2,"arguments must be two buffers: hash state, message part"); \
-        ARG_TO_VOID_BUFFER(state); \
+        ARG_TO_VOID_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); \
         ARG_TO_UCHAR_BUFFER(msg); \
-        if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state, msg, msg_size) == 0 ) { \
-            return info.GetReturnValue().Set(Nan::True()); \
+        NEW_BUFFER_AND_PTR(state2, crypto_auth_ ## ALGO ## _statebytes()); \
+        memcpy(state2_ptr, state, crypto_auth_ ## ALGO ## _statebytes()); \
+        if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state2_ptr, msg, msg_size) == 0 ) { \
+            return info.GetReturnValue().Set(state2); \
         } \
-        return info.GetReturnValue().Set(Nan::False()); \
+        return info.GetReturnValue().Set(Nan::Null()); \
     } \
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _final) { \
         Nan::EscapableHandleScope scope; \
@@ -59,18 +61,24 @@
             return info.GetReturnValue().Set(hash); \
         } \
         return info.GetReturnValue().Set(Nan::False()); \
-    } \
+    }
 
 
 #define METHOD_AND_PROPS(ALGO) \
     NEW_METHOD(crypto_auth_ ## ALGO); \
     NEW_METHOD(crypto_auth_ ## ALGO ## _verify); \
+    NEW_METHOD(crypto_auth_ ## ALGO ## _init); \
+    NEW_METHOD(crypto_auth_ ## ALGO ## _update); \
+    NEW_METHOD(crypto_auth_ ## ALGO ## _final); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _BYTES); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _KEYBYTES);
 
 #define NAN_METHODS(ALGO) \
     NAN_METHOD(bind_crypto_auth_ ## ALGO); \
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _verify); \
+    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _init); \
+    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update); \
+    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _final);
 
 NAN_METHODS(hmacsha256);
 NAN_METHODS(hmacsha512);

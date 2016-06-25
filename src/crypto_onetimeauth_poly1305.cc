@@ -32,7 +32,7 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305) {
     if( crypto_onetimeauth_poly1305(token_ptr, message, message_size, key) == 0 ) {
         return info.GetReturnValue().Set(token);
     }
-    
+
     return info.GetReturnValue().Set(Nan::Null());
 }
 
@@ -76,12 +76,12 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_init) {
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(state, sizeof(crypto_onetimeauth_poly1305_state));
-    
+
     if (crypto_onetimeauth_poly1305_init((crypto_onetimeauth_poly1305_state *)state_ptr, key) == 0) {
         return info.GetReturnValue().Set(state);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /*
@@ -93,12 +93,15 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_update) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: state buffer, message buffer");
-    
+
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_UCHAR_BUFFER(message);
-    
-    crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state *)state, message, message_size);
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    NEW_BUFFER_AND_PTR(state2, sizeof(crypto_onetimeauth_poly1305_state));
+    memcpy(state2_ptr, state, sizeof(crypto_onetimeauth_poly1305_state));
+
+    crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state *)state2_ptr, message, message_size);
+    return info.GetReturnValue().Set(state2);
 }
 
 
@@ -111,14 +114,14 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_final) {
 
     ARGS(1,"arguments must be: state buffer");
     ARG_TO_VOID_BUFFER(state);
-    
+
     NEW_BUFFER_AND_PTR(out, crypto_onetimeauth_poly1305_BYTES);
-    
+
     if (crypto_onetimeauth_poly1305_final((crypto_onetimeauth_poly1305_state *)state, out_ptr) == 0) {
         return info.GetReturnValue().Set(out);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**

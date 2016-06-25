@@ -26,18 +26,18 @@ NAN_METHOD(bind_crypto_generichash) {
     ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);
-    
-    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);    
+
+    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);
     CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
-    
+
     NEW_BUFFER_AND_PTR(hash, out_size);
     sodium_memzero(hash_ptr, out_size);
 
     if (crypto_generichash(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
         return info.GetReturnValue().Set(hash);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /*
@@ -56,17 +56,17 @@ NAN_METHOD(bind_crypto_generichash_init) {
     ARGS(2,"arguments must be: key buffer, output size");
     ARG_TO_UCHAR_BUFFER(key);
     ARG_TO_NUMBER(out_size);
-    
-    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);    
+
+    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);
     CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
-    
+
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-    
+
     if (crypto_generichash_init((crypto_generichash_state *)state_ptr, key, key_size, out_size) == 0) {
         return info.GetReturnValue().Set(state);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 
@@ -74,7 +74,7 @@ NAN_METHOD(bind_crypto_generichash_init) {
 int crypto_generichash_update(crypto_generichash_state *state,
                               const unsigned char *in,
                               unsigned long long inlen);
-                              
+
     buffer state
     buffer message
 */
@@ -82,12 +82,15 @@ NAN_METHOD(bind_crypto_generichash_update) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: state buffer, message buffer");
-    
+
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_UCHAR_BUFFER(message);
-    
-    crypto_generichash_update((crypto_generichash_state *)state, message, message_size);
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    NEW_BUFFER_AND_PTR(state2, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
+    memcpy(state2_ptr, state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
+
+    crypto_generichash_update((crypto_generichash_state *)state2_ptr, message, message_size);
+    return info.GetReturnValue().Set(state2);
 }
 
 /*
@@ -100,15 +103,15 @@ NAN_METHOD(bind_crypto_generichash_final) {
     ARGS(2,"arguments must be: state buffer, output size");
     ARG_TO_VOID_BUFFER(state);
     ARG_TO_NUMBER(out_size);
-    
+
     CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
     NEW_BUFFER_AND_PTR(hash, out_size);
-    
+
     if (crypto_generichash_final((crypto_generichash_state *)state, hash_ptr, out_size) == 0) {
         return info.GetReturnValue().Set(hash);
     }
-    
-    return info.GetReturnValue().Set(Nan::Null()); 
+
+    return info.GetReturnValue().Set(Nan::Null());
 }
 
 /**
