@@ -11,6 +11,8 @@ If you really need them please create a pull request and I will merge it in. Tha
   * sodium_mprotect_readonly
   * sodium_mprotect_readwrite
   * sodium_munlock
+  * crypto_box_seal
+  * crypto_box_seal_open
   
 Deprecated Functions
   
