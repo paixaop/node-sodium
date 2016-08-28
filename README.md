@@ -24,6 +24,16 @@ Just a quick example that uses the same public/secret key pair to encrypt and th
     var cipherText = box.encrypt("This is a secret message", "utf8");
     var plainText = box.decrypt(cipherText);
 
+The `pwhash` API now supports Argon2i:
+
+    var sodium = require('sodium').api
+
+    var password = new Buffer('this is a test password','utf8');
+    var hash = sodium.crypto_pwhash_str(
+      password,
+      sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,                                            
+      sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE);
+    var isValid = sodium.crypto_pwhash_str_verify(hash, password);
 
 # Low Level API
 A low level API is provided for advanced users. The functions available through the low level API have the exact same names as in lib sodium, and are available via the `sodium.api` object. Here is one example of how to use some of the low level API functions to encrypt/decrypt a message:
