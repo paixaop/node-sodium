@@ -78,7 +78,7 @@ NAN_METHOD(bind_crypto_hash_sha512_final) {
     ARG_TO_VOID_BUFFER(state);
     NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
 
-    if( crypto_hash_sha512_final((crypto_hash_sha512_state*)state2_ptr, hash_ptr) == 0 ) {
+    if( crypto_hash_sha512_final((crypto_hash_sha512_state*) state, hash_ptr) == 0 ) {
         return info.GetReturnValue().Set(hash);
     }
 
