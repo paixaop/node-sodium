@@ -6,11 +6,12 @@
 var assert = require('assert');
 var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
+var toBuffer = require('../lib/toBuffer');
 
 var key = new Buffer(sodium.crypto_auth_KEYBYTES).fill('Jefe').fill(0, 4, 32);
-var c = Buffer.from('what do ya want for nothing?');
+var c = toBuffer('what do ya want for nothing?', 'ascii');
 
-var key2 = Buffer.from('Another one got caught today, it\'s all over the papers. "Teenager Arrested in Computer Crime Scandal", "Hacker Arrested after Bank Tampering"... Damn kids. They\'re all alike.');
+var key2 = toBuffer('Another one got caught today, it\'s all over the papers. "Teenager Arrested in Computer Crime Scandal", "Hacker Arrested after Bank Tampering"... Damn kids. They\'re all alike.', 'ascii');
 
 testAlgorithm('hmacsha256', key);
 testAlgorithm('hmacsha512', key);
