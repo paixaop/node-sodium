@@ -222,7 +222,7 @@ function copyFiles(files, next) {
 }
 
 function gypConfigure(next) {
-    var gyp = exec('/usr/local/bin/node-gyp configure');
+    var gyp = exec('node-gyp configure');
     gyp.stdout.on('data', function(data) {
         process.stdout.write(data.toString());
     });
