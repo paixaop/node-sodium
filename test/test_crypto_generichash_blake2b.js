@@ -921,10 +921,10 @@ describe('Generic Hash', function() {
             var m2 = testMessage.slice(testMessage.length / 2);
 
             if( m1.length ) {
-                sodium.crypto_generichash_blake2b_update(state, m1);
+                state = sodium.crypto_generichash_blake2b_update(state, m1);
             }
             if( m2.length ) {
-                sodium.crypto_generichash_blake2b_update(state, m2);
+                state = sodium.crypto_generichash_blake2b_update(state, m2);
             }
 
             var out = sodium.crypto_generichash_blake2b_final(state, sodium.crypto_generichash_blake2b_BYTES_MAX);
