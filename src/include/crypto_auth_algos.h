@@ -13,7 +13,7 @@
         Nan::EscapableHandleScope scope; \
         ARGS(2,"arguments message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(msg);\
-        ARG_TO_UCHAR_BUFFER_LEN(key, crypto_auth_ ## ALGO ## _KEYBYTES); \
+        ARG_TO_UCHAR_BUFFER(key); \
         NEW_BUFFER_AND_PTR(token, crypto_auth_ ## ALGO ## _BYTES); \
         if( crypto_auth_ ## ALGO (token_ptr, msg, msg_size, key) == 0 ) { \
             return info.GetReturnValue().Set(token); \
@@ -25,7 +25,7 @@
         ARGS(3,"arguments token, message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER_LEN(token, crypto_auth_ ## ALGO ## _BYTES); \
         ARG_TO_UCHAR_BUFFER(message); \
-        ARG_TO_UCHAR_BUFFER_LEN(key, crypto_auth_ ## ALGO ## _KEYBYTES); \
+        ARG_TO_UCHAR_BUFFER(key); \
         return info.GetReturnValue().Set( \
             Nan::New<Integer>(crypto_auth_ ## ALGO ## _verify(token, message, message_size, key))\
         );\
@@ -56,9 +56,9 @@
         Nan::EscapableHandleScope scope; \
         ARGS(1,"arguments must be a hash state buffer"); \
         ARG_TO_VOID_BUFFER(state); \
-        NEW_BUFFER_AND_PTR(hash, crypto_auth_ ## ALGO ## _BYTES); \
-        if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, hash_ptr) == 0 ) { \
-            return info.GetReturnValue().Set(hash); \
+        NEW_BUFFER_AND_PTR(token, crypto_auth_ ## ALGO ## _BYTES); \
+        if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, token_ptr) == 0 ) { \
+            return info.GetReturnValue().Set(token); \
         } \
         return info.GetReturnValue().Set(Nan::False()); \
     }
