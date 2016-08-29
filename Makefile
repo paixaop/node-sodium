@@ -73,11 +73,11 @@ endif
 
 sodium: libsodium
 	echo Build node-sodium module
-	node-gyp build
+	node-gyp rebuild
 
 nodesodium:
 	echo Build node-sodium module
-	node-gyp build
+	node-gyp rebuild
 
 test: test-unit
 
