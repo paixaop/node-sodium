@@ -56,11 +56,6 @@ describe('crypto_auth check paramters', function() {
             var token = sodium.crypto_auth(b, k);
         });
 
-        k = new Buffer(5);
-        assert.throws(function() {
-            var token = sodium.crypto_auth(b, k);
-        });
-
         k = 5;
         assert.throws(function() {
             var token = sodium.crypto_auth(b, k);
@@ -123,10 +118,6 @@ describe('crypto_auth_verify check paramters', function() {
             var r = sodium.crypto_auth_verify(t, b, k);
         });
 
-        k = new Buffer(5);
-        assert.throws(function() {
-            var r = sodium.crypto_auth_verify(t, b, k);
-        });
 
         k = 5;
         assert.throws(function() {
