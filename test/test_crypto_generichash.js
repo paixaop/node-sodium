@@ -910,16 +910,14 @@ describe('Generic Hash', function() {
 
     it('should return match all test vectors using the streaming API', function(done) {
         testVectors.forEach(function(vector, i) {
-            var halfMessageSize = vector.in.length / 2;
-
             var testMessage = toBuffer(vector.in);
-
             var testKey = toBuffer(vector.key);
 
             var state = sodium.crypto_generichash_init(testKey, sodium.crypto_generichash_BYTES_MAX);
+            var halfLength = Math.ceil(testMessage.length / 2);
 
-            var m1 = testMessage.slice(0, testMessage.length / 2);
-            var m2 = testMessage.slice(testMessage.length / 2);
+            var m1 = testMessage.slice(0, halfLength);
+            var m2 = testMessage.slice(halfLength, testMessage.length);
 
             if( m1.length ) {
                 state = sodium.crypto_generichash_update(state, m1);
@@ -932,6 +930,7 @@ describe('Generic Hash', function() {
             var expectedOut = toBuffer(vector.out);
 
             assert(sodium.compare(out, expectedOut)==0, "Test vector " + i + " failed." );
+            //assert.deepEqual(out, expectedOut);
         });
         done();
     });

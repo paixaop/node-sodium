@@ -8,7 +8,9 @@ var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 var toBuffer = require('../lib/toBuffer');
 
-var key = new Buffer(sodium.crypto_auth_KEYBYTES).fill('Jefe').fill(0, 4, 32);
+var key = new Buffer(sodium.crypto_auth_KEYBYTES);
+key.fill('Jefe');
+key.fill(0, 4, 32);
 var c = toBuffer('what do ya want for nothing?', 'ascii');
 
 var key2 = toBuffer('Another one got caught today, it\'s all over the papers. "Teenager Arrested in Computer Crime Scandal", "Hacker Arrested after Bank Tampering"... Damn kids. They\'re all alike.', 'ascii');
@@ -25,8 +27,9 @@ testAlgorithm('hmacsha512256', key2);
 
 function testAlgorithm(algo, k) {
     // Split the message in half
-    var c1 = c.slice(0, c.length / 2);
-    var c2 = c.slice(c.length / 2, c.length);
+    var halfLength = Math.ceil(c.length / 2);
+    var c1 = c.slice(0, halfLength);
+    var c2 = c.slice(halfLength, c.length);
 
     // Stream API
     var s1 = sodium['crypto_auth_' + algo + '_init'](k);
