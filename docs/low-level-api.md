@@ -98,12 +98,12 @@ Securely wipe buffer
 ```javascript
 // Lets create a new buffer with a string
 var buffer = new Buffer("I am a buffer", "utf-8");
-console.log(b);            // <Buffer 49 20 61 6d 20 61 20 62 75 66 66 65 72> 
-console.log(b.toString()); // I'm a string! will be printed
+console.log(buffer);            // <Buffer 49 20 61 6d 20 61 20 62 75 66 66 65 72> 
+console.log(buffer.toString()); // I'm a buffer! will be printed
 
 // Now lets set all the bytes in the buffer to 0
-sodium.memzero(b);
-console.log(b);            // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00>
+sodium.memzero(buffer);
+console.log(buffer);            // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00>
 ``` 
 
 ## memcmp(buffer1, buffer2, size)
