@@ -102,6 +102,7 @@ NAN_METHOD(bind_crypto_box_easy) {
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
+    // The ciphertext will include the mac.
     NEW_BUFFER_AND_PTR(ctxt, message_size + crypto_box_MACBYTES);
 
     if (crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
@@ -612,8 +613,8 @@ NAN_METHOD(bind_crypto_box_easy_afternm) {
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
-    // Pad the message with crypto_box_ZEROBYTES zeros
-    NEW_BUFFER_AND_PTR(ctxt, message_size);
+    // The ciphertext will include the mac.
+    NEW_BUFFER_AND_PTR(ctxt, crypto_box_MACBYTES + message_size);
 
     if (crypto_box_easy_afternm(ctxt_ptr, message, message_size, nonce, k) == 0) {
         return info.GetReturnValue().Set(ctxt);
@@ -635,8 +636,14 @@ NAN_METHOD(bind_crypto_box_open_easy_afternm) {
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
-    // Pad the message with crypto_box_ZEROBYTES zeros
-    NEW_BUFFER_AND_PTR(message, ctxt_size);
+    // cipherText should have crypto_box_MACBYTES + encrypted message chars so lets check
+    if (ctxt_size < crypto_box_MACBYTES) {
+        std::ostringstream oss;
+        oss << "argument cipherText must have a length of at least " << crypto_box_MACBYTES << " bytes";
+        return Nan::ThrowError(oss.str().c_str());
+    }
+
+    NEW_BUFFER_AND_PTR(message, ctxt_size - crypto_box_MACBYTES);
 
     if (crypto_box_open_easy_afternm(message_ptr, ctxt, ctxt_size, nonce, k) == 0) {
         return info.GetReturnValue().Set(message);
