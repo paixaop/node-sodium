@@ -21,6 +21,7 @@ void register_crypto_sign(Handle<Object> target) {
     NEW_METHOD_ALIAS(crypto_sign_keypair, crypto_sign_ed25519_keypair);
     NEW_METHOD_ALIAS(crypto_sign_seed_keypair, crypto_sign_ed25519_seed_keypair);
     
+    NEW_INT_PROP(crypto_sign_SEEDBYTES);
     NEW_INT_PROP(crypto_sign_BYTES);
     NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
