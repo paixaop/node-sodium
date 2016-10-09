@@ -214,6 +214,19 @@ describe('crypto_box_open_easy', function() {
         done();
     });
 
+    it('crypto_box_afternm should encrypt/decrypt', function(done) {
+        // Create shared secret
+        var secret = sodium.crypto_box_beforenm(sender.publicKey, receiver.secretKey);
+        // Encrypt message, ensure we get the same cipherText!
+        var cipherText = sodium.crypto_box_easy_afternm(plainText,nonce,secret);
+        assert.deepEqual(cipherMsg, cipherText);
+
+        // Decrypt cipherText, ensure we get the same plainText!
+        var plainMsg = sodium.crypto_box_open_easy_afternm(cipherMsg,nonce,secret);
+        assert.deepEqual(plainMsg, plainText);
+        done();
+    });
+
     // test bad params
     it('should fail on bad argument 1', function(done) {
         var ctxt = "cipherMsg";
