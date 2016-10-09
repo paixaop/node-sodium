@@ -9,8 +9,9 @@
     "nan": "^2.2.1"
   },
   "devDependencies": {
-    "mdextract": "^1.0.0",
+    "chloride-test": "^1.1.1",
     "istanbul": ">=0.4.3",
+    "mdextract": "^1.0.0",
     "mocha": ">=2.4.5",
     "mocha-istanbul": ">=0.2.0",
     "node-gyp": ">=3.3.1"
