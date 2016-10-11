@@ -1,6 +1,6 @@
 var sodium = require('sodium').api;
 
-process.stdout.write("Password: ");
+process.stdout.write('Password: ');
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
