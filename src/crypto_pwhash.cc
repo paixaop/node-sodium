@@ -123,7 +123,7 @@ NAN_METHOD(bind_crypto_pwhash) {
 NAN_METHOD(bind_crypto_pwhash_str) {
     Nan::EscapableHandleScope scope;
     
-    ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
+    ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
     
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_NUMBER(oppLimit);
@@ -210,7 +210,7 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
 NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_ll) {
     Nan::EscapableHandleScope scope;
 
-    ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p");
+    ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p, output buffer");
     
     ARG_TO_BUFFER_TYPE(passwd, uint8_t*);
     ARG_TO_BUFFER_TYPE(salt, uint8_t*);
