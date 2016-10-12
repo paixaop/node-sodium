@@ -42,7 +42,7 @@ NAN_METHOD(bind_crypto_pwhash_argon2i) {
 NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
     Nan::EscapableHandleScope scope;
     
-    ARGS(3,"arguments must be: output buffer, password buffer, oLimit, memLimit");
+    ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
     
     ARG_TO_BUFFER_TYPE(passwd, char*);
     ARG_TO_NUMBER(oppLimit);
