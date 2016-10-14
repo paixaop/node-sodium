@@ -2,11 +2,11 @@
 
 # node-sodium
 
-Uses Libsodium 1.0.10
+Uses Libsodium 1.0.11
 
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
-As of libsodium 1.0.10 all functions except memory allocation have been implemented.
+As of libsodium 1.0.11 all functions except memory allocation have been implemented.
 Missing functions are listed in [`docs/not implemented.md`](https://github.com/paixaop/node-sodium/blob/master/docs/not%20implemented.md).
 
 
