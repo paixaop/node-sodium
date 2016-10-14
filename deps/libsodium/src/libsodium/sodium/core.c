@@ -16,9 +16,10 @@
 #include "randombytes.h"
 #include "runtime.h"
 #include "utils.h"
+#include "private/mutex.h"
 
-#if !defined(_MSC_VER) && 1
-# warning This is unstable, untested, development code.
+#if !defined(_MSC_VER) && 0
+# warning *** This is unstable, untested, development code.
 # warning It might not compile. It might not work as expected.
 # warning It might be totally insecure.
 # warning Do not use this in production.
@@ -26,19 +27,22 @@
 # warning Alternatively, use the "stable" branch in the git repository.
 #endif
 
-static int _sodium_crit_enter(void);
-static int _sodium_crit_leave(void);
+#if !defined(_MSC_VER) && (!defined(CONFIGURED) || CONFIGURED != 1)
+# warning *** The library is being compiled using an undocumented method.
+# warning This is not supported. It has not been tested, it might not
+# warning work as expected, and performance is likely to be suboptimal.
+#endif
 
 static volatile int initialized;
 
 int
 sodium_init(void)
 {
-    if (_sodium_crit_enter() != 0) {
+    if (sodium_crit_enter() != 0) {
         return -1;
     }
     if (initialized != 0) {
-        if (_sodium_crit_leave() != 0) {
+        if (sodium_crit_leave() != 0) {
             return -1;
         }
         return 1;
@@ -52,7 +56,7 @@ sodium_init(void)
     _crypto_scalarmult_curve25519_pick_best_implementation();
     _crypto_stream_chacha20_pick_best_implementation();
     initialized = 1;
-    if (_sodium_crit_leave() != 0) {
+    if (sodium_crit_leave() != 0) {
         return -1;
     }
     return 0;
@@ -62,14 +66,14 @@ sodium_init(void)
 
 static pthread_mutex_t _sodium_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static int
-_sodium_crit_enter(void)
+int
+sodium_crit_enter(void)
 {
     return pthread_mutex_lock(&_sodium_lock);
 }
 
-static int
-_sodium_crit_leave(void)
+int
+sodium_crit_leave(void)
 {
     return pthread_mutex_unlock(&_sodium_lock);
 }
@@ -79,7 +83,7 @@ _sodium_crit_leave(void)
 static CRITICAL_SECTION _sodium_lock;
 static volatile LONG    _sodium_lock_initialized;
 
-static int
+int
 _sodium_crit_init(void)
 {
     LONG status = 0L;
@@ -100,8 +104,8 @@ _sodium_crit_init(void)
     }
 }
 
-static int
-_sodium_crit_enter(void)
+int
+sodium_crit_enter(void)
 {
     if (_sodium_crit_init() != 0) {
         return -1;
@@ -111,8 +115,8 @@ _sodium_crit_enter(void)
     return 0;
 }
 
-static int
-_sodium_crit_leave(void)
+int
+sodium_crit_leave(void)
 {
     LeaveCriticalSection(&_sodium_lock);
 
@@ -123,8 +127,8 @@ _sodium_crit_leave(void)
 
 static volatile int _sodium_lock;
 
-static int
-_sodium_crit_enter(void)
+int
+sodium_crit_enter(void)
 {
 # ifdef HAVE_NANOSLEEP
     struct timespec q;
@@ -140,8 +144,8 @@ _sodium_crit_enter(void)
     return 0;
 }
 
-static int
-_sodium_crit_leave(void)
+int
+sodium_crit_leave(void)
 {
     __sync_lock_release(&_sodium_lock);
 
@@ -150,14 +154,14 @@ _sodium_crit_leave(void)
 
 #else
 
-static int
-_sodium_crit_enter(void)
+int
+sodium_crit_enter(void)
 {
     return 0;
 }
 
-static int
-_sodium_crit_leave(void)
+int
+sodium_crit_leave(void)
 {
     return 0;
 }
