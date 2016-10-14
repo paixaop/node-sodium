@@ -83,6 +83,10 @@ Before you install `node-sodium`. If you run into permission errors while instal
 
 	sudo npm install node-gyp -g
 
+Compiling libsodium requires autoconf, automake and libtool so if you get an errors about these tools missing please install them. On Mac OS you can do so with:
+
+    brew install libtool autoconf automake
+
 ## Windows Install
 
 Windows installs will automatically attempt to download LibSodium binary distribution, and include files, from [my repo](https://github.com/paixaop/libsodium-bin).
