@@ -255,12 +255,11 @@ function doDownloads(next) {
     // Added libsodium_version to package.json to support multiple binary versions of
     // libsodium
     var package = require('./package.json');
-    var libsodiumVersion = '';
     if( package.libsodium_version ) {
-        libsodiumVersion = package.libsodium_version + '/';
+        baseUrl += package.libsodium_version;
     }
 
-    var libURL = baseURL + '/' + libsodiumVersion + arch + '/Release/' + ver + '/dynamic';
+    var libURL = baseURL + '/' + arch + '/Release/' + ver + '/dynamic';
     files = libFiles.slice(0); // clone array
     downloadAll(files, libURL, 'deps/build/lib', function() {
         console.log('Libs for version ' + ver + ' downloaded.');
