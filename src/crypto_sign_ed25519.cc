@@ -27,7 +27,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
     ARGS(1, "argument ed25519_pk must be a buffer")
     ARG_TO_UCHAR_BUFFER_LEN(ed25519_pk, crypto_sign_ed25519_PUBLICKEYBYTES);
     
-    NEW_BUFFER_AND_PTR(curve25519_pk, crypto_sign_curve25519_PUBLICKEYBYTES);
+    NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
 
     if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
       return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
@@ -56,7 +56,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
     ARGS(1, "argument ed25519_sk must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(ed25519_sk, crypto_sign_ed25519_SECRETKEYBYTES);
     
-    NEW_BUFFER_AND_PTR(curve25519_sk, crypto_sign_curve25519_SECRETKEYBYTES);
+    NEW_BUFFER_AND_PTR(curve25519_sk, crypto_box_SECRETKEYBYTES);
 
     if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
       return Nan::ThrowError("crypto_sign_ed25519_sk_to_curve25519 conversion failed");
