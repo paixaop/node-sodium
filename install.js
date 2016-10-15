@@ -256,7 +256,7 @@ function doDownloads(next) {
     // libsodium
     var package = require('./package.json');
     if( package.libsodium_version ) {
-        baseUrl += package.libsodium_version;
+        baseURL += '/' + package.libsodium_version;
     }
 
     var libURL = baseURL + '/' + arch + '/Release/' + ver + '/dynamic';
