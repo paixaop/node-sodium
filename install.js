@@ -250,6 +250,15 @@ function doDownloads(next) {
         default:
             throw new Error('No pre-compiled binary available for this platform ' + os.arch());
     }
+
+    // Older versions of node-sodium will try and download from the 'root' of baseURL
+    // Added libsodium_version to package.json to support multiple binary versions of
+    // libsodium
+    var package = require('./package.json');
+    if( package.libsodium_version ) {
+        baseURL += '/' + package.libsodium_version;
+    }
+
     var libURL = baseURL + '/' + arch + '/Release/' + ver + '/dynamic';
     files = libFiles.slice(0); // clone array
     downloadAll(files, libURL, 'deps/build/lib', function() {

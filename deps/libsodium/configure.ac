@@ -1,5 +1,5 @@
 AC_PREREQ([2.65])
-AC_INIT([libsodium],[1.0.10],
+AC_INIT([libsodium],[1.0.11],
   [https://github.com/jedisct1/libsodium/issues],
   [libsodium],
   [https://github.com/jedisct1/libsodium])
@@ -17,9 +17,9 @@ ISODATE=`date +%Y-%m-%d`
 AC_SUBST(ISODATE)
 
 SODIUM_LIBRARY_VERSION_MAJOR=9
-SODIUM_LIBRARY_VERSION_MINOR=2
+SODIUM_LIBRARY_VERSION_MINOR=3
 DLL_VERSION=8
-SODIUM_LIBRARY_VERSION=19:0:1
+SODIUM_LIBRARY_VERSION=19:1:1
 #                       | | |
 #                +------+ | +---+
 #                |        |     |
@@ -40,8 +40,8 @@ LX_CFLAGS=${CFLAGS-NONE}
 
 dnl Path check
 
-AS_IF([test pwd | fgrep ' ' > /dev/null 2>&1],
-  [AC_MSG_WARN([The build directory contains whitespaces - This can cause tests/installation to fail due to limitations of some libtool versions])]
+AS_IF([pwd | fgrep ' ' > /dev/null 2>&1],
+  [AC_MSG_ERROR([The build directory contains whitespaces - This can cause tests/installation to fail due to limitations of some libtool versions])]
 )
 
 dnl Switches
@@ -569,7 +569,7 @@ AM_CONDITIONAL([HAVE_TI_MODE], [test $HAVE_TI_MODE_V = 1])
 AC_SUBST(HAVE_TI_MODE_V)
 
 HAVE_CPUID_V=0
-AS_IF([test "$enable_asm" != "no" -o "$host_os" = "nacl"],[
+AS_IF([test "$enable_asm" != "no" -o "$host_alias" = "x86_64-nacl"],[
   AC_MSG_CHECKING(for cpuid instruction)
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[ ]], [[
 unsigned int cpu_info[4];
@@ -675,6 +675,8 @@ AC_SUBST(TEST_LDFLAGS)
 AM_CONDITIONAL([EMSCRIPTEN], [test "x$EMSCRIPTEN" != "x"])
 
 AM_CONDITIONAL([NATIVECLIENT], [test "x$NATIVECLIENT" != "x"])
+
+AC_DEFINE([CONFIGURED], [1], [the build system was properly configured])
 
 dnl Libtool.
 
