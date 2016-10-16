@@ -17,6 +17,10 @@ Store a password hash in `output` using [Argon2i](https://github.com/P-H-C/phc-w
 
 **alg**: *Number*, Algorithm to use. Currently only `sodium.crypto_pwhash_argon2i_ALG_ARGON2I13` is supported.
 
+**Returns**
+
+*boolean*, `true` if successful, `false` if not.
+
 
 crypto_pwhash_argon2i_str(passwd, oppLimit, memLimit)
 -----------------------------------------------------
@@ -36,17 +40,25 @@ Returns a buffer of size `sodium.crypto_pwhash_argon2i_STRBYTES` containing an A
 
 **memlimit**: *Number*, Maximum amount of RAM to consume, in bytes.
 
+**Returns**
+
+*Buffer*|*Boolean*, Hash buffer or `false` if hash unsuccessful.
+
 
 crypto_pwhash_argon2i_str_verify(pwhash, passwd)
 ------------------------------------------------
 
-Hashes `passwd` using the same parameters and salt as `pwhash` and compares the result. Returns `true` if they are the same, `false` otherwise.
+Hashes `passwd` using the same parameters and salt as `pwhash` and compares the result.
 
 **Parameters**
 
 **pwhash**: *Buffer*, Hash generated with `crypto_pwhash_argon2i_str`.
 
 **pass**: *Buffer*, Password to verify.
+
+**Returns**
+
+*Boolean*, `true` if `passwd` is verified, `false` if not.
 
 
 crypto_pwhash(out, passwd, salt, oppLimit, memLimit, alg)
@@ -68,8 +80,12 @@ Store a password hash in `out` using the specified algorithm.
 
 **alg**: *Number*, Algorithm to use. Currently `sodium.crypto_pwhash_argon2i_ALG_ARGON2I13` and `sodium.crypto_pwhash_ALG_DEFAULT` are supported.
 
+**Returns**
 
-crypto_pwhash(passwd, oppLimit, memLimit)
+*Boolean*|*null*, `true` if hash successful, `null` if not.
+
+
+crypto_pwhash_str(passwd, oppLimit, memLimit)
 -----------------------------------------
 
 Returns a buffer of size `sodium.crypto_pwhash_STRBYTES` containing an ASCII-encoded string suitable for storage. It includes:
@@ -87,11 +103,15 @@ Returns a buffer of size `sodium.crypto_pwhash_STRBYTES` containing an ASCII-enc
 
 **memlimit**: *Number*, Maximum amount of RAM to consume, in bytes.
 
+**Returns**
+
+*Buffer*|*Boolean*, Hash buffer or `false` if unsuccessful.
+
 
 crypto_pwhash_str_verify(pwhash, passwd)
 ----------------------------------------
 
-Hashes `passwd` using the same parameters and salt as `pwhash` and compares the result. Returns `true` if they are the same, `false` otherwise.
+Hashes `passwd` using the same parameters and salt as `pwhash` and compares the result.
 
 **Parameters**
 
@@ -99,15 +119,19 @@ Hashes `passwd` using the same parameters and salt as `pwhash` and compares the 
 
 **pass**: *Buffer*, Password to verify.
 
+**Returns**
 
-crypto_pwhash_scryptsalsa208sha256(outlen, passwd, salt, oppLimit, memLimit)
+*Boolean*, `true` if `passwd` verified, `false` if not.
+
+
+crypto_pwhash_scryptsalsa208sha256(out, passwd, salt, oppLimit, memLimit)
 ---------------------------------------------------------------------------------
 
-Returns a hash of `passwd` in a buffer of length `outlen` using Scrypt with Salsa20/8 core and SHA-256.
+Stores a hash of `passwd` in `out` using Scrypt with Salsa20/8 core and SHA-256.
 
 **Parameters**
 
-**outlen**: *Number*, Length of output buffer, in bytes.
+**out**: *Number*, Output buffer.
 
 **passwd**: *Buffer*, Password to hash.
 
@@ -116,6 +140,10 @@ Returns a hash of `passwd` in a buffer of length `outlen` using Scrypt with Sals
 **oppLimit**: *Number*, Maximum number of computations to perform.
 
 **memLimit**: *Number*, Maximum amount of RAM to consume, in bytes.
+
+**Returns**
+
+*Boolean*, `true` if successful, `false` if not.
 
 
 crypto_pwhash_scryptsalsa208sha256_ll(passwd, salt, N, r, p, out)
@@ -137,11 +165,15 @@ Stores a hash of `passwd` in `out` using the low-level Scrypt API.
 
 **out**: *Buffer*, Output buffer to store the hash in. Should be able to store `crypto_pwhash_scryptsalsa208sha256_STRBYTES`.
 
+**Returns**
+
+*Boolean*, `true` if successful, `false` if not.
+
 
 crypto_pwhash_scryptsalsa208sha256_str(passwd, oppLimit, memLimit)
 ------------------------------------------------------------------
 
-Returns a hash of `passwd` using Scrypt, or `null` on error.
+Returns a hash of `passwd` using Scrypt.
 
 **Parameters**
 
@@ -151,11 +183,27 @@ Returns a hash of `passwd` using Scrypt, or `null` on error.
 
 **memLimit**: *Number*, Maximum amount of RAM to consume, in bytes.
 
+**Returns**
+
+*Buffer*|*null*, Hash buffer or null if unsuccessful.
+
 
 crypto_pwhash_scryptsalsa208sha256_str_verify(pwhash, passwd)
 -------------------------------------------------------------
 
-Hashes `passwd` using Scrypt with the parameters stored in `pwhash`, and compares the result with `pwhash`. Returns `true` if they are the same, `false` otherwise.
+Hashes `passwd` using Scrypt with the parameters stored in `pwhash`, and compares the result with `pwhash`. 
+
+**Parameters**
+
+**passwd**: *Buffer*, Password to hash.
+
+**oppLimit**: *Number*, Maximum number of computations to perform.
+
+**memLimit**: *Number*, Maximum amount of RAM to consume, in bytes.
+
+**Returns**
+
+*Boolean*, `true` if `passwd` verified, `false` if not.
 
 
 crypto_pwhash_ALG_DEFAULT
@@ -167,8 +215,7 @@ Default hashing algorithm to use. Currently `crypto_pwhash_argon2i_ALG_ARGON2I13
 crypto_pwhash_SALTBYTES
 -----------------------
 
-Size of salt buffer in bytes. Algorithm-specific values: `crypto_pwhash_scryptsalsa208sha256_SALTBYTES`,
-`crypto_pwhash_argon2i_SALTBYTES`.
+Size of salt buffer in bytes. Algorithm-specific values: `crypto_pwhash_scryptsalsa208sha256_SALTBYTES`, `crypto_pwhash_argon2i_SALTBYTES`.
 
 
 crypto_pwhash_STRBYTES
