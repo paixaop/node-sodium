@@ -21,7 +21,6 @@ build-aux
 .deps
 deps/libsodium/**/Makefile
 deps/libsodium/**/Makefile.in
-deps/libsodium/m4
 deps/libsodium/config.status
 deps/libsodium/configure
 deps/libsodium/aclocal.m4
