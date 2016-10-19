@@ -24,7 +24,6 @@ deps/libsodium/**/Makefile.in
 deps/libsodium/config.status
 deps/libsodium/configure
 deps/libsodium/aclocal.m4
-deps/libsodium/dist-build
 deps/libsodium/libsodium-uninstalled.pc
 deps/libsodium/libsodium.pc
 deps/libsodium/libtool
