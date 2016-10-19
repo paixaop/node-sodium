@@ -27,7 +27,6 @@ deps/libsodium/aclocal.m4
 deps/libsodium/libsodium-uninstalled.pc
 deps/libsodium/libsodium.pc
 deps/libsodium/libtool
-deps/libsodium/test/default
 deps/libsodium/src/libsodium/include/sodium/version.h
 lib-cov
 convershot
