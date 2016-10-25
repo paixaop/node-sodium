@@ -46,7 +46,7 @@ NAN_METHOD(bind_randombytes_random) {
 
     // uint_32 randombytes_random()
     return info.GetReturnValue().Set(
-        Nan::New<Int32>(randombytes_random())
+        Nan::New<Uint32>(randombytes_random())
     );
 }
 
@@ -64,7 +64,7 @@ NAN_METHOD(bind_randombytes_uniform) {
 
     // uint32_t randombytes_uniform(const uint32_t upper_bound)
     return info.GetReturnValue().Set(
-        Nan::New<Int32>(randombytes_uniform(upper_bound))
+        Nan::New<Uint32>(randombytes_uniform(upper_bound))
     );
 }
 
