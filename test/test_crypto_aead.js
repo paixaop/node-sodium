@@ -4,13 +4,13 @@ var assert = require('assert');
 
 describe("AEAD", function () {
     it("aes256gcm should encrypt and decrypt to the same string", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // If CPU does not support AES256gcm don't test
@@ -34,13 +34,13 @@ describe("AEAD", function () {
 
 
     it("aes256gcm should encrypt and decrypt to the same string with null additional data", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // If CPU does not support AES256gcm don't test
@@ -62,13 +62,13 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305 should encrypt and decrypt to the same string", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -83,12 +83,12 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305 should encrypt and decrypt to the same string with null additional data", function (done) {
-        var message = new Buffer("This is a plain text message");
+        var message = Buffer.from("This is a plain text message");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -103,13 +103,13 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305_ietf should encrypt and decrypt to the same string", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -124,12 +124,12 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305_ietf should encrypt and decrypt to the same string with null additional data", function (done) {
-        var message = new Buffer("This is a plain text message");
+        var message = Buffer.from("This is a plain text message");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -144,13 +144,13 @@ describe("AEAD", function () {
     });
 
     it("aes256gcm should encrypt and decrypt to the same string detached", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // If CPU does not support AES256gcm don't test
@@ -172,13 +172,13 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305 should encrypt and decrypt to the same string detached", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -193,13 +193,13 @@ describe("AEAD", function () {
     });
 
     it("chacha20poly1305_ietf should encrypt and decrypt to the same string detached", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_chacha20poly1305_ietf_KEYBYTES);
         sodium.randombytes_buf(key);
 
         // Encrypt data
@@ -216,13 +216,13 @@ describe("AEAD", function () {
 
 describe("AEAD Precompute Interface", function () {
     it("aes256gcm should encrypt and decrypt to the same string", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         var ctx = sodium.crypto_aead_aes256gcm_beforenm(key);
@@ -246,13 +246,13 @@ describe("AEAD Precompute Interface", function () {
     });
 
     it("aes256gcm should encrypt and decrypt to the same string with null additional data", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         var ctx = sodium.crypto_aead_aes256gcm_beforenm(key);
@@ -276,13 +276,13 @@ describe("AEAD Precompute Interface", function () {
     });
 
     it("aes256gcm should encrypt and decrypt to the same string detached", function (done) {
-        var message = new Buffer("This is a plain text message");
-        var additionalData = new Buffer("this is metadata");
+        var message = Buffer.from("This is a plain text message");
+        var additionalData = Buffer.from("this is metadata");
 
-        var nonce = new Buffer(sodium.crypto_aead_aes256gcm_NPUBBYTES);
+        var nonce = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_NPUBBYTES);
         sodium.randombytes_buf(nonce);
 
-        var key = new Buffer(sodium.crypto_aead_aes256gcm_KEYBYTES);
+        var key = Buffer.allocUnsafe(sodium.crypto_aead_aes256gcm_KEYBYTES);
         sodium.randombytes_buf(key);
 
         var ctx = sodium.crypto_aead_aes256gcm_beforenm(key);

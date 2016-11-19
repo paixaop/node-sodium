@@ -68,14 +68,14 @@ var cipherTextA = [
     ,0xe3,0x55,0xa5
 ];
 
-var key = new Buffer(keyA);
-var nonce = new Buffer(nonceA);
-var plainText = new Buffer(plainTextA);
-var cipherText = new Buffer(cipherTextA);
+var key = Buffer.from(keyA);
+var nonce = Buffer.from(nonceA);
+var plainText = Buffer.from(plainTextA);
+var cipherText = Buffer.from(cipherTextA);
 
 describe('Stream', function() {
     it('crypto_stream should return a buffer', function(done) {
-        var buf = new Buffer(1000);
+        var buf = Buffer.allocUnsafe(1000);
         var r = sodium.crypto_stream(1000,nonce,key);
         assert.ok(r);
         var h = sodium.crypto_hash_sha256(r);
@@ -132,7 +132,7 @@ describe("crypto_stream verify parameters", function () {
     });
 
     it('bad param 1 buffer', function(done) {
-        len = new Buffer(2);
+        len = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
         });
@@ -156,7 +156,7 @@ describe("crypto_stream verify parameters", function () {
     });
 
     it('bad param 2 buffer', function(done) {
-        nonce = new Buffer(2);
+        nonce = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
         });
@@ -180,7 +180,7 @@ describe("crypto_stream verify parameters", function () {
     });
 
     it('bad param 1 buffer', function(done) {
-        key = new Buffer(2);
+        key = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_stream(len, nonce, key);
         });
@@ -222,7 +222,7 @@ describe("crypto_stream_xor verify parameters", function () {
     });
 
     it('bad param 2 small buffer', function(done) {
-        nonce = new Buffer(2);
+        nonce = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
         });
@@ -246,7 +246,7 @@ describe("crypto_stream_xor verify parameters", function () {
     });
 
     it('bad param 3 small buffer', function(done) {
-        key = new Buffer(2);
+        key = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_stream_xor(plainText,nonce,key);
         });

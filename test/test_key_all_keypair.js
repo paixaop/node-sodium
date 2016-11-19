@@ -41,8 +41,8 @@ function testKey(modName,sizePkBuffer, sizeSkBuffer) {
         it("isValid should return false on bad key", function (done) {
             var key = new KeyPair();
             var k = {
-                publicKey: new Buffer(2),
-                secretKey: new Buffer(2)
+                publicKey: Buffer.allocUnsafe(2),
+                secretKey: Buffer.allocUnsafe(2)
             };
             assert.ok(!key.isValid(k));
             done();

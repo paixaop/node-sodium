@@ -41,7 +41,7 @@ describe("Auth", function () {
         var auth = new Auth();
 
         assert.throws(function() {
-            auth.set(new Buffer(2));
+            auth.set(Buffer.allocUnsafe(2));
         });
 
         done();

@@ -6,11 +6,11 @@ var sender = sodium.crypto_box_keypair();
 var receiver = sodium.crypto_box_keypair();
 
 // Generate random nonce
-var nonce = new Buffer(sodium.crypto_box_NONCEBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_box_NONCEBYTES);
 sodium.randombytes_buf(nonce);
 
 // Encrypt
-var plainText = new Buffer('this is a message');
+var plainText = Buffer.from('this is a message');
 var cipherMsg = sodium.crypto_box(plainText, nonce, receiver.publicKey, sender.secretKey);
 
 // Decrypt

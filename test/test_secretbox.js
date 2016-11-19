@@ -66,7 +66,7 @@ describe("SecretBox", function () {
         var box = new SecretBox();
 
         assert.throws(function() {
-            box.set(new Buffer(2));
+            box.set(Buffer.allocUnsafe(2));
         });
 
         done();

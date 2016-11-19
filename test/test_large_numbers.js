@@ -9,7 +9,7 @@ var assert = require('assert');
 
 describe('LargeNumbers', function() {
     it('should increment a zero filled buffer to 3 after 3 calls', function(done) {
-        var buf = new Buffer(10);
+        var buf = Buffer.allocUnsafe(10);
         buf.fill(0);
         sodium.increment(buf,10);
         sodium.increment(buf,10);
@@ -25,9 +25,9 @@ describe('LargeNumbers', function() {
     });
 
     it('should add two buffers of the same size', function(done) {
-        var buf1 = new Buffer(10);
-        var buf2 = new Buffer(10);
-        var buf3 = new Buffer(10);
+        var buf1 = Buffer.allocUnsafe(10);
+        var buf2 = Buffer.allocUnsafe(10);
+        var buf3 = Buffer.allocUnsafe(10);
 
         sodium.randombytes_buf(buf1);
         buf1.copy(buf2);
@@ -45,8 +45,8 @@ describe('LargeNumbers', function() {
     });
 
     it('should throw on buffers of different sizes', function(done) {
-        var buf1 = new Buffer(10);
-        var buf2 = new Buffer(100);
+        var buf1 = Buffer.allocUnsafe(10);
+        var buf2 = Buffer.allocUnsafe(100);
 
         assert.throws(function() {
             sodium.add(buf1, buf2);
@@ -56,7 +56,7 @@ describe('LargeNumbers', function() {
     });
 
     it('add should fail on param 1 ont being a buffer', function(done) {
-        var buf = new Buffer(10);
+        var buf = Buffer.allocUnsafe(10);
         assert.throws(function() {
             sodium.add("abc", buf);
         });
@@ -64,7 +64,7 @@ describe('LargeNumbers', function() {
     });
 
     it('add should fail on param 2 ont being a buffer', function(done) {
-        var buf = new Buffer(10);
+        var buf = Buffer.allocUnsafe(10);
         assert.throws(function() {
             sodium.add(buf, "abc");
         });
@@ -72,8 +72,8 @@ describe('LargeNumbers', function() {
     });
 
     it('compare should return true on equal buffers', function(done) {
-        var buf1 = new Buffer(10);
-        var buf2 = new Buffer(10);
+        var buf1 = Buffer.allocUnsafe(10);
+        var buf2 = Buffer.allocUnsafe(10);
 
         sodium.randombytes_buf(buf1);
         buf1.copy(buf2);
@@ -84,8 +84,8 @@ describe('LargeNumbers', function() {
     });
 
     it('compare should return not return 0 on different buffers', function(done) {
-        var buf1 = new Buffer(10);
-        var buf2 = new Buffer(10);
+        var buf1 = Buffer.allocUnsafe(10);
+        var buf2 = Buffer.allocUnsafe(10);
 
         sodium.randombytes_buf(buf1);
         sodium.randombytes_buf(buf2);
@@ -96,8 +96,8 @@ describe('LargeNumbers', function() {
     });
 
     it('compare should throw on different size buffers', function(done) {
-        var buf1 = new Buffer(10);
-        var buf2 = new Buffer(100);
+        var buf1 = Buffer.allocUnsafe(10);
+        var buf2 = Buffer.allocUnsafe(100);
 
         sodium.randombytes_buf(buf1);
         sodium.randombytes_buf(buf2);
@@ -110,14 +110,14 @@ describe('LargeNumbers', function() {
     });
 
     it('is_zero test for 0', function(done) {
-        var buf = new Buffer(10);
+        var buf = Buffer.allocUnsafe(10);
         buf.fill(0);
         assert(sodium.is_zero(buf)==1);
         done();
     });
 
     it('is_zero test should be false for non zero buffers', function(done) {
-        var buf = new Buffer(10);
+        var buf = Buffer.allocUnsafe(10);
         sodium.randombytes_buf(buf);
         assert(sodium.is_zero(buf)==0);
         done();

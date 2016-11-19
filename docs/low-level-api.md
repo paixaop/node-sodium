@@ -45,7 +45,7 @@ Get full version number of libsodium compiled with which node-sodium was compile
   
 **Example**:
   
-```javascript 
+```javascript
 var version = sodium.sodium_version_string();
 console.log(version);  // output should be 0.4.5 or similar
 ```
@@ -56,14 +56,14 @@ Get the minor version number of libsodium with which node-sodium was compiled. I
 
 **Returns**:
 
-  * **{Number}** of minor lib sodium version 
+  * **{Number}** of minor lib sodium version
 
 **Example**:
   
-```javascript 
+```javascript
 var minor_version = sodium.sodium_library_version_minor();
 console.log(minor_version);  // output should be 5 or similar
-```  
+```
 
   
 ## sodium_library_version_major()
@@ -76,12 +76,12 @@ Get the major version number of libsodium with which node-sodium was compiled. I
   
 **Example**:
   
-```javascript 
+```javascript
 var major_version = sodium.sodium_library_version_major();
 if( major_version < 4) {
     console.log("Unsupported version");  // output should be 5 or similar
 }
-``` 
+```
   
 # Utility Functions
 
@@ -97,14 +97,14 @@ Securely wipe buffer
   
 ```javascript
 // Lets create a new buffer with a string
-var buffer = new Buffer("I am a buffer", "utf-8");
-console.log(buffer);            // <Buffer 49 20 61 6d 20 61 20 62 75 66 66 65 72> 
+var buffer = Buffer.from("I am a buffer", "utf-8");
+console.log(buffer);            // <Buffer 49 20 61 6d 20 61 20 62 75 66 66 65 72>
 console.log(buffer.toString()); // I'm a buffer! will be printed
 
 // Now lets set all the bytes in the buffer to 0
 sodium.memzero(buffer);
 console.log(buffer);            // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00>
-``` 
+```
 
 ## memcmp(buffer1, buffer2, size)
 
@@ -125,13 +125,13 @@ Compare buffers in constant time
 
 ```
 // Create the test buffers
-var buffer1 = new Buffer("I am a buffer", "utf-8");
-var buffer2 = new Buffer("I am a buffer too", "utf-8");
+var buffer1 = Buffer.from("I am a buffer", "utf-8");
+var buffer2 = Buffer.from("I am a buffer too", "utf-8");
 
 // Compare the two buffers for full length of the buffer1
 if( sodium.memcmp(buffer1, buffer2, buffer1.length) == 0 ) {
 
-	// This will print as the first 13 bytes of 
+	// This will print as the first 13 bytes of
 	// buffer1 are equal to buffer2
 	console.log("Buffers are equal")
 }
@@ -144,7 +144,7 @@ Compares the first 16 of the given buffers.
 **Parameters**:
 
   * **{Buffer}** `buffer1` buffer you wish to compare with `buffer2`
-  * **{Buffer}** `buffer2` 
+  * **{Buffer}** `buffer2`
   
 **Returns**:
 
@@ -156,8 +156,8 @@ This function is equivalent of calling `memcmp(buffer1, buffer2, 16)`
 **Example**
 
 ```javascript
-var b1= new Buffer([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-var b2= new Buffer([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 16, 17, 18, 19, 20]);
+var b1= Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+var b2= Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 16, 17, 18, 19, 20]);
 
 if( sodium.crypto_verify_16(b1, b2) != 0 ) {
 	console.log('buffers are different');
@@ -209,7 +209,7 @@ Fill the specified buffer with size random bytes. Same as `randombytes_buf()`
 
 ```javascript
 // Create a nonce
-var b = new Buffer(32);
+var b = Buffer.allocUnsafe(32);
 sodium.randombytes(b,32);
 ```
 
@@ -227,7 +227,7 @@ Fill the specified buffer with size random bytes. Same as `randombytes()`
 
 ```javascript
 // Create a nonce
-var b = new Buffer(32);
+var b = Buffer.allocUnsafe(32);
 sodium.randombytes_buf(b,32);
 ```
 
@@ -236,17 +236,17 @@ sodium.randombytes_buf(b,32);
 
   
 ## randombytes_close()
-Close the file descriptor or the handle for the cryptographic service provider. 
+Close the file descriptor or the handle for the cryptographic service provider.
 
 ## randombytes_stir()
-Generate a new key for the pseudorandom number generator. 
+Generate a new key for the pseudorandom number generator.
 
 ## randombytes_random()
 Generate a 32-bit unsigned random number
 
 **Returns**:
 
-  * **{Number}** random 32-bit unsigned value. 
+  * **{Number}** random 32-bit unsigned value.
 
 ## randombytes_uniform(upperBound)
 Generate a random number between `0` and `upperBound`
@@ -258,7 +258,7 @@ Generate a random number between `0` and `upperBound`
 **Example**:
 
 ```javascript
-var n = sodium.randombytes_uniform(100);   
+var n = sodium.randombytes_uniform(100);
 console.log(n);		// number between 0 and 100
 ```
 
@@ -287,8 +287,8 @@ In order to address this, Sodium provides the "shorthash" function, currently im
 **Example**:
 
 ```javascript
-var message = new Buffer("Message to hash", "utf-8");
-var key = new Buffer(sodium.crypto_shorthash_KEYBYTES);
+var message = Buffer.from("Message to hash", "utf-8");
+var key = Buffer.allocUnsafe(sodium.crypto_shorthash_KEYBYTES);
 
 // generate a random key
 sodium.crypto_randombytes_buf(key);
@@ -319,7 +319,7 @@ The `crypto_hash` function is designed to be usable as a strong component of DSA
 **Example**:
 
 ```javascript
-var message = new Buffer("Message to hash", "utf-8");
+var message = Buffer.from("Message to hash", "utf-8");
 
 // calculate the hash
 var hash = sodium.crypto_hash(message, key);
@@ -332,7 +332,7 @@ console.log(hash);
 
 
 ## crypto_hash_sha256(buffer)
-Calculate a SHA256 of a data buffer. 
+Calculate a SHA256 of a data buffer.
 
 **Parameters**:
 
@@ -349,7 +349,7 @@ Calculate a SHA256 of a data buffer.
 **Example**:
 
 ```javascript
-var message = new Buffer("Message to hash", "utf-8");
+var message = Buffer.from("Message to hash", "utf-8");
 
 // calculate the hash
 var hash = sodium.crypto_hash_sha256(message, key);
@@ -363,7 +363,7 @@ console.log(hash);
 
 
 ## crypto_hash_sha512(buffer)
-Calculate a SHA256 of a data buffer. 
+Calculate a SHA256 of a data buffer.
 
 **Parameters**:
 
@@ -381,7 +381,7 @@ Calculate a SHA256 of a data buffer.
 **Example**:
 
 ```javascript
-var message = new Buffer("Message to hash", "utf-8");
+var message = Buffer.from("Message to hash", "utf-8");
 
 // calculate the hash
 var hash = sodium.crypto_hash_sha512(message, key);
@@ -427,8 +427,8 @@ NaCl/Libsodium does not make any promises regarding "strong" unforgeability; per
 **Example**:
 
 ```javascript
-var message = new Buffer(200);
-var key = new Buffer(sodium.crypto_auth_KEYBYTES);
+var message = Buffer.allocUnsafe(200);
+var key = Buffer.allocUnsafe(sodium.crypto_auth_KEYBYTES);
 
 // fill message with random data
 sodium.randombytes(message);
@@ -507,8 +507,8 @@ In situations where multiple messages need to be authenticated use [`crypto_auth
 **Example**:
 
 ```javascript
-var message = new Buffer(200);
-var key = new Buffer(sodium.crypto_auth_KEYBYTES);
+var message = Buffer.allocUnsafe(200);
+var key = Buffer.allocUnsafe(sodium.crypto_auth_KEYBYTES);
 
 // fill message with random data
 sodium.randombytes(message);
@@ -570,7 +570,7 @@ Generates a stream (Buffer) of `length` bytes using the given `secretKey` and `n
    
 **Returns**:
  
-  * **{Buffer}** that is a function of `secretKey` and `nonce` 
+  * **{Buffer}** that is a function of `secretKey` and `nonce`
   * `undefined` if an error occured
 
 **Constants**:
@@ -582,8 +582,8 @@ Generates a stream (Buffer) of `length` bytes using the given `secretKey` and `n
 **Example**:
 
 ```javascript
-var key = new Buffer(sodium.crypto_stream_KEYBYTES);
-var nonce = new Buffer(sodium.crypto_stream_NONCEBYTES);
+var key = Buffer.allocUnsafe(sodium.crypto_stream_KEYBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_stream_NONCEBYTES);
 
 // Generate random key and nonce
 sodium.randombytes(key);
@@ -609,7 +609,7 @@ The `crypto_stream_xor` function guarantees that the cipher text has the same le
    
 **Returns**:
  
-  * **{Buffer}** that is a function of `secretKey` and `nonce` 
+  * **{Buffer}** that is a function of `secretKey` and `nonce`
   * `undefined` if an error occured
 
 **Constants**:
@@ -621,9 +621,9 @@ The `crypto_stream_xor` function guarantees that the cipher text has the same le
 **Example**:
 
 ```javascript
-var plainMsg = new Buffer("This is my plain text","utf-8");
-var key = new Buffer(sodium.crypto_stream_KEYBYTES);
-var nonce = new Buffer(sodium.crypto_stream_NONCEBYTES);
+var plainMsg = Buffer.from("This is my plain text","utf-8");
+var key = Buffer.allocUnsafe(sodium.crypto_stream_KEYBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_stream_NONCEBYTES);
 
 // generate a random key and nonce
 sodium.randombytes(key);
@@ -680,11 +680,11 @@ Unlike the original `libsodium` `crypto_secretbox` automatically pads the `messa
 **Example**:
 
 ```javascript
-var plainMsg = new Buffer("This is my plain text","utf-8");
+var plainMsg = Buffer.from("This is my plain text","utf-8");
 
 // generate random key and nonce
-var key = new Buffer(sodium.crypto_secretbox_KEYBYTES);
-var nonce = new Buffer(sodium.crypto_secretbox_NONCEBYTES);
+var key = Buffer.allocUnsafe(sodium.crypto_secretbox_KEYBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_secretbox_NONCEBYTES);
 sodium.randombytes(key);
 sodium.randombytes(nonce);
 
@@ -778,7 +778,7 @@ var bobKeys = sodium.crypto_box_keypair();
 
 ## crypto_box(message, nonce, pk, sk)
 
-Encrypts a message given the senders secret key, and receivers public key. 
+Encrypts a message given the senders secret key, and receivers public key.
 
 ### Security Model
 
@@ -807,14 +807,14 @@ Users who want public verifiability (or receiver-assisted public verifiability) 
 **Example**:
 
 ```javascript
-var plainMsg = new Buffer("This is my plain text","utf-8");
+var plainMsg = Buffer.from("This is my plain text","utf-8");
 
 // Generate new random public and secret keys for Bob and Alice
 var bobKeys = sodium.crypto_box_keypair();
 var aliceKeys = sodium.crypto_box_keypair();
 
 // Generate a new nonce
-var nonce = new Buffer(sodium.crypto_box_NONCEBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_box_NONCEBYTES);
 sodium.randombytes(nonce);
 
 // Bob wants to send an encrypted message to Alice
@@ -844,7 +844,7 @@ console.log(sodium.crypto_box_PRIMITIVE);
 
 ## crypto_box_open(ctxt, nonce, pk, sk)
 
-Decrypts a cipher text ctxt given the receivers private key, and senders public key and the same nonce that was used when calling `crypto_box`. 
+Decrypts a cipher text ctxt given the receivers private key, and senders public key and the same nonce that was used when calling `crypto_box`.
 
 **Parameters**:
 
@@ -853,22 +853,22 @@ Decrypts a cipher text ctxt given the receivers private key, and senders public 
   * **{Buffer}** `pk` recipient's public key. **Must** be `crypto_box_PUBLICKEYBYTES` in length
   * **{Buffer}** `sk` sender's secret key. **Must** be `crypto_box_SECRETKEYBYTES` in length
   
-**Returns**: 
+**Returns**:
 
   * **{Buffer}** with plain text
-  * `undefined` in case or error  
+  * `undefined` in case or error
 
 **Example**:
 
 ```javascript
-var plainMsg = new Buffer("This is my plain text","utf-8");
+var plainMsg = Buffer.from("This is my plain text","utf-8");
 
 // Generate new random public and secret keys for Bob and Alice
 var bobKeys = sodium.crypto_box_keypair();
 var aliceKeys = sodium.crypto_box_keypair();
 
 // Generate a new nonce
-var nonce = new Buffer(sodium.crypto_box_NONCEBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_box_NONCEBYTES);
 sodium.randombytes(nonce);
 
 // Bob wants to send an encrypted message to Alice
@@ -913,16 +913,16 @@ Partially performs the computation required for both encryption and decryption o
 
 ```javascript
 var plainMsgs = new Array(3);
-plainMsgs[0] = new Buffer("This is my plain text 1","utf-8");
-plainMsgs[1] = new Buffer("This is my plain text 2","utf-8");
-plainMsgs[2] = new Buffer("This is my plain text 3","utf-8");
+plainMsgs[0] = Buffer.from("This is my plain text 1","utf-8");
+plainMsgs[1] = Buffer.from("This is my plain text 2","utf-8");
+plainMsgs[2] = Buffer.from("This is my plain text 3","utf-8");
 
 // Generate new random public and secret keys for Bob and Alice
 var bobKeys = sodium.crypto_box_keypair();
 var aliceKeys = sodium.crypto_box_keypair();
 
 // Generate a new nonce
-var nonce = new Buffer(sodium.crypto_box_NONCEBYTES);
+var nonce = Buffer.allocUnsafe(sodium.crypto_box_NONCEBYTES);
 sodium.randombytes(nonce);
 
 // Bob's side
@@ -962,7 +962,7 @@ for (var i=0; i < cipherMsgs.length; i++) {
 
 ## crypto_box_afternm(message, nonce, k)
 
-Encrypts a given a `message`, using partial computed data `k`. 
+Encrypts a given a `message`, using partial computed data `k`.
 
 **Parameters**:
 
@@ -970,10 +970,10 @@ Encrypts a given a `message`, using partial computed data `k`.
   * **{Buffer}** `nonce` for crypto box. **Must** be `crypto_box_NONCEBYTES` in length
   * **{Buffer}** `k` buffer calculated by the [`crypto_box_beforenm`](#crypto_box_beforenmpk-sk) function call
 
-**Returns**: 
+**Returns**:
 
   * **{Buffer}** with the cipher text
-  * `undefined` in case or error 
+  * `undefined` in case or error
   
 **See Also**:
 
@@ -984,7 +984,7 @@ Encrypts a given a `message`, using partial computed data `k`.
 
 ## crypto_box_open_afternm(ctxt, nonce, k)
 
-Decrypts a cipher text `ctxt` given the receivers given a `nonce` and the partial computed data `k`. 
+Decrypts a cipher text `ctxt` given the receivers given a `nonce` and the partial computed data `k`.
 
 **Parameters**:
 
@@ -992,10 +992,10 @@ Decrypts a cipher text `ctxt` given the receivers given a `nonce` and the partia
   * **{Buffer}** `nonce` for crypto box. **Must** be `crypto_box_NONCEBYTES` in length
   * **{Buffer}** `k` buffer calculated by the [`crypto_box_beforenm`](#crypto_box_beforenmpk-sk) function call
  
-**Returns**: 
+**Returns**:
 
   * **{Buffer}** with the plain text
-  * `undefined` in case or error 
+  * `undefined` in case or error
   
 **See Also**:
 
@@ -1091,7 +1091,7 @@ Signs `message` using the signer's signing secret key
 
 ```javascript
 var keys = sodium.crypto_sign_keypair();
-var message = new Buffer("node-sodium is cool", 'utf8');
+var message = Buffer.from("node-sodium is cool", 'utf8');
 var signedMsg = sodium.crypto_sign(message, keys.secretKey);
 if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
 	console.log("signature is valid");
@@ -1117,7 +1117,7 @@ Verifies the signed message `signedMsg` using the signer's verification key, or 
 
 ```javascript
 var keys = sodium.crypto_sign_keypair();
-var message = new Buffer("node-sodium is cool", 'utf8');
+var message = Buffer.from("node-sodium is cool", 'utf8');
 var signedMsg = sodium.crypto_sign(message, keys.secretKey);
 if( sodium.crypto_sign_open(signedMsg, keys.publicKey) ) {
 	console.log("signature is valid");
@@ -1161,8 +1161,8 @@ NaCl/Libsodium does not make any promises regarding the "decisional Diffie–Hel
 
 ```javascript
 // Generate a random group element and integer
-var p = new Buffer(sodium.crypto_scalarmult_BYTES);
-var n = new Buffer(sodium.crypto_scalarmult_SCALARBYTES);
+var p = Buffer.allocUnsafe(sodium.crypto_scalarmult_BYTES);
+var n = Buffer.allocUnsafe(sodium.crypto_scalarmult_SCALARBYTES);
 sodium.randombytes(p);
 sodium.randombytes(n);
 
@@ -1188,7 +1188,7 @@ The `crypto_scalarmult_base` function computes the scalar product of a standard 
 
 ```javascript
 // Generate a random integer
-var n = new Buffer(sodium.crypto_scalarmult_SCALARBYTES);
+var n = Buffer.allocUnsafe(sodium.crypto_scalarmult_SCALARBYTES);
 sodium.randombytes(n);
 
 // Multiply them

@@ -98,7 +98,7 @@ describe("cb.toBuffer", function () {
     });
 
     it("Generate a buffer from buffer!", function (done) {
-        var a = new Buffer(5);
+        var a = Buffer.allocUnsafe(5);
         a.fill(5);
         var b = cb.toBuffer(a);
         for( var i = 0 ; i < b.length; i++ ) {

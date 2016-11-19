@@ -9,7 +9,7 @@ var crypto = require('crypto');
 
 describe('Hash', function() {
     it('should return sha hash', function(done) {
-        var buf = new Buffer(100);
+        var buf = Buffer.allocUnsafe(100);
         buf.fill(1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
@@ -19,7 +19,7 @@ describe('Hash', function() {
     });
 
     it('should calculate same hash as the crypto module', function(done) {
-        var buf = new Buffer(100);
+        var buf = Buffer.allocUnsafe(100);
         buf.fill(1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
@@ -28,7 +28,7 @@ describe('Hash', function() {
     });
 
     it('should return sha512', function(done) {
-        var buf = new Buffer(100);
+        var buf = Buffer.allocUnsafe(100);
         buf.fill(1);
         var r = sodium.crypto_hash_sha512(buf);
         var hashString = r.toString('hex');
@@ -37,7 +37,7 @@ describe('Hash', function() {
     });
 
     it('should calculate same hash as the crypto module', function(done) {
-        var buf = new Buffer(100);
+        var buf = Buffer.allocUnsafe(100);
         buf.fill(1);
         var r = sodium.crypto_hash_sha256(buf);
         var hashString = r.toString('hex');

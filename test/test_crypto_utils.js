@@ -8,7 +8,7 @@ var sodium = require('../build/Release/sodium');
 
 describe('Utils', function() {
     it('should zero a buffer', function(done) {
-        var buf = new Buffer(100);
+        var buf = Buffer.allocUnsafe(100);
         buf.fill(1);
         sodium.memzero(buf);
         for(var i=0; i< buf.length; i++) {
@@ -19,7 +19,7 @@ describe('Utils', function() {
 });
 
 describe("memzero verify parameters", function () {
-    var buf = new Buffer(100);
+    var buf = Buffer.allocUnsafe(100);
     it('bad param 1 string', function(done) {
         buf = "token";
         assert.throws(function() {

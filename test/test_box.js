@@ -43,7 +43,7 @@ describe("Box", function () {
             box.decrypt({});
         })
         assert.throws(function() {
-            box.decrypt({cipherText: new Buffer('foo')});
+            box.decrypt({cipherText: Buffer.from('foo')});
         });
         assert.throws(function() {
             box.decrypt({nonce: 'bar'});
@@ -95,7 +95,7 @@ describe("Box", function () {
         var box = new Box();
 
         assert.throws(function() {
-            box.set(new Buffer(2));
+            box.set(Buffer.allocUnsafe(2));
         });
 
         done();

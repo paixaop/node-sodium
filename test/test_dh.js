@@ -10,9 +10,9 @@ if (process.env.COVERAGE) {
 describe('DH Group Key Exchange', function () {
 	it('should work for a groupd', function (done) {
 
-		var a = new Sodium.Key.ECDH("", Sodium.Hash.sha256(new Buffer(
+		var a = new Sodium.Key.ECDH("", Sodium.Hash.sha256(Buffer.from(
 			"9549937362")));
-		var b = new Sodium.Key.ECDH("", Sodium.Hash.sha256(new Buffer(
+		var b = new Sodium.Key.ECDH("", Sodium.Hash.sha256(Buffer.from(
 			"9542584444")));
 
 		var abDH = new Sodium.ECDH(b.pk(), a.sk()).secret();

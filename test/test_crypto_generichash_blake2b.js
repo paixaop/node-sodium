@@ -885,7 +885,7 @@ describe('Generic Hash', function() {
 
     it('should throw if key size is too big', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
-        var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MAX + 1);
+        var testKey = Buffer.allocUnsafe(sodium.crypto_generichash_blake2b_KEYBYTES_MAX + 1);
         testKey.fill(1);
 
         assert.throws(function() {
@@ -897,7 +897,7 @@ describe('Generic Hash', function() {
 
     it('should throw if key size is too small', function(done) {
         var testMessage = toBuffer(testVectors[0].in);
-        var testKey = new Buffer(sodium.crypto_generichash_blake2b_KEYBYTES_MIN - 1);
+        var testKey = Buffer.allocUnsafe(sodium.crypto_generichash_blake2b_KEYBYTES_MIN - 1);
         testKey.fill(1);
 
         assert.throws(function() {

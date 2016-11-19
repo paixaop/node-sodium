@@ -41,7 +41,7 @@ function testKey(modName, sizeBuffer) {
 
         it("isValid should return false on bad key", function (done) {
             var key = new Key();
-            var k = new Buffer(2);
+            var k = Buffer.allocUnsafe(2);
             assert.ok(!key.isValid(k));
             done();
         });
@@ -90,7 +90,7 @@ function testKey(modName, sizeBuffer) {
         it("set should throw on bad key length", function (done) {
             var key = new Key();
              assert.throws(function() {
-                key.set(new Buffer(2));
+                key.set(Buffer.allocUnsafe(2));
             });
             done();
         });

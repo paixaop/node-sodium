@@ -89,10 +89,10 @@ var cipherTextA = [
     ,0xe3,0x55,0xa5
 ];
 
-var key = new Buffer(keyA);
-var nonce = new Buffer(nonceA);
-var plainText = new Buffer(plainTextB);
-var cipherText = new Buffer(cipherTextA);
+var key = Buffer.from(keyA);
+var nonce = Buffer.from(nonceA);
+var plainText = Buffer.from(plainTextB);
+var cipherText = Buffer.from(cipherTextA);
 var cipherTextEasy = cipherText.slice(16, cipherText.length);
 
 describe('Secretbox', function() {
@@ -149,7 +149,7 @@ function method_parameter_types (name, fn, good, bad) {
 var areBuffers = [plainText, nonce, key]
 var notBuffers = [1, 'hello', null, true]
 var nonceAndKey = [nonce, key]
-var smallBuffers = [new Buffer(2), new Buffer(12)]
+var smallBuffers = [Buffer.allocUnsafe(2), Buffer.allocUnsafe(12)]
 
 ;[
     'crypto_secretbox',

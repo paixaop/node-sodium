@@ -99,7 +99,7 @@ function testNonce(modName, sizeBuffer) {
 
         it("isValid should return false on bad nonce", function (done) {
             var nonce = new Nonce();
-            var k = new Buffer(2);
+            var k = Buffer.allocUnsafe(2);
             assert.equal(nonce.isValid(k), false);
             done();
         });
@@ -148,7 +148,7 @@ function testNonce(modName, sizeBuffer) {
         it("set should throw on bad nonce length", function (done) {
             var nonce = new Nonce();
             assert.throws(function() {
-                nonce.set(new Buffer(2));
+                nonce.set(Buffer.allocUnsafe(2));
             });
             done();
         });

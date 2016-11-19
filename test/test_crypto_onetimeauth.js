@@ -47,7 +47,7 @@ describe('crypto_onetimeauth verify parameters', function() {
     });
 
     it('bad param 2 buffer', function(done) {
-        key = new Buffer(2);
+        key = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var token = sodium.crypto_onetimeauth(buf, key);
         });
@@ -77,7 +77,7 @@ describe('crypto_onetimeauth_verify verify parameters', function() {
     });
 
     it('bad param 1 small buffer', function(done) {
-        token = new Buffer(2);
+        token = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
         });
@@ -117,7 +117,7 @@ describe('crypto_onetimeauth_verify verify parameters', function() {
     });
 
     it('bad param 3 buffer', function(done) {
-        key = new Buffer(2);
+        key = Buffer.allocUnsafe(2);
          assert.throws(function() {
             var r = sodium.crypto_onetimeauth_verify(token, buf, key);
         });
