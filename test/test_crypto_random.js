@@ -8,8 +8,7 @@ var sodium = require('../build/Release/sodium');
 
 describe('Randombytes', function() {
     it('should return a buffer of random numbers', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(0);
+        var buf = Buffer.alloc(100);
         sodium.randombytes_buf(buf);
 
         var zeros = 0;

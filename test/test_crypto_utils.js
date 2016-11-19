@@ -8,8 +8,7 @@ var sodium = require('../build/Release/sodium');
 
 describe('Utils', function() {
     it('should zero a buffer', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(1);
+        var buf = Buffer.alloc(100, 1);
         sodium.memzero(buf);
         for(var i=0; i< buf.length; i++) {
             assert.equal(buf[i],0);

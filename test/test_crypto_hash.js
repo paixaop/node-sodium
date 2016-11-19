@@ -9,8 +9,7 @@ var crypto = require('crypto');
 
 describe('Hash', function() {
     it('should return sha hash', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(1);
+        var buf = Buffer.alloc(100, 1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
         assert.equal(hashString, "ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
@@ -19,8 +18,7 @@ describe('Hash', function() {
     });
 
     it('should calculate same hash as the crypto module', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(1);
+        var buf = Buffer.alloc(100, 1);
         var r = sodium.crypto_hash(buf);
         var hashString = r.toString('hex');
         assert.equal(hashString, crypto.createHash('sha512').update(buf).digest('hex'));
@@ -28,8 +26,7 @@ describe('Hash', function() {
     });
 
     it('should return sha512', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(1);
+        var buf = Buffer.alloc(100, 1);
         var r = sodium.crypto_hash_sha512(buf);
         var hashString = r.toString('hex');
         assert.equal(hashString, "ceacfdb0944ac37da84556adaac97bbc9a0190ae8ca091576b91ca70e134d1067da2dd5cc311ef147b51adcfbfc2d4086560e7af1f580db8bdc961d5d7a1f127");
@@ -37,8 +34,7 @@ describe('Hash', function() {
     });
 
     it('should calculate same hash as the crypto module', function(done) {
-        var buf = Buffer.allocUnsafe(100);
-        buf.fill(1);
+        var buf = Buffer.alloc(100, 1);
         var r = sodium.crypto_hash_sha256(buf);
         var hashString = r.toString('hex');
         assert.equal(hashString, crypto.createHash('sha256').update(buf).digest('hex'));

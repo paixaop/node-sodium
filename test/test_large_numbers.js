@@ -9,8 +9,7 @@ var assert = require('assert');
 
 describe('LargeNumbers', function() {
     it('should increment a zero filled buffer to 3 after 3 calls', function(done) {
-        var buf = Buffer.allocUnsafe(10);
-        buf.fill(0);
+        var buf = Buffer.alloc(10);
         sodium.increment(buf,10);
         sodium.increment(buf,10);
         sodium.increment(buf,10);
@@ -27,11 +26,10 @@ describe('LargeNumbers', function() {
     it('should add two buffers of the same size', function(done) {
         var buf1 = Buffer.allocUnsafe(10);
         var buf2 = Buffer.allocUnsafe(10);
-        var buf3 = Buffer.allocUnsafe(10);
+        var buf3 = Buffer.alloc(10);
 
         sodium.randombytes_buf(buf1);
         buf1.copy(buf2);
-        buf3.fill(0);
 
         var j= sodium.randombytes_uniform(10000);
         for(var i = 0; i < j; i++) {
@@ -110,8 +108,7 @@ describe('LargeNumbers', function() {
     });
 
     it('is_zero test for 0', function(done) {
-        var buf = Buffer.allocUnsafe(10);
-        buf.fill(0);
+        var buf = Buffer.alloc(10);
         assert(sodium.is_zero(buf)==1);
         done();
     });
