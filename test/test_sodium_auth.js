@@ -8,7 +8,7 @@ var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 var toBuffer = require('../lib/toBuffer');
 
-var key = new Buffer(sodium.crypto_auth_KEYBYTES)
+var key = Buffer.allocUnsafe(sodium.crypto_auth_KEYBYTES)
 key.fill('Jefe');
 key.fill(0,4,32);
 var c = toBuffer('what do ya want for nothing?', 'ascii');
@@ -41,8 +41,8 @@ var expected3 = toBuffer(
       0x31, 0x6f, 0x72, 0x9b, 0x8d, 0x30, 0x0f, 0x15,
       0x9b, 0x2f, 0x60, 0x93, 0xa8, 0x60, 0xc1, 0xed ]);
 
-var a = new Buffer(sodium.crypto_auth_BYTES);
-var a2 = new Buffer(sodium.crypto_auth_hmacsha512_BYTES);
+var a = Buffer.allocUnsafe(sodium.crypto_auth_BYTES);
+var a2 = Buffer.allocUnsafe(sodium.crypto_auth_hmacsha512_BYTES);
 
 describe('LibSodium Auth', function() {
     it('crypto_auth should return the expected auth token', function(done) {

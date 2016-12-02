@@ -5,12 +5,12 @@ var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 describe("Auth5", function() {
-    var key = new Buffer(32).fill(0);
+    var key = Buffer.alloc(32);
 
     it("Test random vectors", function(done) {
         for (var clen = 0; clen < 1000; ++clen) {
             sodium.randombytes_buf(key);
-            c = new Buffer(clen);
+            c = Buffer.allocUnsafe(clen);
             sodium.randombytes_buf(c);
             var a = sodium.crypto_auth(c, key);
             assert.equal(sodium.crypto_auth_verify(a, c, key), 0);

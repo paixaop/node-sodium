@@ -85,18 +85,18 @@
  *     var sodium = require('sodium').api;
  *
  *     // Generate a random key
- *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var key = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(key);
  *
  *     // Generate random nonce
- *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(nonce);
  *
  *     // Precompute and generate the state
  *     var state = sodium.crypto_aead_aes256gcm_beforenm(key);
  *
- *     var message = new Buffer("this is a plain text message");
- *     var additionalData = new Buffer("metadata");
+ *     var message = Buffer.from("this is a plain text message");
+ *     var additionalData = Buffer.from("metadata");
  *
  *     // Encrypt Data
  *     var cipherText = sodium.crypto_aead_aes256gcm_encrypt_afternm(
@@ -152,7 +152,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_is_available) {
  * **Sample**:
  *
  *     // Generate a random key
- *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var key = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(key);
  *     var state = sodium.crypto_aead_aes256gcm_beforenm(key);
  */
@@ -288,18 +288,18 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_afternm) {
  *     var sodium = require('sodium').api;
  *
  *     // Generate a random key
- *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var key = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(key);
  *
  *     // Generate random nonce
- *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(nonce);
  *
  *     // Precompute and generate the state
  *     var state = sodium.crypto_aead_aes256gcm_beforenm(key);
  *
- *     var message = new Buffer("this is a plain text message");
- *     var additionalData = new Buffer("metadata");
+ *     var message = Buffer.from("this is a plain text message");
+ *     var additionalData = Buffer.from("metadata");
  *
  *     // Encrypt Data
  *     var c = sodium.crypto_aead_aes256gcm_encrypt_detached_afternm(
@@ -400,15 +400,15 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_detached_afternm) {
  *     var sodium = require('sodium').api;
  *
  *     // Generate a random key
- *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var key = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(key);
  *
  *     // Generate random nonce
- *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(nonce);
  *
- *     var message = new Buffer("this is a plain text message");
- *     var additionalData = new Buffer("metadata");
+ *     var message = Buffer.from("this is a plain text message");
+ *     var additionalData = Buffer.from("metadata");
  *
  *     // Encrypt Data
  *     var cipherText = sodium.crypto_aead_aes256gcm_encrypt(
@@ -472,15 +472,15 @@ CRYPTO_AEAD_DEF(aes256gcm)
  *     var sodium = require('sodium').api;
  *
  *     // Generate a random key
- *     var key = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var key = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(key);
  *
  *     // Generate random nonce
- *     var nonce = new Buffer(crypto_aead_aes256gcm_KEYBYTES);
+ *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
  *     sodium.randombytes_buf(nonce);
  *
- *     var message = new Buffer("this is a plain text message");
- *     var additionalData = new Buffer("metadata");
+ *     var message = Buffer.from("this is a plain text message");
+ *     var additionalData = Buffer.from("metadata");
  *
  *     // Encrypt Data
  *     var c = sodium.crypto_aead_aes256gcm_encrypt_detached(

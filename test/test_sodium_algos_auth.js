@@ -8,7 +8,7 @@ var crypto = require('crypto');
 var sodium = require('../build/Release/sodium');
 var toBuffer = require('../lib/toBuffer');
 
-var key = new Buffer(sodium.crypto_auth_KEYBYTES);
+var key = Buffer.allocUnsafe(sodium.crypto_auth_KEYBYTES);
 key.fill('Jefe');
 key.fill(0, 4, 32);
 var c = toBuffer('what do ya want for nothing?', 'ascii');

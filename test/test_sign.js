@@ -14,7 +14,7 @@ if (process.env.COVERAGE) {
 describe("Sign", function () {
     it("sign/verify message", function (done) {
         var sign = new Sign();
-        var message = new Buffer("This is a test", 'utf8');
+        var message = Buffer.from("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         var checkMsg = Sign.verify(signedMsg);
         assert.equal(checkMsg.toString('utf8'),"This is a test");
@@ -27,7 +27,7 @@ describe("Sign", function () {
             'xbKDKhNwHv81Pk6pHNPR5oV/7pskFJIFF8M7JTfH2Q==',
             'base64');
         var sign = new Sign(key);
-        var message = new Buffer("This is a test", 'utf8');
+        var message = Buffer.from("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         assert.equal(signedMsg.publicKey.toString('base64'),
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');
@@ -38,7 +38,7 @@ describe("Sign", function () {
     it("sign/verify with key from seed", function(done) {
         var key = new SignKey.fromSeed('Aav6yqemxoPNNqxeKJXMlruKxXEHLD931S8pXzxt4mk=', 'base64');
         var sign = new Sign(key);
-        var message = new Buffer("This is a test", 'utf8');
+        var message = Buffer.from("This is a test", 'utf8');
         var signedMsg = sign.sign("This is a test", 'utf8');
         assert.equal(signedMsg.publicKey.toString('base64'),
             'DsWygyoTcB7/NT5OqRzT0eaFf+6bJBSSBRfDOyU3x9k=');

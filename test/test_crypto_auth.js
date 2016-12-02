@@ -9,10 +9,8 @@ var sodium = require('../build/Release/sodium');
 
 describe('Auth', function() {
     it('should return a token', function(done) {
-        var buf = new Buffer(100);
-        buf.fill(1);
-        var key = new Buffer(sodium.crypto_auth_KEYBYTES);
-        key.fill(0);
+        var buf = Buffer.alloc(100, 1);
+        var key = Buffer.alloc(sodium.crypto_auth_KEYBYTES);
         key[0] = 9;
         key[1] = 9;
         var r = sodium.crypto_auth(buf, key);
@@ -79,7 +77,7 @@ describe('crypto_auth_verify check paramters', function() {
             var r = sodium.crypto_auth_verify(t, b, k);
         });
 
-        t = new Buffer(5);
+        t = Buffer.allocUnsafe(5);
         assert.throws(function() {
             var r = sodium.crypto_auth_verify(t, b, k);
         });
