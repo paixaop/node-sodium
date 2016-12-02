@@ -75,6 +75,16 @@ Tested on Mac, Linux, Windows and IllumOS Systems
 
 node-sodium depends on libsodium, so if libsodium does not compile on your platform chances are `npm install sodium` will fail.
 
+Install can fail in some Linux distros due to permission issues. If you see an error similar to the following:
+
+```
+npm WARN lifecycle sodium@1.2.3~preinstall: cannot run in wd %s %s (wd=%s) sodium@1.2.3 node install.js --preinstall
+```
+
+Try installing with
+
+    npm install sodium --unsafe-perm
+
 Installation will fail if `node-gyp`is not installed on your system. Please run
 
     npm install node-gyp -g
