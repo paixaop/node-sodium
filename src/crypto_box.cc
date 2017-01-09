@@ -491,11 +491,11 @@ NAN_METHOD(bind_crypto_box_open_detached) {
 NAN_METHOD(bind_crypto_box_seal) {
     Nan::EscapableHandleScope scope;
 
-    ARGS(2,"arguments encrypted message, mac, nonce, and key must be buffers");
+    ARGS(2,"arguments unencrypted message, and recipient public key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(pk, crypto_box_PUBLICKEYBYTES);
 
-    NEW_BUFFER_AND_PTR(c, message_size);
+    NEW_BUFFER_AND_PTR(c, message_size + crypto_box_SEALBYTES);
 
     if (crypto_box_seal(c_ptr, message, message_size, pk) == 0) {
         return info.GetReturnValue().Set(c);
@@ -512,12 +512,12 @@ NAN_METHOD(bind_crypto_box_seal) {
 NAN_METHOD(bind_crypto_box_seal_open) {
     Nan::EscapableHandleScope scope;
 
-    ARGS(2,"arguments encrypted message, mac, nonce, and key must be buffers");
+    ARGS(3,"arguments encrypted message, recipient public key, and recipient secret key must be buffers");
     ARG_TO_UCHAR_BUFFER(c);
     ARG_TO_UCHAR_BUFFER_LEN(pk, crypto_box_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_box_SECRETKEYBYTES);
     
-    NEW_BUFFER_AND_PTR(m, c_size);
+    NEW_BUFFER_AND_PTR(m, c_size - crypto_box_SEALBYTES);
 
     if (crypto_box_seal_open(m_ptr, c, c_size, pk, sk) == 0) {
         return info.GetReturnValue().Set(m);
