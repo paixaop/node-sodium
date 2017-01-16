@@ -48,9 +48,9 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
     ARG_TO_NUMBER(oppLimit);
     ARG_TO_NUMBER(memLimit);
     
-    NEW_BUFFER_AND_PTR(out, crypto_pwhash_argon2i_STRBYTES); 
-    
-    if (crypto_pwhash_argon2i_str((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
+    char buf[crypto_pwhash_argon2i_STRBYTES];
+    if (crypto_pwhash_argon2i_str(buf, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        Local<v8::String> out = Nan::New<String>( buf ).ToLocalChecked();
         return info.GetReturnValue().Set(out);
     }
     
@@ -65,11 +65,10 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str_verify) {
     Nan::EscapableHandleScope scope;
 
     ARGS(2,"arguments must be: pwhash string, password");
-    
-    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_argon2i_STRBYTES);
+    String::Utf8Value hash(info[_arg]->ToString()); _arg++;
     ARG_TO_BUFFER_TYPE(passwd, char*);
     
-    if (crypto_pwhash_argon2i_str_verify((char*)hash, passwd, passwd_size) == 0) {
+    if (crypto_pwhash_argon2i_str_verify((char*)(*hash), passwd, passwd_size) == 0) {
         return info.GetReturnValue().Set(Nan::True());
     }
     
@@ -129,9 +128,9 @@ NAN_METHOD(bind_crypto_pwhash_str) {
     ARG_TO_NUMBER(oppLimit);
     ARG_TO_NUMBER(memLimit);
     
-    NEW_BUFFER_AND_PTR(out, crypto_pwhash_STRBYTES); 
-    
-    if (crypto_pwhash_str((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
+    char buf[crypto_pwhash_STRBYTES];
+    if (crypto_pwhash_str(buf, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        Local<v8::String> out = Nan::New<String>( buf ).ToLocalChecked();
         return info.GetReturnValue().Set(out);
     }
     
@@ -151,10 +150,10 @@ NAN_METHOD(bind_crypto_pwhash_str_verify) {
 
     ARGS(2,"arguments must be: pwhash string, password");
     
-    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_STRBYTES);
+    String::Utf8Value hash(info[_arg]->ToString()); _arg++;
     ARG_TO_BUFFER_TYPE(passwd, char*);
     
-    if (crypto_pwhash_str_verify((char*)hash, passwd, passwd_size) == 0) {
+    if (crypto_pwhash_str_verify((char*)(*hash), passwd, passwd_size) == 0) {
         return info.GetReturnValue().Set(Nan::True());
     }
     
@@ -244,10 +243,10 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
     ARG_TO_NUMBER(oppLimit);
     ARG_TO_NUMBER(memLimit);
     
-    NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
-    
-    if (crypto_pwhash_scryptsalsa208sha256_str((char*)hash_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
-        return info.GetReturnValue().Set(hash);
+    char buf[crypto_pwhash_scryptsalsa208sha256_STRBYTES];
+    if (crypto_pwhash_scryptsalsa208sha256_str(buf, passwd, passwd_size, oppLimit, memLimit) == 0) {
+        Local<v8::String> out = Nan::New<String>( buf ).ToLocalChecked();
+        return info.GetReturnValue().Set(out);
     }
     
     return info.GetReturnValue().Set(Nan::Null());
@@ -263,10 +262,10 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
 
     ARGS(2,"arguments must be: pwhash string, password");
     
-    ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    String::Utf8Value hash(info[_arg]->ToString()); _arg++;
     ARG_TO_BUFFER_TYPE(passwd, char*);
     
-    if (crypto_pwhash_scryptsalsa208sha256_str_verify((char*)hash, passwd, passwd_size) == 0) {
+    if (crypto_pwhash_scryptsalsa208sha256_str_verify((char*)(*hash), passwd, passwd_size) == 0) {
         return info.GetReturnValue().Set(Nan::True());
     }
     
