@@ -25,9 +25,11 @@ NAN_METHOD(bind_crypto_generichash) {
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
-    ARG_TO_UCHAR_BUFFER(key);
+    ARG_TO_UCHAR_BUFFER_OR_NULL(key);
 
-    CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);
+    if (key != NULL) {
+        CHECK_SIZE(key_size, crypto_generichash_KEYBYTES_MIN, crypto_generichash_KEYBYTES_MAX);
+    }
     CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
 
     NEW_BUFFER_AND_PTR(hash, out_size);
