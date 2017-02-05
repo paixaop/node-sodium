@@ -1,4 +1,4 @@
-Note the [Generic Hashing](https://download.libsodium.org/doc/hashing/generic_hashing.html) of the libsodium documentation, on which this document heavily depends.
+Note the [Generic Hashing](https://download.libsodium.org/doc/hashing/generic_hashing.html) section of the libsodium documentation, on which this document heavily depends.
 
 Implemented using BLAKE2b. This function set should not be used to hash passwords. Use `crypto_pwhash` instead.
 
@@ -6,7 +6,7 @@ Implemented using BLAKE2b. This function set should not be used to hash password
 crypto_generichash(out_size, in, key)
 -------------------------------------
 
-Compute a fixed length fingerprint for a message of arbitrary length. Use cases include file integrity checks (fulfilling a similar role to MD5 and SHA-1, but with better security) and creating unique identifiers to index data of aribtrary length.
+Compute a fixed length fingerprint for a message of arbitrary length. Use cases include file integrity checks (fulfilling a similar role to MD5 and SHA-1, but with better security) and creating unique identifiers to index data of arbitrary length.
 
 **Parameters**
 
@@ -110,5 +110,5 @@ Recommended length of key, in bytes. Note that key can also be `null`, which lea
 Note
 ----
 
-node-sodium also exposes `crypto_generichash_blake2b`, `crypto_generichash_blake2b_init`, `crypto_generichash_blake2b_update`, and `crypto_generichash_blake2b_final`. In the interests of brevity these are not separately documented, but their usage and parameters are identical (with the exception of constant naming: see above list).
+Node Sodium also exposes `crypto_generichash_blake2b`, `crypto_generichash_blake2b_init`, `crypto_generichash_blake2b_update`, and `crypto_generichash_blake2b_final`. In the interests of brevity these are not separately documented, but their usage and parameters are identical (with the exception of constant naming: see above list).
 
