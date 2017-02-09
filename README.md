@@ -122,6 +122,12 @@ At the moment Windows only supports dynamic linking so you must have the `libsod
 as `sodium.node`. This is done automatically by the install script, but if you move things around manually
 please don't forget to copy the DLL file as well.
 
+If you experience difficulty with the install even with a correctly set `msvs_version`, it may be worth trying:
+
+    npm install npm -g
+    
+to upgrade npm and its bundled version of node-gyp. 
+
 # Manual Build
 
 Node Sodium includes the source of libsodium, so the normal install will try to compile libsodium directly from source, using libsodium's own build tools.
