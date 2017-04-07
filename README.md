@@ -139,6 +139,19 @@ Before you run the manual build you must run the `npm install` once to install t
 Please note that `npm install` will install the dependencies and compile `node-sodium` as well. After this initial step you can make changes to the source and run the following commands to manually build the module:
 
     make sodium
+    
+You need to install autotools and check the version. For OSX you can do
+
+```
+brew install libtool autoconf automake
+```
+
+
+```
+autoconf --version
+automake --version
+libtool -V
+```
 
 # SECURITY WARNING: Using a Binary LibSodium Library
 
