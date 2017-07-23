@@ -99,6 +99,10 @@ Compiling libsodium requires autoconf, automake and libtool so if you get an err
 
     brew install libtool autoconf automake
 
+If you cannot compile libsodium on Linux, try installing libtools with:
+
+    sudo apt-get install libtool-bin
+
 ## Windows Install
 
 Windows installs will automatically attempt to download LibSodium binary distribution, and include files, from [my repo](https://github.com/paixaop/libsodium-bin).
