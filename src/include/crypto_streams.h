@@ -69,6 +69,5 @@ NAN_METHODS(salsa208);
 NAN_METHODS(salsa2012);
 NAN_METHODS(chacha20);
 NAN_METHODS(chacha20_ietf);
-NAN_METHODS(aes128ctr);
 
 #endif
