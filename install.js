@@ -56,7 +56,6 @@ var includeFiles = [
     'include/sodium/crypto_sign_ed25519.h',
     'include/sodium/crypto_sign_edwards25519sha512batch.h',
     'include/sodium/crypto_stream.h',
-    'include/sodium/crypto_stream_aes128ctr.h',
     'include/sodium/crypto_stream_chacha20.h',
     'include/sodium/crypto_stream_salsa20.h',
     'include/sodium/crypto_stream_salsa2012.h',
