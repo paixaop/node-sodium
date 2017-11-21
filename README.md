@@ -99,6 +99,10 @@ Compiling libsodium requires autoconf, automake and libtool so if you get an err
 
     brew install libtool autoconf automake
 
+If you cannot compile libsodium on Linux, try installing libtools with:
+
+    sudo apt-get install libtool-bin
+
 ## Windows Install
 
 Windows installs will automatically attempt to download LibSodium binary distribution, and include files, from [my repo](https://github.com/paixaop/libsodium-bin).
@@ -122,6 +126,12 @@ At the moment Windows only supports dynamic linking so you must have the `libsod
 as `sodium.node`. This is done automatically by the install script, but if you move things around manually
 please don't forget to copy the DLL file as well.
 
+If you experience difficulty with the install even with a correctly set `msvs_version`, it may be worth trying:
+
+    npm install npm -g
+    
+to upgrade npm and its bundled version of node-gyp. 
+
 # Manual Build
 
 Node Sodium includes the source of libsodium, so the normal install will try to compile libsodium directly from source, using libsodium's own build tools.
@@ -133,6 +143,19 @@ Before you run the manual build you must run the `npm install` once to install t
 Please note that `npm install` will install the dependencies and compile `node-sodium` as well. After this initial step you can make changes to the source and run the following commands to manually build the module:
 
     make sodium
+    
+You need to install autotools and check the version. For OSX you can do
+
+```
+brew install libtool autoconf automake
+```
+
+
+```
+autoconf --version
+automake --version
+libtool -V
+```
 
 # SECURITY WARNING: Using a Binary LibSodium Library
 
