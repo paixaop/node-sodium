@@ -28,14 +28,14 @@ using namespace v8;
 #define SODIUM_STATIC
 
 // Check if a function argument is a node Buffer. If not throw V8 exception
-#define ARG_IS_BUFFER(i,msg) \
+#define ARG_IS_BUFFER(i, msg) \
     if (!Buffer::HasInstance(info[i])) { \
         std::ostringstream oss; \
         oss << "argument " << msg << " must be a buffer"; \
         return Nan::ThrowError(oss.str().c_str()); \
     }
 
-#define ARG_IS_BUFFER_OR_NULL(i,msg) \
+#define ARG_IS_BUFFER_OR_NULL(i, msg) \
     if (!Buffer::HasInstance(info[i])) { \
         if( !info[i]->IsNull() ) { \
             std::ostringstream oss; \
@@ -159,13 +159,43 @@ using namespace v8;
     Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs ## slowBuffer);
 
 #define NEW_INT_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
+    Nan::Maybe<bool> NAME ##_r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            Nan::New<Integer>(NAME), ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        std::ostringstream oss; \
+        oss << "Property " << #NAME << " could not be set!"; \
+        Nan::ThrowError(oss.str().c_str()); \
+    } 
 
 #define NEW_NUMBER_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Number>(NAME), v8::ReadOnly);
+    Nan::Maybe<bool> NAME ##_r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            Nan::New<Number>(NAME), ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        std::ostringstream oss; \
+        oss << "Property " << #NAME << " could not be set!"; \
+        Nan::ThrowError(oss.str().c_str()); \
+    }
 
 #define NEW_STRING_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<String>(NAME).ToLocalChecked(), v8::ReadOnly);
+    Nan::MaybeLocal<String> NAME ## _mvalue = String::NewFromOneByte(Isolate::GetCurrent(), (uint8_t*) &NAME[0], v8::NewStringType::kNormal); \
+    Local<Value> NAME ## _value = NAME ## _mvalue.ToLocalChecked(); \
+    Nan::Maybe<bool> NAME ## _r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            NAME ## _value, \
+            ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        std::ostringstream oss; \
+        oss << "Property " << #NAME << " could not be set!"; \
+        Nan::ThrowError(oss.str().c_str()); \
+    }
 
 #define NEW_METHOD(NAME) \
     Nan::SetMethod(target, #NAME, bind_ ## NAME)

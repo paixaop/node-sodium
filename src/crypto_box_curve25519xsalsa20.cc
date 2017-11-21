@@ -143,8 +143,8 @@ NAN_METHOD(bind_crypto_box_keypair) {
     if (crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("publicKey").ToLocalChecked(), Nan::New<Value>(pk), DontDelete);
+        b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("secretKey").ToLocalChecked(), Nan::New<Value>(sk), DontDelete);
 
         return info.GetReturnValue().Set(result);
     } else {

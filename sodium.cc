@@ -750,8 +750,9 @@ NAN_METHOD(bind_crypto_sign_keypair) {
 
     if( crypto_sign_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
-        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
-        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+        Local<Context> ctx = Nan::GetCurrentContext();
+        result->DefineOwnProperty(ctx, NanNew<String>("publicKey"), vk, DontDelete);
+        result->DefineOwnProperty(ctx, NanNew<String>("secretKey"), sk, DontDelete);
         NanReturnValue(result);
     }
     NanReturnUndefined();
@@ -794,9 +795,10 @@ NAN_METHOD(bind_crypto_sign_seed_keypair) {
 
     if( crypto_sign_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = NanNew<Object>();
+        Local<Context> ctx = Nan::GetCurrentContext();
 
-        result->ForceSet(NanNew<String>("publicKey"), vk, DontDelete);
-        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+        result->DefineOwnProperty(ctx, NanNew<String>("publicKey"), vk, DontDelete);
+        result->DefineOwnProperty(ctx, NanNew<String>("secretKey"), sk, DontDelete);
 
         NanReturnValue(result);
     }
@@ -1023,9 +1025,10 @@ NAN_METHOD(bind_crypto_box_keypair) {
     
     if( crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = NanNew<Object>();
+        Local<Context> ctx = Nan::GetCurrentContext();
 
-        result->ForceSet(NanNew<String>("publicKey"), pk, DontDelete);
-        result->ForceSet(NanNew<String>("secretKey"), sk, DontDelete);
+        result->DefineOwnProperty(ctx, NanNew<String>("publicKey"), pk, DontDelete);
+        result->DefineOwnProperty(ctx, NanNew<String>("secretKey"), sk, DontDelete);
 
         NanReturnValue(result);
     }
@@ -1339,10 +1342,12 @@ NAN_METHOD(bind_crypto_scalarmult) {
 
 
 #define NEW_INT_PROP(NAME) \
-    target->ForceSet(NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
+    Local<Context> ctx = Nan::GetCurrentContext(); \
+    target->DefineOwnProperty(ctx, NanNew<String>(#NAME), NanNew<Integer>(NAME), ReadOnly)
 
 #define NEW_STRING_PROP(NAME) \
-    target->ForceSet(NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
+    Local<Context> ctx = Nan::GetCurrentContext(); \
+    target->DefineOwnProperty(ctx, NanNew<String>(#NAME), NanNew<String>(NAME), ReadOnly)
 
 #define NEW_METHOD(NAME) \
     NODE_SET_METHOD(target, #NAME, bind_ ## NAME)

@@ -143,10 +143,9 @@ NAN_METHOD(bind_crypto_box_keypair) {
 
     if (crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
-        Local<Context> ctx = Nan::GetCurrentContext();
         
-        result->DefineOwnProperty(ctx, Nan::New<String>("publicKey").ToLocalChecked(), Nan::New<Value>(pk), DontDelete);
-        result->DefineOwnProperty(ctx, Nan::New<String>("secretKey").ToLocalChecked(), Nan::New<Value>(sk), DontDelete);
+        Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("publicKey").ToLocalChecked(), Nan::New<Value>(pk), DontDelete);
+        b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("secretKey").ToLocalChecked(), Nan::New<Value>(sk), DontDelete);
 
         return info.GetReturnValue().Set(result);
     } else {
@@ -542,10 +541,18 @@ NAN_METHOD(bind_crypto_box_seed_keypair) {
 
     if (crypto_box_seed_keypair(pk_ptr, sk_ptr, seed) == 0) {
         Local<Object> result = Nan::New<Object>();
-        Local<Context> ctx = Nan::GetCurrentContext();
-        
-        result->DefineOwnProperty(ctx, Nan::New<String>("publicKey").ToLocalChecked(), Nan::New<Value>(pk), DontDelete);
-        result->DefineOwnProperty(ctx, Nan::New<String>("secretKey").ToLocalChecked(), Nan::New<Value>(sk), DontDelete);
+
+        Nan::Maybe<bool> b = result->DefineOwnProperty(
+            Nan::GetCurrentContext(), 
+            Nan::New<String>("publicKey").ToLocalChecked(), 
+            Nan::New<Value>(pk), 
+            DontDelete);
+
+        b = result->DefineOwnProperty(
+            Nan::GetCurrentContext(), 
+            Nan::New<String>("secretKey").ToLocalChecked(), 
+            Nan::New<Value>(sk), 
+            DontDelete);
 
         return info.GetReturnValue().Set(result);
     }

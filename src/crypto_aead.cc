@@ -323,16 +323,16 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_encrypt_detached_afternm) {
 
     if( crypto_aead_aes256gcm_encrypt_detached_afternm(c_ptr, mac_ptr, NULL, m, m_size, ad, ad_size, NULL, npub, (crypto_aead_aes256gcm_state*)ctx) == 0 ) {
         Local<Object> result = Nan::New<Object>();
-        Local<Context> ctx = Nan::GetCurrentContext();
         
         Local<String> cipherTextKey = Nan::New<String>("cipherText").ToLocalChecked();
         Local<Value> cipherTextValue = Nan::New<Value>(c);
 
         Local<String> macKey = Nan::New<String>("mac").ToLocalChecked();
         Local<Value> macValue = Nan::New<Value>(mac);
+
+        Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), cipherTextKey,  cipherTextValue, DontDelete);
+        b = result->DefineOwnProperty(Nan::GetCurrentContext(), macKey, macValue, DontDelete);
         
-        result->DefineOwnProperty(ctx, cipherTextKey,  cipherTextValue, DontDelete);
-        result->DefineOwnProperty(ctx, macKey, macValue, DontDelete);
         return info.GetReturnValue().Set(result);
     }
 

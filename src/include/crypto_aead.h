@@ -103,13 +103,12 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         unsigned long long maclen;\
         if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac_ptr, &maclen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
             Local<Object> result = Nan::New<Object>(); \
-            Local<Context> ctx = Nan::GetCurrentContext();\
             Local<String> cipherTextKey = Nan::New<String>("cipherText").ToLocalChecked(); \
             Local<Value> cipherTextValue = Nan::New<Value>(c); \
             Local<String> macKey = Nan::New<String>("mac").ToLocalChecked(); \
             Local<Value> macValue = Nan::New<Value>(mac); \
-            result->DefineOwnProperty(ctx, cipherTextKey,  cipherTextValue, DontDelete); \
-            result->DefineOwnProperty(ctx, macKey, macValue, DontDelete); \
+            Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), cipherTextKey,  cipherTextValue, DontDelete); \
+            b = result->DefineOwnProperty(Nan::GetCurrentContext(), macKey, macValue, DontDelete); \
             return info.GetReturnValue().Set(result); \
         } \
         return info.GetReturnValue().Set(Nan::Undefined()); \
