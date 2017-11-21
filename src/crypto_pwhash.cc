@@ -28,10 +28,10 @@ NAN_METHOD(bind_crypto_pwhash_argon2i) {
     ARG_TO_NUMBER(alg);
 
     if (crypto_pwhash_argon2i(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /* int crypto_pwhash_argon2i_str(char out[crypto_pwhash_argon2i_STRBYTES],
@@ -55,7 +55,7 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
         return info.GetReturnValue().Set(out);
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /* int crypto_pwhash_argon2i_str_verify(const char str[crypto_pwhash_argon2i_STRBYTES],
@@ -71,10 +71,10 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str_verify) {
     ARG_TO_BUFFER_TYPE(passwd, char*);
 
     if (crypto_pwhash_argon2i_str_verify((char*)(*hash), passwd, passwd_size) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /*
@@ -104,10 +104,10 @@ NAN_METHOD(bind_crypto_pwhash) {
     ARG_TO_NUMBER(alg);
 
     if (crypto_pwhash(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 
@@ -136,7 +136,7 @@ NAN_METHOD(bind_crypto_pwhash_str) {
         return info.GetReturnValue().Set(out);
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /**
@@ -156,10 +156,10 @@ NAN_METHOD(bind_crypto_pwhash_str_verify) {
     ARG_TO_BUFFER_TYPE(passwd, char*);
 
     if (crypto_pwhash_str_verify((char*)hash, passwd, passwd_size) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 
@@ -190,10 +190,10 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256) {
     ARG_TO_NUMBER(memLimit);
 
     if (crypto_pwhash_scryptsalsa208sha256(out, out_size, passwd, passwd_size, salt, oppLimit, memLimit) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /**
@@ -221,10 +221,10 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_ll) {
     ARG_TO_BUFFER_TYPE(out, uint8_t*);
 
     if (crypto_pwhash_scryptsalsa208sha256_ll(passwd, passwd_size, salt, salt_size, N, r, p, out, out_size) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /**
@@ -251,7 +251,7 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -268,10 +268,10 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str_verify) {
     ARG_TO_BUFFER_TYPE(passwd, char*);
 
     if (crypto_pwhash_scryptsalsa208sha256_str_verify((char*)hash, passwd, passwd_size) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 

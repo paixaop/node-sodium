@@ -21,7 +21,7 @@ NAN_METHOD(bind_randombytes_buf) {
     GET_ARG_AS_VOID(0, buffer);
     randombytes_buf(buffer, buffer_size);
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 // void randombytes_stir()
@@ -29,7 +29,7 @@ NAN_METHOD(bind_randombytes_stir) {
     Nan::EscapableHandleScope scope;
     randombytes_stir();
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 NAN_METHOD(bind_randombytes_close) {

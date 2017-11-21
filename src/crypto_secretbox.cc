@@ -60,7 +60,7 @@ NAN_METHOD(bind_crypto_secretbox) {
         return info.GetReturnValue().Set(ctxt);
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -173,7 +173,7 @@ NAN_METHOD(bind_crypto_secretbox_easy) {
         return info.GetReturnValue().Set(c);
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -217,7 +217,7 @@ NAN_METHOD(bind_crypto_secretbox_open_easy) {
         return info.GetReturnValue().Set(c);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -243,7 +243,7 @@ NAN_METHOD(bind_crypto_secretbox_detached) {
         return info.GetReturnValue().Set(c);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -269,7 +269,7 @@ NAN_METHOD(bind_crypto_secretbox_open_detached) {
         return info.GetReturnValue().Set(m);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**

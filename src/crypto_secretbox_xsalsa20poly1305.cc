@@ -33,7 +33,7 @@ NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305) {
         return info.GetReturnValue().Set(ctxt);
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305_open) {

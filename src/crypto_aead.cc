@@ -130,10 +130,10 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_is_available) {
     Nan::EscapableHandleScope scope;
 
     if( crypto_aead_aes256gcm_is_available() == 1 ) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 
@@ -168,7 +168,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_beforenm) {
         return info.GetReturnValue().Set(ctxt);
     }
 
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /**
@@ -209,7 +209,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_encrypt_afternm) {
     if( crypto_aead_aes256gcm_encrypt_afternm (c_ptr, &clen, m, m_size, ad, ad_size, NULL, npub, (crypto_aead_aes256gcm_state*)ctx) == 0 ) {
         return info.GetReturnValue().Set(c);
     }
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /**
@@ -254,7 +254,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_afternm) {
         return info.GetReturnValue().Set(m);
     }
 
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /**
@@ -324,19 +324,13 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_encrypt_detached_afternm) {
     if( crypto_aead_aes256gcm_encrypt_detached_afternm(c_ptr, mac_ptr, NULL, m, m_size, ad, ad_size, NULL, npub, (crypto_aead_aes256gcm_state*)ctx) == 0 ) {
         Local<Object> result = Nan::New<Object>();
         
-        Local<String> cipherTextKey = Nan::New<String>("cipherText").ToLocalChecked();
-        Local<Value> cipherTextValue = Nan::New<Value>(c);
-
-        Local<String> macKey = Nan::New<String>("mac").ToLocalChecked();
-        Local<Value> macValue = Nan::New<Value>(mac);
-
-        Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), cipherTextKey,  cipherTextValue, DontDelete);
-        b = result->DefineOwnProperty(Nan::GetCurrentContext(), macKey, macValue, DontDelete);
+        JS_OBJECT_SET_PROPERTY(result, "cipherText", c);
+        JS_OBJECT_SET_PROPERTY(result, "mac", mac);
         
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     }
 
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /**
@@ -379,7 +373,7 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_decrypt_detached_afternm) {
         return info.GetReturnValue().Set(m);
     }
 
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED; //JS_UNDEFINED;
 }
 
 /**

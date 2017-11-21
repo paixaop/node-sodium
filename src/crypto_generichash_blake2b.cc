@@ -37,7 +37,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -66,7 +66,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
         return info.GetReturnValue().Set(state);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 
@@ -112,7 +112,7 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -145,10 +145,10 @@ NAN_METHOD(bind_crypto_generichash_blake2b_salt_personal) {
 
     sodium_memzero(out, out_size);
     if (crypto_generichash_blake2b_salt_personal(out, out_size, in, in_size, key, key_size, salt, personal) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /**

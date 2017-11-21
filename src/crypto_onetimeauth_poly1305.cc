@@ -33,7 +33,7 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305) {
         return info.GetReturnValue().Set(token);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -81,7 +81,7 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_init) {
         return info.GetReturnValue().Set(state);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -121,7 +121,7 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_final) {
         return info.GetReturnValue().Set(out);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**

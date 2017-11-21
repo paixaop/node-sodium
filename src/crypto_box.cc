@@ -144,10 +144,10 @@ NAN_METHOD(bind_crypto_box_keypair) {
     if (crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
         
-        Nan::Maybe<bool> b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("publicKey").ToLocalChecked(), Nan::New<Value>(pk), DontDelete);
-        b = result->DefineOwnProperty(Nan::GetCurrentContext(), Nan::New<String>("secretKey").ToLocalChecked(), Nan::New<Value>(sk), DontDelete);
+        JS_OBJECT_SET_PROPERTY(result, "publicKey", pk);
+        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
 
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     } else {
         return;
     }
@@ -452,7 +452,7 @@ NAN_METHOD(bind_crypto_box_detached) {
         return info.GetReturnValue().Set(c);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -481,7 +481,7 @@ NAN_METHOD(bind_crypto_box_open_detached) {
         return info.GetReturnValue().Set(m);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -501,7 +501,7 @@ NAN_METHOD(bind_crypto_box_seal) {
         return info.GetReturnValue().Set(c);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -523,7 +523,7 @@ NAN_METHOD(bind_crypto_box_seal_open) {
         return info.GetReturnValue().Set(m);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -542,22 +542,13 @@ NAN_METHOD(bind_crypto_box_seed_keypair) {
     if (crypto_box_seed_keypair(pk_ptr, sk_ptr, seed) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        Nan::Maybe<bool> b = result->DefineOwnProperty(
-            Nan::GetCurrentContext(), 
-            Nan::New<String>("publicKey").ToLocalChecked(), 
-            Nan::New<Value>(pk), 
-            DontDelete);
+        JS_OBJECT_SET_PROPERTY(result, "publicKey", pk);
+        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
 
-        b = result->DefineOwnProperty(
-            Nan::GetCurrentContext(), 
-            Nan::New<String>("secretKey").ToLocalChecked(), 
-            Nan::New<Value>(sk), 
-            DontDelete);
-
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -581,7 +572,7 @@ NAN_METHOD(bind_crypto_box_detached_afternm) {
         return info.GetReturnValue().Set(ctxt);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());   
+    return JS_NULL;   
 }
 
 /*
@@ -606,7 +597,7 @@ NAN_METHOD(bind_crypto_box_open_detached_afternm) {
         return info.GetReturnValue().Set(message);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());   
+    return JS_NULL;   
 }
 
 /*
@@ -629,7 +620,7 @@ NAN_METHOD(bind_crypto_box_easy_afternm) {
         return info.GetReturnValue().Set(ctxt);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());   
+    return JS_NULL;   
 }
 
 /*
@@ -658,7 +649,7 @@ NAN_METHOD(bind_crypto_box_open_easy_afternm) {
         return info.GetReturnValue().Set(message);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());   
+    return JS_NULL;   
 }
 
 
