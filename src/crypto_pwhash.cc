@@ -247,7 +247,7 @@ NAN_METHOD(bind_crypto_pwhash_scryptsalsa208sha256_str) {
     NEW_BUFFER_AND_PTR(hash, crypto_pwhash_scryptsalsa208sha256_STRBYTES);
 
     if (crypto_pwhash_scryptsalsa208sha256_str((char*)hash_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
-        return info.GetReturnValue().Set(hash);
+        return JS_BUFFER(hash);
     }
 
     return JS_NULL;
