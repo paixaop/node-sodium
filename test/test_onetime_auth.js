@@ -63,13 +63,6 @@ describe("Auth", function () {
         done();
     });
 
-    it('should fail call generate before having a key', function() {
-        var auth = new Auth();
-        assert.throws(function() {
-            auth.generate("123");
-        });
-    });
-
     it('should fail call validate before having a key', function() {
         var auth = new Auth();
         assert.throws(function() {
