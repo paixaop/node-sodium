@@ -51,8 +51,7 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str) {
     NEW_BUFFER_AND_PTR(buf, crypto_pwhash_argon2i_STRBYTES);
 
     if (crypto_pwhash_argon2i_str((char*)buf_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
-        Local<v8::String> out = Nan::New<String>( (char*)buf_ptr ).ToLocalChecked();
-        return info.GetReturnValue().Set(out);
+        return JS_BUFFER(buf);
     }
 
     return JS_FALSE;
@@ -67,10 +66,10 @@ NAN_METHOD(bind_crypto_pwhash_argon2i_str_verify) {
 
     ARGS(2,"arguments must be: pwhash string, password");
 
-    ARG_TO_STRING(hash);
+    ARG_TO_BUFFER_TYPE(hash, char*);
     ARG_TO_BUFFER_TYPE(passwd, char*);
 
-    if (crypto_pwhash_argon2i_str_verify((char*)(*hash), passwd, passwd_size) == 0) {
+    if (crypto_pwhash_argon2i_str_verify(hash, passwd, passwd_size) == 0) {
         return JS_TRUE;
     }
 
