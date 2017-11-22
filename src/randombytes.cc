@@ -68,6 +68,19 @@ NAN_METHOD(bind_randombytes_uniform) {
     );
 }
 
+NAN_METHOD(bind_randombytes_buf_deterministic) {
+     Nan::EscapableHandleScope scope;
+
+    ARGS(2,"arguments buf and seed must be buffers");
+
+    ARG_TO_UCHAR_BUFFER(buffer);
+    ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
+    randombytes_buf_deterministic(buffer, buffer_size, seed);
+
+    return JS_NULL;
+}
+
+
 /**
  * Register function calls in node binding
  */
@@ -79,5 +92,6 @@ void register_randombytes(Handle<Object> target) {
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);
     NEW_METHOD(randombytes_uniform);
+    NEW_METHOD(randombytes_buf_deterministic);
     
 }
