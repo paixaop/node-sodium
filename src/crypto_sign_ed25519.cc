@@ -165,8 +165,8 @@ NAN_METHOD(bind_crypto_sign_ed25519_keypair) {
 
     if (crypto_sign_ed25519_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
 
         return info.GetReturnValue().Set(result);
     }
@@ -189,8 +189,8 @@ NAN_METHOD(bind_crypto_sign_ed25519_seed_keypair) {
     if (crypto_sign_ed25519_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
 
         return info.GetReturnValue().Set(result);
     }

@@ -323,8 +323,8 @@ NAN_METHOD(bind_crypto_aead_aes256gcm_encrypt_detached_afternm) {
 
     if( crypto_aead_aes256gcm_encrypt_detached_afternm(c_ptr, mac_ptr, NULL, m, m_size, ad, ad_size, NULL, npub, (crypto_aead_aes256gcm_state*)ctx) == 0 ) {
         Local<Object> result = Nan::New<Object>();
-        result->ForceSet(Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete);
-        result->ForceSet(Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete);
         return info.GetReturnValue().Set(result);
     }
 

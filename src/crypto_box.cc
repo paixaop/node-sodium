@@ -144,8 +144,8 @@ NAN_METHOD(bind_crypto_box_keypair) {
     if (crypto_box_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
 
         return info.GetReturnValue().Set(result);
     } else {
@@ -542,8 +542,8 @@ NAN_METHOD(bind_crypto_box_seed_keypair) {
     if (crypto_box_seed_keypair(pk_ptr, sk_ptr, seed) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
+        Nan::ForceSet(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
 
         return info.GetReturnValue().Set(result);
     }

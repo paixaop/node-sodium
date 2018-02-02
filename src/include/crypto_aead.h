@@ -103,8 +103,8 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         unsigned long long maclen;\
         if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac_ptr, &maclen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
             Local<Object> result = Nan::New<Object>(); \
-            result->ForceSet(Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete); \
-            result->ForceSet(Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete); \
+            Nan::ForceSet(result, Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete); \
+            Nan::ForceSet(result, Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete); \
             return info.GetReturnValue().Set(result); \
         } \
         return info.GetReturnValue().Set(Nan::Undefined()); \
