@@ -10,6 +10,7 @@ var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var os = require('os');
 
 var libFiles = [
@@ -270,8 +271,8 @@ function doDownloads(next) {
     });
 }
 
-function run(cmdLine, expectedExitCode, next) {
-    var child = exec(cmdLine);
+function run(cmdLine, args, expectedExitCode, next) {
+    var child = spawn(cmdLine, { shell: true });
 
     if (typeof expectedExitCode === 'undefined') {
         expectedExitCode = 0;
@@ -340,9 +341,9 @@ function isPreInstallMode() {
 // Start
 if (os.platform() !== 'win32') {
     if (isPreInstallMode()) {
-        run('make libsodium');
+        run('make', ['libsodium']);
     } else {
-        run('make nodesodium');
+        run('make', ['nodesodium']);
     }
 } else {
     checkMSVSVersion();
@@ -357,7 +358,7 @@ if (os.platform() !== 'win32') {
         });
     } else {
         console.log('Install Mode');
-        run('node-gyp rebuild', 0, function() {
+        run('node-gyp', ['rebuild'], 0, function() {
             console.log('Copy lib files to Release folder');
             files = libFiles.slice(0); // clone array
             copyFiles(files, function() {
