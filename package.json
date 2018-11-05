@@ -7,7 +7,7 @@
   "main": "index.js",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "nan": ">=2.2.1 <2.8.0"
+    "nan": "2.7.0"
   },
   "devDependencies": {
     "mdextract": "^1.0.0",
