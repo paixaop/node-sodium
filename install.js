@@ -10,6 +10,7 @@ var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var os = require('os');
 
 var libFiles = [
@@ -270,7 +271,7 @@ function doDownloads(next) {
 }
 
 function run(cmdLine, expectedExitCode, next) {
-    var child = exec(cmdLine);
+    var child = spawn(cmdLine, { shell: true });
 
     if (typeof expectedExitCode === 'undefined') {
         expectedExitCode = 0;
