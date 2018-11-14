@@ -32,3 +32,4 @@ lib-cov
 convershot
 html-report
 coverage.html
+.vscode-upload.json
