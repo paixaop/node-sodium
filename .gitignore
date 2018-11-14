@@ -34,4 +34,3 @@ html-report
 coverage.html
 .vscode-upload.json
 .Makefile.swp
-package-lock.json
