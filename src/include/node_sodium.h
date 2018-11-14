@@ -51,8 +51,8 @@ using namespace v8;
 
 #define GET_ARG_AS(i, NAME, TYPE) \
     ARG_IS_BUFFER(i,#NAME); \
-    TYPE NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
-    unsigned long long NAME ## _size = Buffer::Length(info[i]->ToObject()); \
+    TYPE NAME = (TYPE) Buffer::Data(info[i]); \
+    unsigned long long NAME ## _size = Buffer::Length(info[i]); \
     if( NAME ## _size == 0 ) { }
 
 #define GET_ARG_AS_OR_NULL(i, NAME, TYPE) \
@@ -60,8 +60,8 @@ using namespace v8;
     unsigned long long NAME ## _size = 0; \
     if( !info[i]->IsNull() ) { \
         ARG_IS_BUFFER(i,#NAME); \
-        NAME = (TYPE) Buffer::Data(info[i]->ToObject()); \
-        NAME ## _size = Buffer::Length(info[i]->ToObject()); \
+        NAME = (TYPE) Buffer::Data(info[i]); \
+        NAME ## _size = Buffer::Length(info[i]); \
         if( NAME ## _size == 0 ) { } \
     } else { \
         NAME = NULL; \
@@ -159,13 +159,13 @@ using namespace v8;
     Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs ## slowBuffer);
 
 #define NEW_INT_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
+    Nan::DefineOwnProperty(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
 
 #define NEW_NUMBER_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Number>(NAME), v8::ReadOnly);
+    Nan::DefineOwnProperty(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Number>(NAME), v8::ReadOnly);
 
 #define NEW_STRING_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<String>(NAME).ToLocalChecked(), v8::ReadOnly);
+    Nan::DefineOwnProperty(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<String>(NAME).ToLocalChecked(), v8::ReadOnly);
 
 #define NEW_METHOD(NAME) \
     Nan::SetMethod(target, #NAME, bind_ ## NAME)
