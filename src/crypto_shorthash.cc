@@ -42,7 +42,7 @@ NAN_METHOD(bind_crypto_shorthash) {
     if( crypto_shorthash(hash_ptr, message, message_size, key) == 0 ) {
         return info.GetReturnValue().Set(hash);
     } else {
-        return info.GetReturnValue().Set(Nan::Null());
+        return JS_NULL;
     }
 }
 

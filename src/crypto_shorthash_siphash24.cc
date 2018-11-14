@@ -42,7 +42,7 @@ NAN_METHOD(bind_crypto_shorthash_siphash24) {
         return info.GetReturnValue().Set(hash);
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**

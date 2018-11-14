@@ -18,7 +18,7 @@
         if( crypto_auth_ ## ALGO (token_ptr, msg, msg_size, key) == 0 ) { \
             return info.GetReturnValue().Set(token); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     }\
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _verify) { \
         Nan::EscapableHandleScope scope; \
@@ -38,7 +38,7 @@
         if( crypto_auth_ ## ALGO ## _init((crypto_auth_ ## ALGO ## _state*) state_ptr, key, key_size) == 0 ) { \
             return info.GetReturnValue().Set(state); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     } \
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
         Nan::EscapableHandleScope scope; \
@@ -50,7 +50,7 @@
         if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state2_ptr, msg, msg_size) == 0 ) { \
             return info.GetReturnValue().Set(state2); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     } \
     NAN_METHOD(bind_crypto_auth_ ## ALGO ## _final) { \
         Nan::EscapableHandleScope scope; \
@@ -60,7 +60,7 @@
         if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, token_ptr) == 0 ) { \
             return info.GetReturnValue().Set(token); \
         } \
-        return info.GetReturnValue().Set(Nan::False()); \
+        return JS_FALSE; \
     }
 
 

@@ -1,8 +1,17 @@
 sudo: false
 language: node_js
 node_js:
-  - "4.5.0"
   - "6.9.1"
+  - "9.2.0"
+  - "8.9.1"
+
+matrix:
+  include:
+    - os: linux
+    - os: osx
+      osx_image: xcode9.1
+      env: 
+        - CXX=g++
 
 env:
   - CXX=g++-4.8
@@ -17,3 +26,4 @@ addons:
 before_install:
   - export JOBS=max
   - export prebuild_compile=true
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi

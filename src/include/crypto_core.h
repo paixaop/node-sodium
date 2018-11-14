@@ -19,7 +19,7 @@
         if (crypto_core_ ## ALGO (out_ptr, in, key, c) == 0) { \
             return info.GetReturnValue().Set(out); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     }
 
 #define METHOD_AND_PROPS(ALGO) \

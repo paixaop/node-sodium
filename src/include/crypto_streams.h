@@ -19,7 +19,7 @@
         if (crypto_stream_ ## ALGO (stream_ptr, slen, nonce, key) == 0) { \
             return info.GetReturnValue().Set(stream); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     } \
     NAN_METHOD(bind_crypto_stream_ ## ALGO ## _xor) { \
         Nan::EscapableHandleScope scope; \
@@ -31,7 +31,7 @@
         if (crypto_stream_ ## ALGO ## _xor(ctxt_ptr, message, message_size, nonce, key) == 0) { \
             return info.GetReturnValue().Set(ctxt); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     }
 
 #define CRYPTO_STREAM_DEF_IC(ALGO) \
@@ -46,7 +46,7 @@
         if (crypto_stream_ ## ALGO ## _xor_ic(ctxt_ptr, message, message_size, nonce, ic, key) == 0) { \
             return info.GetReturnValue().Set(ctxt); \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return JS_NULL; \
     }
 
 
@@ -69,6 +69,5 @@ NAN_METHODS(salsa208);
 NAN_METHODS(salsa2012);
 NAN_METHODS(chacha20);
 NAN_METHODS(chacha20_ietf);
-NAN_METHODS(aes128ctr);
 
 #endif

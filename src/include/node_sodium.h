@@ -28,19 +28,15 @@ using namespace v8;
 #define SODIUM_STATIC
 
 // Check if a function argument is a node Buffer. If not throw V8 exception
-#define ARG_IS_BUFFER(i,msg) \
+#define ARG_IS_BUFFER(i, NAME) \
     if (!Buffer::HasInstance(info[i])) { \
-        std::ostringstream oss; \
-        oss << "argument " << msg << " must be a buffer"; \
-        return Nan::ThrowError(oss.str().c_str()); \
+       return Nan::ThrowError("argument " #NAME " must be a buffer"); \
     }
 
-#define ARG_IS_BUFFER_OR_NULL(i,msg) \
+#define ARG_IS_BUFFER_OR_NULL(i, NAME) \
     if (!Buffer::HasInstance(info[i])) { \
         if( !info[i]->IsNull() ) { \
-            std::ostringstream oss; \
-            oss << "argument " << msg << " must be a buffer"; \
-            return Nan::ThrowError(oss.str().c_str()); \
+            return Nan::ThrowError("argument " #NAME " must be a buffer or null"); \
         } \
     }
 
@@ -70,9 +66,7 @@ using namespace v8;
 #define GET_ARG_AS_LEN(i, NAME, MAXLEN, TYPE) \
     GET_ARG_AS(i, NAME, TYPE); \
     if( NAME ## _size != MAXLEN ) { \
-        std::ostringstream oss; \
-        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long" ; \
-        return Nan::ThrowError(oss.str().c_str()); \
+        return Nan::ThrowError("argument " #NAME " must be " #MAXLEN " bytes long"); \
     }
 
 #define GET_ARG_AS_UCHAR(i, NAME) \
@@ -88,11 +82,11 @@ using namespace v8;
     GET_ARG_AS_LEN(i, NAME, MAXLEN, void*)
 
 #define GET_ARG_NUMBER(i, NAME) \
-    size_t NAME; \
+    uint32_t NAME; \
     if (info[i]->IsUint32()) { \
         NAME = info[i]->Uint32Value(); \
     } else { \
-        return Nan::ThrowError("argument size must be a number"); \
+        return Nan::ThrowError("argument " #NAME " must be a number"); \
     }
 
 #define GET_ARG_AS_STRING(i, NAME) \
@@ -100,7 +94,7 @@ using namespace v8;
     if (info[i]->IsString()) { \
         NAME = info[i]->ToString(); \
     } else { \
-        return Nan::ThrowError("argument must be a string"); \
+        return Nan::ThrowError("argument " #NAME " must be a string"); \
     }
 
 #define ARG_TO_BUFFER_TYPE(NAME, TYPE)              GET_ARG_AS(_arg, NAME, TYPE); _arg++
@@ -112,30 +106,24 @@ using namespace v8;
 #define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
 #define ARG_TO_BUFFER_OR_NULL(NAME, TYPE)           GET_ARG_AS_OR_NULL(_arg, NAME, TYPE); _arg++
 #define ARG_TO_UCHAR_BUFFER_OR_NULL(NAME)           GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); _arg++
-#define ARG_TO_STRING(NAME)                         GET_ARG_AS_STRING(_arg, NAME); _arg++;
+#define ARG_TO_STRING(NAME)                         GET_ARG_AS_STRING(_arg, NAME); _arg++
 
 #define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
     GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char*); \
     if( NAME ## _size != 0 && NAME ## _size != MAXLEN ) { \
-        std::ostringstream oss; \
-        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long or NULL" ; \
-        return Nan::ThrowError(oss.str().c_str()); \
+        return Nan::ThrowError("argument " #NAME " must be " #MAXLEN " bytes long or null"); \
     } \
     _arg++
 
 
 #define CHECK_MAX_SIZE(NAME, MAX_SIZE)  \
     if( NAME > MAX_SIZE ) {     \
-        std::ostringstream oss; \
-        oss << #NAME << " size cannot be bigger than " << MAX_SIZE << " bytes";  \
-        return Nan::ThrowError(oss.str().c_str()); \
+        return Nan::ThrowError(#NAME " size cannot be bigger than " #MAX_SIZE " bytes"); \
     }
 
 #define CHECK_MIN_SIZE(NAME, MIN_SIZE)  \
     if( NAME < MIN_SIZE ) {     \
-        std::ostringstream oss; \
-        oss << #NAME << " size cannot be smaller than " << MIN_SIZE << " bytes";  \
-        return Nan::ThrowError(oss.str().c_str()); \
+        return Nan::ThrowError(#NAME " size cannot be smaller than " #MIN_SIZE " bytes"); \
     }
 
 #define CHECK_SIZE(NAME, MIN_SIZE, MAX_SIZE) \
@@ -159,18 +147,81 @@ using namespace v8;
     Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs ## slowBuffer);
 
 #define NEW_INT_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Integer>(NAME), v8::ReadOnly);
+    Nan::Maybe<bool> NAME ##_r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            Nan::New<Integer>(NAME), ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        Nan::ThrowError("Property " #NAME " could not be set!"); \
+    } 
 
 #define NEW_NUMBER_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<Number>(NAME), v8::ReadOnly);
+    Nan::Maybe<bool> NAME ##_r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            Nan::New<Number>(NAME), ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        Nan::ThrowError("Property " #NAME " could not be set!"); \
+    }
 
 #define NEW_STRING_PROP(NAME) \
-    Nan::ForceSet(target, Nan::New<String>(#NAME).ToLocalChecked(), Nan::New<String>(NAME).ToLocalChecked(), v8::ReadOnly);
+    Nan::MaybeLocal<String> NAME ## _mvalue = String::NewFromOneByte(Isolate::GetCurrent(), (uint8_t*) &NAME[0], v8::NewStringType::kNormal); \
+    Local<Value> NAME ## _value = NAME ## _mvalue.ToLocalChecked(); \
+    Nan::Maybe<bool> NAME ## _r = \
+        target->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(#NAME).ToLocalChecked(), \
+            NAME ## _value, \
+            ReadOnly); \
+    if( NAME ## _r.IsNothing() ) { \
+        Nan::ThrowError("Property " #NAME " could not be set!"); \
+    }
 
 #define NEW_METHOD(NAME) \
     Nan::SetMethod(target, #NAME, bind_ ## NAME)
 
 #define NEW_METHOD_ALIAS(NAME, LINKTO) \
     Nan::SetMethod(target, #NAME, bind_ ## LINKTO)
+
+#define JS_OBJECT_SET_PROPERTY(OBJ, PROP, VALUE) \
+    Nan::Maybe<bool> OBJ ## _ ## VALUE ## _bool = \
+        OBJ->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(PROP).ToLocalChecked(), \
+            Nan::New<Value>(VALUE), \
+            DontDelete); \
+    if( OBJ ## _ ## VALUE ## _bool.IsNothing() ) {}
+
+#define JS_OBJECT(OBJ) \
+    info.GetReturnValue().Set(OBJ)
+
+#define JS_UNDEFINED \
+    JS_OBJECT(Nan::Undefined())
+
+#define JS_NULL \
+    JS_OBJECT(Nan::Null())
+
+#define JS_FALSE \
+    JS_OBJECT(Nan::False())
+
+#define JS_TRUE \
+    JS_OBJECT(Nan::True())
+
+#define JS_TYPE(OBJ, TYPE) \
+    JS_OBJECT(Nan::New<TYPE>(OBJ))
+
+#define JS_UINT32(OBJ) \
+    JS_TYPE(OBJ, Uint32)
+
+#define JS_INTEGER(OBJ) \
+    JS_TYPE(OBJ, Integer)
+    
+#define JS_STRING(OBJ) \
+    JS_OBJECT(Nan::New<String>(OBJ).ToLocalChecked())
+
+#define JS_BUFFER(OBJ) \
+    JS_OBJECT(OBJ)
 
 #endif

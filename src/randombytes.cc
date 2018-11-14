@@ -16,12 +16,11 @@
 NAN_METHOD(bind_randombytes_buf) {
     Nan::EscapableHandleScope scope;
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
+    ARG_TO_VOID_BUFFER(buffer);
 
-    GET_ARG_AS_VOID(0, buffer);
     randombytes_buf(buffer, buffer_size);
-
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 // void randombytes_stir()
@@ -29,43 +28,47 @@ NAN_METHOD(bind_randombytes_stir) {
     Nan::EscapableHandleScope scope;
     randombytes_stir();
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 NAN_METHOD(bind_randombytes_close) {
     Nan::EscapableHandleScope scope;
 
     // int randombytes_close()
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(randombytes_close())
-    );
+    return JS_INTEGER(randombytes_close());
 }
 
 NAN_METHOD(bind_randombytes_random) {
     Nan::EscapableHandleScope scope;
 
     // uint_32 randombytes_random()
-    return info.GetReturnValue().Set(
-        Nan::New<Uint32>(randombytes_random())
-    );
+    return JS_UINT32(randombytes_random());
 }
 
 NAN_METHOD(bind_randombytes_uniform) {
     Nan::EscapableHandleScope scope;
-    uint32_t upper_bound;
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument size must be a positive number");
+    ARGS(1, "argument size must be a positive number");
+    ARG_TO_NUMBER(upper_bound);
 
-    if (info[0]->IsUint32()) {
-        upper_bound = info[0]->Int32Value();
-    } else {
+    if (upper_bound <= 0) {
         return Nan::ThrowError("argument size must be a positive number");
     }
 
     // uint32_t randombytes_uniform(const uint32_t upper_bound)
-    return info.GetReturnValue().Set(
-        Nan::New<Uint32>(randombytes_uniform(upper_bound))
-    );
+    return JS_UINT32(randombytes_uniform(upper_bound));
+}
+
+NAN_METHOD(bind_randombytes_buf_deterministic) {
+     Nan::EscapableHandleScope scope;
+
+    ARGS(2,"arguments buf and seed must be buffers");
+
+    ARG_TO_UCHAR_BUFFER(buffer);
+    ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
+    randombytes_buf_deterministic(buffer, buffer_size, seed);
+
+    return JS_NULL;
 }
 
 /**
@@ -79,5 +82,7 @@ void register_randombytes(Handle<Object> target) {
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);
     NEW_METHOD(randombytes_uniform);
-    
+    NEW_METHOD(randombytes_buf_deterministic);
+
+    NEW_INT_PROP(randombytes_SEEDBYTES);
 }

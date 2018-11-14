@@ -38,7 +38,7 @@ NAN_METHOD(bind_memzero) {
     ARG_TO_VOID_BUFFER(buffer);
     
     sodium_memzero(buffer, buffer_size);
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -130,7 +130,7 @@ NAN_METHOD(bind_increment) {
     
     sodium_increment(buffer, buffer_size);
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
@@ -166,7 +166,7 @@ NAN_METHOD(bind_add) {
         return Nan::ThrowError("buffers need to be the same size");
     }
     sodium_add(buffer_1, buffer_2, buffer_1_size);
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**

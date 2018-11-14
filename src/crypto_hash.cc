@@ -25,7 +25,7 @@ NAN_METHOD(bind_crypto_hash) {
     if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
         return info.GetReturnValue().Set(hash);
     } else {
-        return info.GetReturnValue().Set(Nan::Null());
+        return JS_NULL;
     }
 }
 

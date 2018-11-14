@@ -1,13 +1,13 @@
 
-#ifndef __SODIUM_VERSION_H__
-#define __SODIUM_VERSION_H__
+#ifndef sodium_version_H
+#define sodium_version_H
 
 #include "export.h"
 
-#define SODIUM_VERSION_STRING "1.0.11"
+#define SODIUM_VERSION_STRING "1.0.16"
 
-#define SODIUM_LIBRARY_VERSION_MAJOR 9
-#define SODIUM_LIBRARY_VERSION_MINOR 3
+#define SODIUM_LIBRARY_VERSION_MAJOR 10
+#define SODIUM_LIBRARY_VERSION_MINOR 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +21,9 @@ int         sodium_library_version_major(void);
 
 SODIUM_EXPORT
 int         sodium_library_version_minor(void);
+
+SODIUM_EXPORT
+int         sodium_library_minimal(void);
 
 #ifdef __cplusplus
 }

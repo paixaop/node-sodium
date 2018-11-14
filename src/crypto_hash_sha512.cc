@@ -25,7 +25,7 @@ NAN_METHOD(bind_crypto_hash_sha512) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -40,7 +40,7 @@ NAN_METHOD(bind_crypto_hash_sha512_init) {
         return info.GetReturnValue().Set(state);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /* int crypto_hash_sha512_update(crypto_hash_sha512_state *state,
@@ -64,7 +64,7 @@ NAN_METHOD(bind_crypto_hash_sha512_update) {
         return info.GetReturnValue().Set(state2);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /* int crypto_hash_sha512_final(crypto_hash_sha512_state *state,
@@ -82,7 +82,7 @@ NAN_METHOD(bind_crypto_hash_sha512_final) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /**

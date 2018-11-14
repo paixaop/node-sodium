@@ -46,10 +46,10 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_keypair) {
     if (crypto_box_curve25519xsalsa20poly1305_keypair(pk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), pk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        JS_OBJECT_SET_PROPERTY(result, "publicKey", pk);
+        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
 
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     } else {
         return;
     }

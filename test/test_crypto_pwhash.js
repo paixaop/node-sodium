@@ -59,7 +59,9 @@ describe('PWHash', function() {
                     password,
                     sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
                     sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE);
-        assert(sodium.crypto_pwhash_str_verify(out, password));
+
+        var valid = sodium.crypto_pwhash_str_verify(out, password);
+        assert(valid);
         
         done();
     });
@@ -74,7 +76,6 @@ describe('PWHash', function() {
                     sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE);
         
         assert(sodium.crypto_pwhash_str_verify(out, badPassword)==false);
-        
         done();
     });
 });
@@ -83,11 +84,13 @@ describe('PWHash argon2i', function() {
     it('should verify the generated hash with same password', function(done) {
         var password = Buffer.from('this is a test password','utf8');
     
-        var out = sodium.crypto_pwhash_argon2i_str(
+        var hash = sodium.crypto_pwhash_argon2i_str(
                     password,
                     sodium.crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE,
                     sodium.crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
-        assert(sodium.crypto_pwhash_argon2i_str_verify(out, password));
+
+        var result = sodium.crypto_pwhash_argon2i_str_verify(hash, password);
+        assert(result);
         
         done();
     });

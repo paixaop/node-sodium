@@ -44,7 +44,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _encrypt (c_ptr, &clen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
             return info.GetReturnValue().Set(c); \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return JS_UNDEFINED; \
     } \
     NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt) { \
         Nan::EscapableHandleScope scope; \
@@ -63,7 +63,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _decrypt (m_ptr, &mlen, NULL, c, c_size, ad, ad_size, npub, k) == 0 ) { \
             return info.GetReturnValue().Set(m); \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return JS_UNDEFINED; \
     }
 
 
@@ -103,11 +103,11 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         unsigned long long maclen;\
         if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac_ptr, &maclen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
             Local<Object> result = Nan::New<Object>(); \
-            result->ForceSet(Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete); \
-            result->ForceSet(Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete); \
-            return info.GetReturnValue().Set(result); \
+            JS_OBJECT_SET_PROPERTY(result, "cipherText", c); \
+            JS_OBJECT_SET_PROPERTY(result, "mac", mac); \
+            return JS_OBJECT(result); \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return JS_UNDEFINED; \
     }\
     NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt_detached) { \
         Nan::EscapableHandleScope scope; \
@@ -126,7 +126,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _decrypt_detached (m_ptr, NULL, c, c_size, mac, ad, ad_size, npub, k) == 0 ) { \
             return info.GetReturnValue().Set(m); \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return JS_UNDEFINED; \
     }
 
 #define METHOD_AND_PROPS(ALGO) \

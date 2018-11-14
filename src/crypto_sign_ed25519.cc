@@ -84,7 +84,7 @@ NAN_METHOD(bind_crypto_sign_ed25519) {
         return info.GetReturnValue().Set(sig);
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /* int crypto_sign_ed25519_open(unsigned char *m, unsigned long long *mlen_p,
@@ -108,7 +108,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_open) {
         return info.GetReturnValue().Set(m);
     } 
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /* int crypto_sign_ed25519_detached(unsigned char *sig,
@@ -132,7 +132,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_detached) {
         return info.GetReturnValue().Set(sig);
     }
         
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /* int crypto_sign_ed25519_verify_detached(const unsigned char *sig,
@@ -149,10 +149,10 @@ NAN_METHOD(bind_crypto_sign_ed25519_verify_detached) {
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_sign_ed25519_PUBLICKEYBYTES);
 
     if (crypto_sign_ed25519_verify_detached(signature, message, message_size, publicKey) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return JS_TRUE;
     }
     
-    return info.GetReturnValue().Set(Nan::False());
+    return JS_FALSE;
 }
 
 /* int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk);
@@ -165,13 +165,14 @@ NAN_METHOD(bind_crypto_sign_ed25519_keypair) {
 
     if (crypto_sign_ed25519_keypair(vk_ptr, sk_ptr) == 0) {
         Local<Object> result = Nan::New<Object>();
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        
+        JS_OBJECT_SET_PROPERTY(result, "publicKey", vk);
+        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
 
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /* crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
@@ -189,13 +190,13 @@ NAN_METHOD(bind_crypto_sign_ed25519_seed_keypair) {
     if (crypto_sign_ed25519_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
         Local<Object> result = Nan::New<Object>();
 
-        result->ForceSet(Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        result->ForceSet(Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        JS_OBJECT_SET_PROPERTY(result, "publicKey", vk);
+        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
 
-        return info.GetReturnValue().Set(result);
+        return JS_OBJECT(result);
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 /* int crypto_sign_ed25519_sk_to_seed(unsigned char *seed,
@@ -213,7 +214,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_seed) {
         return info.GetReturnValue().Set(seed);
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 
@@ -231,7 +232,7 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_pk) {
         return info.GetReturnValue().Set(pk);
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return JS_UNDEFINED;
 }
 
 

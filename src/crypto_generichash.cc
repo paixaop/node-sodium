@@ -39,7 +39,7 @@ NAN_METHOD(bind_crypto_generichash) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /*
@@ -68,7 +68,7 @@ NAN_METHOD(bind_crypto_generichash_init) {
         return info.GetReturnValue().Set(state);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 
@@ -113,7 +113,7 @@ NAN_METHOD(bind_crypto_generichash_final) {
         return info.GetReturnValue().Set(hash);
     }
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return JS_NULL;
 }
 
 /**
