@@ -104,7 +104,7 @@ test-cov: clean instrument
 	@echo Open html-report/index.html file in your browser
 
 clean:
-	-rm package-lock.json
+	#-rm package-lock.json
 	-rm -fr lib-cov
 	-rm -fr covershot
 	-rm -fr html-report
