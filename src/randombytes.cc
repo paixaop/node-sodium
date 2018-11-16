@@ -59,13 +59,23 @@ Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
         Napi::Value::From(env, randombytes_uniform(upper_bound));
 }
 
+Napi::Value bind_randombytes_buf_deterministic(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    ARGS(2,"arguments buf and seed must be buffers");
+    ARG_TO_UCHAR_BUFFER(buffer);
+    ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
+    randombytes_buf_deterministic(buffer, buffer_size, seed);
+    return env.Null();
+}
+
 /**
  * Register function calls in node binding
  */
 void register_randombytes(Napi::Env env, Napi::Object exports) {
    
     NEW_METHOD(randombytes_buf);
-    exports.Set(Napi::String::New(env, "randombytes"), Napi::Function::New(env, bind_randombytes_buf));
+    NEW_METHOD_ALIAS(randombytes, randombytes_buf);
     NEW_METHOD(randombytes_close);
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);
