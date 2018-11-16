@@ -49,6 +49,7 @@ Napi::Value bind_crypto_pwhash_argon2i_str(const Napi::CallbackInfo& info) {
     ARG_TO_NUMBER(memLimit);
 
     NEW_BUFFER_AND_PTR(buf, crypto_pwhash_argon2i_STRBYTES);
+    buf_ptr++; 
     char *out_ptr = (char *) buf.Data();
 
     if (crypto_pwhash_argon2i_str(out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
