@@ -53,7 +53,7 @@ Napi::Value bind_crypto_pwhash_argon2i_str(const Napi::CallbackInfo& info) {
     char *out_ptr = (char *) buf.Data();
 
     if (crypto_pwhash_argon2i_str(out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0) {
-        return Napi::String::New(env, out_ptr);
+        return buf;
     }
 
     return Napi::Boolean::New(env, false);
@@ -68,11 +68,10 @@ Napi::Value bind_crypto_pwhash_argon2i_str_verify(const Napi::CallbackInfo& info
 
     ARGS(2,"arguments must be: pwhash string, password");
 
-    ARG_TO_STRING(hash);
+    ARG_TO_BUFFER_TYPE(hash, char);
     ARG_TO_BUFFER_TYPE(passwd, char);
 
-    const char *hash_ptr = hash.Utf8Value().c_str();
-    if (crypto_pwhash_argon2i_str_verify(hash_ptr, passwd, passwd_size) == 0) {
+    if (crypto_pwhash_argon2i_str_verify(hash, passwd, passwd_size) == 0) {
         return Napi::Boolean::New(env, true);
     }
 
