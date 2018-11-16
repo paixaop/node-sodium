@@ -32,10 +32,9 @@
 Napi::Value bind_crypto_shorthash(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-
-    GET_ARG_AS_UCHAR(0,message);
-    GET_ARG_AS_UCHAR_LEN(1, key, crypto_shorthash_KEYBYTES);
+    ARGS(1,"argument message must be a buffer");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_shorthash_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(hash, crypto_shorthash_BYTES);
 

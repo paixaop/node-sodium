@@ -16,9 +16,8 @@
 Napi::Value bind_crypto_hash(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
-
-    GET_ARG_AS_UCHAR(0,msg);
+    ARGS(1,"argument message must be a buffer");
+    ARG_TO_UCHAR_BUFFER(msg);
 
     NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);
 

@@ -46,7 +46,8 @@
 // Create a new buffer, and get a pointer to it
 #define NEW_BUFFER_AND_PTR(NAME, size) \
     Napi::Buffer<unsigned char> NAME = Napi::Buffer<unsigned char>::New(info.Env(), size); \
-    unsigned char* NAME ## _ptr = (unsigned char*) NAME.Data()
+    unsigned char* NAME ## _ptr = (unsigned char*) NAME.Data(); \
+    if( *NAME ## _ptr == 0 ) { }
 
 #define GET_ARG_AS(i, NAME, TYPE) \
     ARG_IS_BUFFER(i,#NAME); \
@@ -77,19 +78,7 @@
         return env.Null(); \
     }
 
-#define GET_ARG_AS_UCHAR(i, NAME) \
-    GET_ARG_AS(i, NAME, unsigned char)
-
-#define GET_ARG_AS_UCHAR_LEN(i, NAME, MAXLEN) \
-    GET_ARG_AS_LEN(i, NAME, MAXLEN, unsigned char)
-
-#define GET_ARG_AS_VOID(i, NAME) \
-    GET_ARG_AS(i, NAME, void)
-
-#define GET_ARG_AS_VOID_LEN(i, NAME, MAXLEN) \
-    GET_ARG_AS_LEN(i, NAME, MAXLEN, void)
-
-#define GET_ARG_NUMBER(i, NAME) \
+#define GET_ARG_AS_NUMBER(i, NAME) \
     size_t NAME; \
     if (info[i].IsNumber()) { \
         NAME = info[i].As<Napi::Number>().Uint32Value(); \
@@ -107,16 +96,15 @@
         return env.Null(); \
     }
 
+#define ARG_TO_NUMBER(NAME)                         GET_ARG_AS_NUMBER(_arg, NAME); _arg++
+#define ARG_TO_STRING(NAME)                         GET_ARG_AS_STRING(_arg, NAME); _arg++;
+
 #define ARG_TO_BUFFER_TYPE(NAME, TYPE)              GET_ARG_AS(_arg, NAME, TYPE); _arg++
 #define ARG_TO_BUFFER_TYPE_LEN(NAME, MAXLEN, TYPE)  GET_ARG_AS_LEN(_arg, NAME, MAXLEN, TYPE); _arg++
-#define ARG_TO_NUMBER(NAME)                         GET_ARG_NUMBER(_arg, NAME); _arg++
-#define ARG_TO_VOID_BUFFER_LEN(NAME, MAXLEN)        GET_ARG_AS_VOID_LEN(_arg, NAME, MAXLEN); _arg++
-#define ARG_TO_VOID_BUFFER(NAME)                    GET_ARG_AS_VOID(_arg, NAME); _arg++
-#define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS_UCHAR(_arg, NAME); _arg++
-#define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_UCHAR_LEN(_arg, NAME, MAXLEN); _arg++
 #define ARG_TO_BUFFER_OR_NULL(NAME, TYPE)           GET_ARG_AS_OR_NULL(_arg, NAME, TYPE); _arg++
+#define ARG_TO_UCHAR_BUFFER(NAME)                   GET_ARG_AS(_arg, NAME, unsigned char); _arg++
+#define ARG_TO_UCHAR_BUFFER_LEN(NAME, MAXLEN)       GET_ARG_AS_LEN(_arg, NAME, MAXLEN, unsigned char); _arg++
 #define ARG_TO_UCHAR_BUFFER_OR_NULL(NAME)           GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char); _arg++
-#define ARG_TO_STRING(NAME)                         GET_ARG_AS_STRING(_arg, NAME); _arg++;
 
 #define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
     GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char); \
@@ -151,9 +139,6 @@
 
 #define ARGS(n, message) \
     int _arg = 0;        \
-    NUMBER_OF_MANDATORY_ARGS(n, message)
-
-#define NUMBER_OF_MANDATORY_ARGS(n, message) \
     if (info.Length() < (n)) {               \
         Napi::Error::New(env, message).ThrowAsJavaScriptException(); \
         return env.Null();     \
