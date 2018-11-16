@@ -182,13 +182,4 @@
 #define NAPI_METHOD(name) \
     Napi::Value name(const Napi::CallbackInfo& info)
 
-#define JS_OBJECT_SET_PROPERTY(OBJ, PROP, VALUE) \
-    Nan::Maybe<bool> OBJ ## _ ## VALUE ## _bool = \
-        OBJ->DefineOwnProperty( \
-            Nan::GetCurrentContext(), \
-            Nan::New<String>(PROP).ToLocalChecked(), \
-            Nan::New<Value>(VALUE), \
-            DontDelete); \
-    if( OBJ ## _ ## VALUE ## _bool.IsNothing() ) {}
-
 #endif
