@@ -89,7 +89,7 @@
  *     sodium.randombytes_buf(key);
  *
  *     // Generate random nonce
- *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_KEYBYTES);
+ *     var nonce = Buffer.allocUnsafe(crypto_aead_aes256gcm_NPUBBYTES);
  *     sodium.randombytes_buf(nonce);
  *
  *     // Precompute and generate the state
