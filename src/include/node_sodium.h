@@ -144,13 +144,6 @@
         return env.Null();     \
     }
 
-#define TO_REAL_BUFFER(slowBuffer, actualBuffer) \
-    Handle<Value> constructorArgs ## slowBuffer[3] = \
-        { slowBuffer->handle_, \
-          Napi::Number::New(env, Buffer::Length(slowBuffer)), \
-          Napi::Number::New(env, 0) }; \
-    Napi::Object actualBuffer = bufferConstructor->NewInstance(3, constructorArgs ## slowBuffer);
-
 #define NEW_INT_PROP(NAME) \
     exports.DefineProperty( \
         Napi::PropertyDescriptor::Value( \
@@ -197,35 +190,5 @@
             Nan::New<Value>(VALUE), \
             DontDelete); \
     if( OBJ ## _ ## VALUE ## _bool.IsNothing() ) {}
-
-#define JS_OBJECT(OBJ) \
-    info.GetReturnValue().Set(OBJ)
-
-#define JS_UNDEFINED \
-    JS_OBJECT(Nan::Undefined())
-
-#define JS_NULL \
-    JS_OBJECT(Nan::Null())
-
-#define JS_FALSE \
-    JS_OBJECT(Nan::False())
-
-#define JS_TRUE \
-    JS_OBJECT(Nan::True())
-
-#define JS_TYPE(OBJ, TYPE) \
-    JS_OBJECT(Nan::New<TYPE>(OBJ))
-
-#define JS_UINT32(OBJ) \
-    JS_TYPE(OBJ, Uint32)
-
-#define JS_INTEGER(OBJ) \
-    JS_TYPE(OBJ, Integer)
-    
-#define JS_STRING(OBJ) \
-    JS_OBJECT(Nan::New<String>(OBJ).ToLocalChecked())
-
-#define JS_BUFFER(OBJ) \
-    JS_OBJECT(OBJ)
 
 #endif
