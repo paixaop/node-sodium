@@ -102,7 +102,6 @@ test-cov: clean instrument
 	@echo Open html-report/index.html file in your browser
 
 clean:
-	#-rm package-lock.json
 	-rm -fr lib-cov
 	-rm -fr covershot
 	-rm -fr html-report
@@ -137,13 +136,16 @@ clean:
 	-find ${LIBSODIUM_DIR} -name Makefile.in -delete
 	-find ${LIBSODIUM_DIR} -name *.trs -delete
 	-find ${LIBSODIUM_DIR}/test/default/ -type f ! -name "*.*" -delete
-
+	@echo 
+	@echo NOTICE: package-lock.json is not removed by default. Run \'make cleanall\' to remove it.
+	@echo 
 
 cleanbuild: clean
 	-rm -fr ./build
 
 cleanall: cleanbuild
 	-rm -fr ./node_modules
+	-rm package-lock.json
 
 publish:
 	npm version patch
