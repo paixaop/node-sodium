@@ -153,15 +153,6 @@
         ) \
     )
 
-#define NEW_NUMBER_PROP(NAME) \
-     exports.DefineProperty( \
-        Napi::PropertyDescriptor::Value( \
-            Napi::String::New(env, #NAME), \
-            Napi::Number::New(env, NAME), \
-            napi_default \
-        ) \
-    )
-
 #define NEW_STRING_PROP(NAME) \
     exports.DefineProperty( \
         Napi::PropertyDescriptor::Value( \

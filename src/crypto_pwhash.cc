@@ -295,34 +295,34 @@ void register_crypto_pwhash(Napi::Env env, Napi::Object exports) {
     NEW_METHOD(crypto_pwhash_argon2i_str_verify);
 
     // Properties
-    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
     NEW_STRING_PROP(crypto_pwhash_scryptsalsa208sha256_STRPREFIX);
 
-    NEW_NUMBER_PROP(crypto_pwhash_ALG_DEFAULT);
-    NEW_NUMBER_PROP(crypto_pwhash_SALTBYTES);
-    NEW_NUMBER_PROP(crypto_pwhash_STRBYTES);
+    NEW_INT_PROP(crypto_pwhash_ALG_DEFAULT);
+    NEW_INT_PROP(crypto_pwhash_SALTBYTES);
+    NEW_INT_PROP(crypto_pwhash_STRBYTES);
     NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
+    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
+    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
     NEW_STRING_PROP(crypto_pwhash_PRIMITIVE);
 
     NEW_INT_PROP(crypto_pwhash_argon2i_ALG_ARGON2I13);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_SALTBYTES);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_STRBYTES);
+    NEW_INT_PROP(crypto_pwhash_argon2i_SALTBYTES);
+    NEW_INT_PROP(crypto_pwhash_argon2i_STRBYTES);
     NEW_STRING_PROP(crypto_pwhash_argon2i_STRPREFIX);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
-    NEW_NUMBER_PROP(crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
+    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);
 }
