@@ -13,71 +13,59 @@
 // Lib Sodium Random
 
 // void randombytes_buf(void *const buf, const size_t size)
-NAN_METHOD(bind_randombytes_buf) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_buf(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-    ARGS(1, "argument must be a buffer");
-    ARG_TO_VOID_BUFFER(buffer);
+    ARGS(1,"argument must be a buffer");
 
+    ARG_TO_UCHAR_BUFFER(buffer);
     randombytes_buf(buffer, buffer_size);
-    return JS_NULL;
+
+    return env.Null();
 }
 
 // void randombytes_stir()
-NAN_METHOD(bind_randombytes_stir) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_stir(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
     randombytes_stir();
 
-    return JS_NULL;
+    return env.Null();
 }
 
-NAN_METHOD(bind_randombytes_close) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_close(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     // int randombytes_close()
-    return JS_INTEGER(randombytes_close());
+    return 
+        Napi::Number::New(env, randombytes_close());
 }
 
-NAN_METHOD(bind_randombytes_random) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_random(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     // uint_32 randombytes_random()
-    return JS_UINT32(randombytes_random());
+    return 
+        Napi::Value::From(env, randombytes_random());
 }
 
-NAN_METHOD(bind_randombytes_uniform) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-    ARGS(1, "argument size must be a positive number");
+    ARGS(1,"argument size must be a positive number");
     ARG_TO_NUMBER(upper_bound);
 
-    if (upper_bound <= 0) {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
-
     // uint32_t randombytes_uniform(const uint32_t upper_bound)
-    return JS_UINT32(randombytes_uniform(upper_bound));
-}
-
-NAN_METHOD(bind_randombytes_buf_deterministic) {
-     Nan::EscapableHandleScope scope;
-
-    ARGS(2,"arguments buf and seed must be buffers");
-
-    ARG_TO_UCHAR_BUFFER(buffer);
-    ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
-    randombytes_buf_deterministic(buffer, buffer_size, seed);
-
-    return JS_NULL;
+    return 
+        Napi::Value::From(env, randombytes_uniform(upper_bound));
 }
 
 /**
  * Register function calls in node binding
  */
-void register_randombytes(Handle<Object> target) {
+void register_randombytes(Napi::Env env, Napi::Object exports) {
    
     NEW_METHOD(randombytes_buf);
-    Nan::SetMethod(target, "randombytes", bind_randombytes_buf);
+    exports.Set(Napi::String::New(env, "randombytes"), Napi::Function::New(env, bind_randombytes_buf));
     NEW_METHOD(randombytes_close);
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);

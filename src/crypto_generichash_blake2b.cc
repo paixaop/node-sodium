@@ -19,8 +19,8 @@
  *  buffer in,
  *  buffer key
  */
-NAN_METHOD(bind_crypto_generichash_blake2b) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_blake2b(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_NUMBER(out_size);
@@ -34,10 +34,10 @@ NAN_METHOD(bind_crypto_generichash_blake2b) {
     sodium_memzero(hash_ptr, out_size);
 
     if (crypto_generichash_blake2b(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /*
@@ -50,8 +50,8 @@ int crypto_generichash_blake2b_init(crypto_generichash_blake2b_state *state,
   state = sodium_malloc((crypto_generichash_blake2b_statebytes() + (size_t) 63U)
  *                       & ~(size_t) 63U);
 */
-NAN_METHOD(bind_crypto_generichash_blake2b_init) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_blake2b_init(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: key buffer, output size");
     ARG_TO_UCHAR_BUFFER(key);
@@ -63,10 +63,10 @@ NAN_METHOD(bind_crypto_generichash_blake2b_init) {
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
 
     if (crypto_generichash_blake2b_init((crypto_generichash_blake2b_state *)state_ptr, key, key_size, out_size) == 0) {
-        return info.GetReturnValue().Set(state);
+        return state;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 
@@ -78,30 +78,30 @@ int crypto_generichash_blake2b_update(crypto_generichash_blake2b_state *state,
     buffer state
     buffer message
 */
-NAN_METHOD(bind_crypto_generichash_blake2b_update) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_blake2b_update(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(state); // VOID
     ARG_TO_UCHAR_BUFFER(message);
 
     NEW_BUFFER_AND_PTR(state2, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
     memcpy(state2_ptr, state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
 
     crypto_generichash_blake2b_update((crypto_generichash_blake2b_state *)state2_ptr, message, message_size);
-    return info.GetReturnValue().Set(state2);
+    return state2;
 }
 
 /*
 int crypto_generichash_blake2b_final(crypto_generichash_blake2b_state *state,
                              unsigned char *out, const size_t outlen);
 */
-NAN_METHOD(bind_crypto_generichash_blake2b_final) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_blake2b_final(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, output size");
-    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(state);
     ARG_TO_NUMBER(out_size);
 
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
@@ -109,10 +109,10 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
     NEW_BUFFER_AND_PTR(hash, out_size);
 
     if (crypto_generichash_blake2b_final((crypto_generichash_blake2b_state *)state, hash_ptr, out_size) == 0) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /*
@@ -130,8 +130,8 @@ NAN_METHOD(bind_crypto_generichash_blake2b_final) {
     Buffer salt
     Buffer personal
  */
-NAN_METHOD(bind_crypto_generichash_blake2b_salt_personal) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_blake2b_salt_personal(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(5,"arguments must five buffers: output, message, key, salt, personal");
     ARG_TO_UCHAR_BUFFER(out);
@@ -145,16 +145,17 @@ NAN_METHOD(bind_crypto_generichash_blake2b_salt_personal) {
 
     sodium_memzero(out, out_size);
     if (crypto_generichash_blake2b_salt_personal(out, out_size, in, in_size, key, key_size, salt, personal) == 0) {
-        return JS_TRUE;
+        return Napi::Boolean::New(env, true);
     }
 
-    return JS_FALSE;
+    return Napi::Boolean::New(env, false);
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_generichash_blake2b(Handle<Object> target) {
+void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
+
      // Generic Hash
     NEW_METHOD(crypto_generichash_blake2b);
     NEW_METHOD(crypto_generichash_blake2b_init);

@@ -35,10 +35,11 @@
       'src/crypto_onetimeauth.cc',
       'src/crypto_onetimeauth_poly1305.cc'
     ],
+    'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
     'include_dirs': [
       'src/include',
       'deps/build/include',
-      "<!(node -e \"require('nan')\")"
+      "<!@(node -p \"require('node-addon-api').include\")"
     ],
     'cflags': ['-fPIC'],
     'configurations': {

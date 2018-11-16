@@ -20,8 +20,8 @@
  *  [in] 	mlen 	the length of msg.
  *  [in] 	key 	the key used to compute the token.
  */
-NAN_METHOD(bind_crypto_onetimeauth_poly1305) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_onetimeauth_poly1305(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -30,10 +30,10 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305) {
     NEW_BUFFER_AND_PTR(token, crypto_onetimeauth_poly1305_BYTES);
 
     if( crypto_onetimeauth_poly1305(token_ptr, message, message_size, key) == 0 ) {
-        return info.GetReturnValue().Set(token);
+        return token;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /**
@@ -49,17 +49,17 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305) {
  *  [in] 	mlen 	the length of msg.
  *  [in] 	key 	the key used to compute the token.
  */
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_verify) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_onetimeauth_poly1305_verify(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments token, message, and key must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(token, crypto_onetimeauth_poly1305_BYTES);
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
 
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(crypto_onetimeauth_poly1305_verify(token, message, message_size, key))
-    );
+    return 
+        Napi::Number::New(env, crypto_onetimeauth_poly1305_verify(token, message, message_size, key))
+    ;
 }
 
 /*
@@ -69,8 +69,8 @@ int crypto_onetimeauth_poly1305_init(crypto_onetimeauth_poly1305_state *state,
     buffer key
     return state
 */
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_init) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_onetimeauth_poly1305_init(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"argument key must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
@@ -78,10 +78,10 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_init) {
     NEW_BUFFER_AND_PTR(state, sizeof(crypto_onetimeauth_poly1305_state));
 
     if (crypto_onetimeauth_poly1305_init((crypto_onetimeauth_poly1305_state *)state_ptr, key) == 0) {
-        return info.GetReturnValue().Set(state);
+        return state;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /*
@@ -89,19 +89,19 @@ int crypto_onetimeauth_poly1305_update(crypto_onetimeauth_poly1305_state *state,
                                        const unsigned char *in,
                                        unsigned long long inlen);
 */
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_update) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_onetimeauth_poly1305_update(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(state);  // VOID
     ARG_TO_UCHAR_BUFFER(message);
 
     NEW_BUFFER_AND_PTR(state2, sizeof(crypto_onetimeauth_poly1305_state));
     memcpy(state2_ptr, state, sizeof(crypto_onetimeauth_poly1305_state));
 
     crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state *)state2_ptr, message, message_size);
-    return info.GetReturnValue().Set(state2);
+    return state2;
 }
 
 
@@ -109,25 +109,26 @@ NAN_METHOD(bind_crypto_onetimeauth_poly1305_update) {
 int crypto_onetimeauth_poly1305_final(crypto_onetimeauth_poly1305_state *state,
                                       unsigned char *out);
 */
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_final) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_onetimeauth_poly1305_final(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"arguments must be: state buffer");
-    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(state); // VOID
 
     NEW_BUFFER_AND_PTR(out, crypto_onetimeauth_poly1305_BYTES);
 
     if (crypto_onetimeauth_poly1305_final((crypto_onetimeauth_poly1305_state *)state, out_ptr) == 0) {
-        return info.GetReturnValue().Set(out);
+        return out;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_onetimeauth_poly1305(Handle<Object> target) {
+void register_crypto_onetimeauth_poly1305(Napi::Env env, Napi::Object exports) {
+
     // One Time Auth
     NEW_METHOD(crypto_onetimeauth_poly1305);
     NEW_METHOD(crypto_onetimeauth_poly1305_verify);

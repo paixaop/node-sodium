@@ -29,8 +29,8 @@
  * outputs short, but unpredictable (without knowing the secret key) values
  * suitable for picking a list in a hash table for a given key.
  */
-NAN_METHOD(bind_crypto_shorthash_siphash24) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_shorthash_siphash24(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"argument message must be a buffer");
     ARG_TO_UCHAR_BUFFER(message);
@@ -39,16 +39,17 @@ NAN_METHOD(bind_crypto_shorthash_siphash24) {
     NEW_BUFFER_AND_PTR(hash, crypto_shorthash_siphash24_BYTES);
 
     if( crypto_shorthash_siphash24(hash_ptr, message, message_size, key) == 0 ) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     }
     
-    return JS_NULL;
+    return env.Null();
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_shorthash_siphash24(Handle<Object> target) {
+void register_crypto_shorthash_siphash24(Napi::Env env, Napi::Object exports) {
+
     // Short Hash
     NEW_METHOD(crypto_shorthash_siphash24);
     NEW_INT_PROP(crypto_shorthash_siphash24_BYTES);

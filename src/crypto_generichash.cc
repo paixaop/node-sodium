@@ -19,8 +19,8 @@
  *  buffer in,
  *  buffer key
  */
-NAN_METHOD(bind_crypto_generichash) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_NUMBER(out_size);
@@ -36,10 +36,10 @@ NAN_METHOD(bind_crypto_generichash) {
     sodium_memzero(hash_ptr, out_size);
 
     if (crypto_generichash(hash_ptr, out_size, in, in_size, key, key_size) == 0) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /*
@@ -52,8 +52,8 @@ int crypto_generichash_init(crypto_generichash_state *state,
   state = sodium_malloc((crypto_generichash_statebytes() + (size_t) 63U)
  *                       & ~(size_t) 63U);
 */
-NAN_METHOD(bind_crypto_generichash_init) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_init(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: key buffer, output size");
     ARG_TO_UCHAR_BUFFER(key);
@@ -65,10 +65,10 @@ NAN_METHOD(bind_crypto_generichash_init) {
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
 
     if (crypto_generichash_init((crypto_generichash_state *)state_ptr, key, key_size, out_size) == 0) {
-        return info.GetReturnValue().Set(state);
+        return state;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 
@@ -80,46 +80,47 @@ int crypto_generichash_update(crypto_generichash_state *state,
     buffer state
     buffer message
 */
-NAN_METHOD(bind_crypto_generichash_update) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_update(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_VOID_BUFFER(state);
+    ARG_TO_UCHAR_BUFFER(state); //VOID
     ARG_TO_UCHAR_BUFFER(message);
 
     NEW_BUFFER_AND_PTR(state2, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
     memcpy(state2_ptr, state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
 
     crypto_generichash_update((crypto_generichash_state *)state2_ptr, message, message_size);
-    return info.GetReturnValue().Set(state2);
+    return state2;
 }
 
 /*
 int crypto_generichash_final(crypto_generichash_state *state,
                              unsigned char *out, const size_t outlen);
 */
-NAN_METHOD(bind_crypto_generichash_final) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_generichash_final(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, output size");
-    ARG_TO_VOID_BUFFER(state);
-    ARG_TO_NUMBER(out_size);
+    ARG_TO_UCHAR_BUFFER(state); // VOID
+    ARG_TO_NUMBER(out_size); 
 
     CHECK_SIZE(out_size, crypto_generichash_BYTES_MIN, crypto_generichash_BYTES_MAX);
     NEW_BUFFER_AND_PTR(hash, out_size);
 
     if (crypto_generichash_final((crypto_generichash_state *)state, hash_ptr, out_size) == 0) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     }
 
-    return JS_NULL;
+    return env.Null();
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_generichash(Handle<Object> target) {
+void register_crypto_generichash(Napi::Env env, Napi::Object exports) {
+
      // Generic Hash
     NEW_METHOD(crypto_generichash);
     NEW_METHOD(crypto_generichash_init);

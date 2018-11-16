@@ -7,8 +7,8 @@
  */
 #include "node_sodium.h"
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -31,32 +31,32 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305) {
     NEW_BUFFER_AND_PTR(ctxt, message_size);
 
     if (crypto_box_curve25519xsalsa20poly1305(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
-        return info.GetReturnValue().Set(ctxt);
+        return ctxt;
     } else {
-        return;
+        return env.Null();
     }
 }
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_keypair) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_keypair(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(pk, crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES);
     NEW_BUFFER_AND_PTR(sk, crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES);
 
     if (crypto_box_curve25519xsalsa20poly1305_keypair(pk_ptr, sk_ptr) == 0) {
-        Local<Object> result = Nan::New<Object>();
+        Napi::Object result = Napi::Object::New(env);
 
-        JS_OBJECT_SET_PROPERTY(result, "publicKey", pk);
-        JS_OBJECT_SET_PROPERTY(result, "secretKey", sk);
+        result.Set(Napi::String::New(env, "publicKey"), pk);
+        result.Set(Napi::String::New(env, "secretKey"), sk);
 
-        return JS_OBJECT(result);
+        return result;
     } else {
-        return;
+        return env.Null();
     }
 }
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_open(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(cipherText);
@@ -68,7 +68,8 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open) {
     if (cipherText_size < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "argument cipherText must have a length of at least " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     unsigned int i;
@@ -80,7 +81,8 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open) {
     if (i < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "the first " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     NEW_BUFFER_AND_PTR(msg, cipherText_size);
@@ -91,14 +93,14 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open) {
         NEW_BUFFER_AND_PTR(plain_text, cipherText_size - crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_curve25519xsalsa20poly1305_ZEROBYTES), cipherText_size - crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
 
-        return info.GetReturnValue().Set(plain_text);
+        return plain_text;
     } else {
-        return;
+        return env.Null();
     }
 }
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_beforenm) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_beforenm(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments publicKey, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES);
@@ -107,14 +109,15 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_beforenm) {
     NEW_BUFFER_AND_PTR(k, crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES);
 
     if( crypto_box_curve25519xsalsa20poly1305_beforenm(k_ptr, publicKey, secretKey) != 0) {
-      return Nan::ThrowError("crypto_box_curve25519xsalsa20poly1305_beforenm failed");
+      Napi::Error::New(env, "crypto_box_curve25519xsalsa20poly1305_beforenm failed").ThrowAsJavaScriptException();
+      return env.Null();
     }
 
-    return info.GetReturnValue().Set(k);
+    return k;
 }
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_afternm) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_afternm(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce and k must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -136,14 +139,14 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_afternm) {
     NEW_BUFFER_AND_PTR(ctxt, message_size);
 
     if (crypto_box_curve25519xsalsa20poly1305_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
-        return info.GetReturnValue().Set(ctxt);
+        return ctxt;
     } else {
-        return;
+        return env.Null();
     }
 }
 
-NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open_afternm) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_open_afternm(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, k");
     ARG_TO_UCHAR_BUFFER(cipherText);
@@ -154,7 +157,8 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open_afternm) {
     if (cipherText_size < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "argument cipherText must have a length of at least " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     unsigned int i;
@@ -165,7 +169,8 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open_afternm) {
     if (i < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "the first " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     NEW_BUFFER_AND_PTR(msg, cipherText_size);
@@ -176,16 +181,17 @@ NAN_METHOD(bind_crypto_box_curve25519xsalsa20poly1305_open_afternm) {
         NEW_BUFFER_AND_PTR(plain_text,cipherText_size - crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_curve25519xsalsa20poly1305_ZEROBYTES), cipherText_size - crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
 
-        return info.GetReturnValue().Set(plain_text);
+        return plain_text;
     } else {
-        return;
+        return env.Null();
     }
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_box_curve25519xsalsa20poly1305(Handle<Object> target) {
+void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object exports) {
+
      // Box
     NEW_METHOD(crypto_box_curve25519xsalsa20poly1305);
     NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_keypair);

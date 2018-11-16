@@ -8,10 +8,10 @@
 #ifndef __CRYPTO_ONETIMEAUTH_POLY1305_H__
 #define __CRYPTO_ONETIMEAUTH_POLY1305_H__
 
-NAN_METHOD(bind_crypto_onetimeauth_poly1305);
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_verify);
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_init);
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_update);
-NAN_METHOD(bind_crypto_onetimeauth_poly1305_final);
+Napi::Value bind_crypto_onetimeauth_poly1305(const Napi::CallbackInfo& info);
+Napi::Value bind_crypto_onetimeauth_poly1305_verify(const Napi::CallbackInfo& info);
+Napi::Value bind_crypto_onetimeauth_poly1305_init(const Napi::CallbackInfo& info);
+Napi::Value bind_crypto_onetimeauth_poly1305_update(const Napi::CallbackInfo& info);
+Napi::Value bind_crypto_onetimeauth_poly1305_final(const Napi::CallbackInfo& info);
 
 #endif

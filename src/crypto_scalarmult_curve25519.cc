@@ -10,8 +10,8 @@
 /**
  * int crypto_scalarmult_curve25519_base(unsigned char *q, const unsigned char *n)
  */
-NAN_METHOD(bind_crypto_scalarmult_curve25519_base) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_scalarmult_curve25519_base(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_curve25519_SCALARBYTES);
@@ -19,9 +19,9 @@ NAN_METHOD(bind_crypto_scalarmult_curve25519_base) {
     NEW_BUFFER_AND_PTR(q, crypto_scalarmult_curve25519_BYTES);
 
     if (crypto_scalarmult_curve25519_base(q_ptr, n) == 0) {
-        return info.GetReturnValue().Set(q);
+        return q;
     } else {
-        return;
+        return env.Null();
     }
 }
 
@@ -30,8 +30,8 @@ NAN_METHOD(bind_crypto_scalarmult_curve25519_base) {
  * int crypto_scalarmult_curve25519(unsigned char *q, const unsigned char *n,
  *                  const unsigned char *p)
  */
-NAN_METHOD(bind_crypto_scalarmult_curve25519) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_scalarmult_curve25519(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_curve25519_SCALARBYTES);
@@ -40,16 +40,17 @@ NAN_METHOD(bind_crypto_scalarmult_curve25519) {
     NEW_BUFFER_AND_PTR(q, crypto_scalarmult_curve25519_BYTES);
 
     if (crypto_scalarmult_curve25519(q_ptr, n, p) == 0) {
-        return info.GetReturnValue().Set(q);
+        return q;
     } else {
-        return;
+        return env.Null();
     }
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_scalarmult_curve25519(Handle<Object> target) {
+void register_crypto_scalarmult_curve25519(Napi::Env env, Napi::Object exports) {
+
     // Scalar Mult
     NEW_METHOD(crypto_scalarmult_curve25519);
     NEW_METHOD(crypto_scalarmult_curve25519_base);

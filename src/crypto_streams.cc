@@ -26,11 +26,72 @@ CRYPTO_STREAM_DEF_IC(chacha20)
 CRYPTO_STREAM_DEF(chacha20_ietf)
 CRYPTO_STREAM_DEF_IC(chacha20_ietf)
 
+/*
+ *  int crypto_stream_aes128ctr_beforenm(unsigned char *c, const unsigned char *k);
+ */
+Napi::Value bind_crypto_stream_aes128ctr_beforenm(const Napi::CallbackInfo& info) { 
+    Napi::Env env = info.Env();
+    
+    ARGS(1,"arguments key must be a buffer");
+    ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_aes128ctr_KEYBYTES);
+    
+    NEW_BUFFER_AND_PTR(ctxt, crypto_stream_aes128ctr_BEFORENMBYTES);
+    
+    if (crypto_stream_aes128ctr_beforenm(ctxt_ptr, key) == 0) {
+        return ctxt;
+    }
+    
+    return env.Null();
+}
+
+/*
+    int crypto_stream_aes128ctr_afternm(unsigned char *out, unsigned long long len,
+                                  const unsigned char *nonce, const unsigned char *c);
+*/
+Napi::Value bind_crypto_stream_aes128ctr_afternm(const Napi::CallbackInfo& info) { 
+    Napi::Env env = info.Env();
+    
+    ARGS(3,"arguments are: output buffer, nonce, beforenm output buffer");
+    ARG_TO_UCHAR_BUFFER(out);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_aes128ctr_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(c, crypto_stream_aes128ctr_BEFORENMBYTES);
+    
+    if (crypto_stream_aes128ctr_afternm(out, out_size, nonce, c) == 0) {
+        return Napi::Boolean::New(env, true);
+    }
+    
+    return Napi::Boolean::New(env, false);
+}
+
+/*
+    int crypto_stream_aes128ctr_xor_afternm(unsigned char *out, const unsigned char *in,
+                                        unsigned long long len,
+                                        const unsigned char *nonce,
+                                        const unsigned char *c);
+
+*/
+Napi::Value bind_crypto_stream_aes128ctr_xor_afternm(const Napi::CallbackInfo& info) { 
+    Napi::Env env = info.Env();
+    
+    ARGS(3,"arguments are: output buffer, nonce, beforenm output buffer");
+    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_aes128ctr_NONCEBYTES);
+    ARG_TO_UCHAR_BUFFER_LEN(c, crypto_stream_aes128ctr_BEFORENMBYTES);
+    
+    NEW_BUFFER_AND_PTR(out, message_size);
+    
+    if (crypto_stream_aes128ctr_xor_afternm(out_ptr, message, message_size, nonce, c) == 0) {
+        return out;
+    }
+    
+    return env.Null();
+}
+
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_streams(Handle<Object> target) {
+void register_crypto_streams(Napi::Env env, Napi::Object exports) {    
     
     METHODS(xsalsa20);
     NEW_METHOD(crypto_stream_xsalsa20_xor_ic);
