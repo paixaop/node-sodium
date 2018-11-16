@@ -1,32 +1,40 @@
 
 #include <string.h>
 
-#include "crypto_sign_ed25519.h"
 #include "crypto_hash_sha512.h"
 #include "crypto_scalarmult_curve25519.h"
+#include "crypto_sign_ed25519.h"
+#include "sign_ed25519_ref10.h"
+#include "private/ed25519_ref10.h"
 #include "randombytes.h"
 #include "utils.h"
-#include "private/curve25519_ref10.h"
 
-int crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
-                                     const unsigned char *seed)
+int
+crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
+                                 const unsigned char *seed)
 {
-    ge_p3 A;
+    ge25519_p3 A;
 
-    crypto_hash_sha512(sk,seed,32);
+#ifdef ED25519_NONDETERMINISTIC
+    memmove(sk, seed, 32);
+#else
+    crypto_hash_sha512(sk, seed, 32);
+#endif
     sk[0] &= 248;
-    sk[31] &= 63;
+    sk[31] &= 127;
     sk[31] |= 64;
 
-    ge_scalarmult_base(&A,sk);
-    ge_p3_tobytes(pk,&A);
+    ge25519_scalarmult_base(&A, sk);
+    ge25519_p3_tobytes(pk, &A);
 
     memmove(sk, seed, 32);
     memmove(sk + 32, pk, 32);
+
     return 0;
 }
 
-int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk)
+int
+crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk)
 {
     unsigned char seed[32];
     int           ret;
@@ -38,35 +46,41 @@ int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk)
     return ret;
 }
 
-int crypto_sign_ed25519_pk_to_curve25519(unsigned char *curve25519_pk,
-                                         const unsigned char *ed25519_pk)
+int
+crypto_sign_ed25519_pk_to_curve25519(unsigned char *curve25519_pk,
+                                     const unsigned char *ed25519_pk)
 {
-    ge_p3 A;
-    fe    x;
-    fe    one_minus_y;
+    ge25519_p3 A;
+    fe25519    x;
+    fe25519    one_minus_y;
 
-    if (ge_frombytes_negate_vartime(&A, ed25519_pk) != 0) {
+    if (ge25519_has_small_order(ed25519_pk) != 0 ||
+        ge25519_frombytes_negate_vartime(&A, ed25519_pk) != 0 ||
+        ge25519_is_on_main_subgroup(&A) == 0) {
         return -1;
     }
-    fe_1(one_minus_y);
-    fe_sub(one_minus_y, one_minus_y, A.Y);
-    fe_invert(one_minus_y, one_minus_y);
-    fe_1(x);
-    fe_add(x, x, A.Y);
-    fe_mul(x, x, one_minus_y);
-    fe_tobytes(curve25519_pk, x);
+    fe25519_1(one_minus_y);
+    fe25519_sub(one_minus_y, one_minus_y, A.Y);
+    fe25519_invert(one_minus_y, one_minus_y);
+    fe25519_1(x);
+    fe25519_add(x, x, A.Y);
+    fe25519_mul(x, x, one_minus_y);
+    fe25519_tobytes(curve25519_pk, x);
 
     return 0;
 }
 
-int crypto_sign_ed25519_sk_to_curve25519(unsigned char *curve25519_sk,
-                                         const unsigned char *ed25519_sk)
+int
+crypto_sign_ed25519_sk_to_curve25519(unsigned char *curve25519_sk,
+                                     const unsigned char *ed25519_sk)
 {
     unsigned char h[crypto_hash_sha512_BYTES];
 
-    crypto_hash_sha512(h, ed25519_sk,
-                       crypto_sign_ed25519_SECRETKEYBYTES -
-                       crypto_sign_ed25519_PUBLICKEYBYTES);
+#ifdef ED25519_NONDETERMINISTIC
+    memcpy(h, ed25519_sk, 32);
+#else
+    crypto_hash_sha512(h, ed25519_sk, 32);
+#endif
     h[0] &= 248;
     h[31] &= 127;
     h[31] |= 64;

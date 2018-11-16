@@ -10,6 +10,7 @@ var https = require('https');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var os = require('os');
 
 var libFiles = [
@@ -56,7 +57,6 @@ var includeFiles = [
     'include/sodium/crypto_sign_ed25519.h',
     'include/sodium/crypto_sign_edwards25519sha512batch.h',
     'include/sodium/crypto_stream.h',
-    'include/sodium/crypto_stream_aes128ctr.h',
     'include/sodium/crypto_stream_chacha20.h',
     'include/sodium/crypto_stream_salsa20.h',
     'include/sodium/crypto_stream_salsa2012.h',
@@ -271,7 +271,7 @@ function doDownloads(next) {
 }
 
 function run(cmdLine, expectedExitCode, next) {
-    var child = exec(cmdLine);
+    var child = spawn(cmdLine, { shell: true });
 
     if (typeof expectedExitCode === 'undefined') {
         expectedExitCode = 0;

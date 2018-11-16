@@ -73,10 +73,12 @@ endif
 
 sodium: libsodium
 	echo Build node-sodium module
+	node defines.js
 	node-gyp rebuild
 
 nodesodium:
 	echo Build node-sodium module
+	node defines.js
 	node-gyp rebuild
 
 test: test-unit
@@ -102,12 +104,14 @@ test-cov: clean instrument
 	@echo Open html-report/index.html file in your browser
 
 clean:
+	#-rm package-lock.json
 	-rm -fr lib-cov
 	-rm -fr covershot
 	-rm -fr html-report
 	-rm -fr coverage
 	-rm -fr coverage.html
 	-rm -fr ${INSTALL_DIR}
+	-rm ./deps/libsodium.gyp
 	-rm -fr ${LIBSODIUM_DIR}/autom4te.cache
 	-rm -fr ${LIBSODIUM_DIR}/build-aux
 	-rm ${LIBSODIUM_DIR}/aclocal.m4

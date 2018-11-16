@@ -9,7 +9,6 @@
 #include "crypto_streams.h"
 
 // Generate the binding methods for each algorithm
-CRYPTO_STREAM_DEF(aes128ctr)
 CRYPTO_STREAM_DEF(salsa20)
 CRYPTO_STREAM_DEF_IC(salsa20)
 CRYPTO_STREAM_DEF(xsalsa20)
@@ -22,8 +21,8 @@ CRYPTO_STREAM_DEF_IC(chacha20)
 // chacha_ietf uses the same key length as crypto_stream_chacha20_KEYBYTES
 // Libsodium does not define it, lets define it here so we don't get compilation errors
 // when expanding the macros
-#define crypto_stream_chacha20_ietf_KEYBYTES   crypto_stream_chacha20_KEYBYTES
-#define crypto_stream_chacha20_ietf_NONCEBYTES crypto_stream_chacha20_IETF_NONCEBYTES
+// #define crypto_stream_chacha20_ietf_KEYBYTES   crypto_stream_chacha20_KEYBYTES
+//#define crypto_stream_chacha20_ietf_NONCEBYTES crypto_stream_chacha20_IETF_NONCEBYTES
 CRYPTO_STREAM_DEF(chacha20_ietf)
 CRYPTO_STREAM_DEF_IC(chacha20_ietf)
 
@@ -115,11 +114,4 @@ void register_crypto_streams(Napi::Env env, Napi::Object exports) {
     METHODS(chacha20_ietf);
     NEW_METHOD(crypto_stream_chacha20_ietf_xor_ic);
     PROPS(chacha20_ietf);
-    
-    METHODS(aes128ctr);
-    NEW_INT_PROP(crypto_stream_aes128ctr_BEFORENMBYTES);
-    NEW_METHOD(crypto_stream_aes128ctr_beforenm);
-    NEW_METHOD(crypto_stream_aes128ctr_afternm);
-    NEW_METHOD(crypto_stream_aes128ctr_xor_afternm);
-    PROPS(aes128ctr);
 }

@@ -70,5 +70,7 @@ void register_randombytes(Napi::Env env, Napi::Object exports) {
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);
     NEW_METHOD(randombytes_uniform);
-    
+    NEW_METHOD(randombytes_buf_deterministic);
+
+    NEW_INT_PROP(randombytes_SEEDBYTES);
 }

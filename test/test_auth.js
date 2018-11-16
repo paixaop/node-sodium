@@ -62,14 +62,13 @@ describe("Auth", function () {
         done();
     });
 
-    it('should fail call generate with no message encoding set', function() {
+    it('should fail call validate before having a key', function() {
         var auth = new Auth();
         assert.throws(function() {
-            auth.generate("123");
+            auth.validate("123123", "123123");
         });
     });
 
-    
     it('should set an encoding if a supported encoding is passed to setEncoding', function() {
         var auth = new Auth();
         auth.setEncoding('base64');

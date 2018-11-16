@@ -206,4 +206,43 @@ using namespace Napi;
 #define NAPI_METHOD(name) \
     Napi::Value name(const Napi::CallbackInfo& info)
 
+#define JS_OBJECT_SET_PROPERTY(OBJ, PROP, VALUE) \
+    Nan::Maybe<bool> OBJ ## _ ## VALUE ## _bool = \
+        OBJ->DefineOwnProperty( \
+            Nan::GetCurrentContext(), \
+            Nan::New<String>(PROP).ToLocalChecked(), \
+            Nan::New<Value>(VALUE), \
+            DontDelete); \
+    if( OBJ ## _ ## VALUE ## _bool.IsNothing() ) {}
+
+#define JS_OBJECT(OBJ) \
+    info.GetReturnValue().Set(OBJ)
+
+#define JS_UNDEFINED \
+    JS_OBJECT(Nan::Undefined())
+
+#define JS_NULL \
+    JS_OBJECT(Nan::Null())
+
+#define JS_FALSE \
+    JS_OBJECT(Nan::False())
+
+#define JS_TRUE \
+    JS_OBJECT(Nan::True())
+
+#define JS_TYPE(OBJ, TYPE) \
+    JS_OBJECT(Nan::New<TYPE>(OBJ))
+
+#define JS_UINT32(OBJ) \
+    JS_TYPE(OBJ, Uint32)
+
+#define JS_INTEGER(OBJ) \
+    JS_TYPE(OBJ, Integer)
+    
+#define JS_STRING(OBJ) \
+    JS_OBJECT(Nan::New<String>(OBJ).ToLocalChecked())
+
+#define JS_BUFFER(OBJ) \
+    JS_OBJECT(OBJ)
+
 #endif
