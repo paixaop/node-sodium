@@ -41,7 +41,8 @@
       'deps/build/include',
       "<!@(node -p \"require('node-addon-api').include\")"
     ],
-    'cflags': ['-fPIC', '-fexceptions'],
+    'cflags!': [ '-fno-exceptions' ],
+    'cflags_cc!': [ '-fno-exceptions' ],
     'configurations': {
       'Debug': {
         'msvs_settings': {
@@ -60,7 +61,6 @@
         },
       },
     },
-    'defines': [ 'NAPI_CPP_EXCEPTIONS' ],
     'conditions': [
       ['OS=="mac"', {
         'libraries': [
