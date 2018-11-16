@@ -41,11 +41,12 @@
       'deps/build/include',
       "<!@(node -p \"require('node-addon-api').include\")"
     ],
-    'cflags': ['-fPIC'],
+    'cflags': ['-fPIC', '-fexceptions'],
     'configurations': {
       'Debug': {
         'msvs_settings': {
           'VCCLCompilerTool': {
+            'ExceptionHandling': 1,
             'DisableSpecificWarnings': ['4244', '4267']
           },
         },
@@ -53,6 +54,7 @@
       'Release': {
         'msvs_settings': {
           'VCCLCompilerTool': {
+            'ExceptionHandling': 1,
             'DisableSpecificWarnings': ['4244','4267']
           },
         },

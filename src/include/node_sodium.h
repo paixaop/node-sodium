@@ -21,8 +21,6 @@
 
 #include "sodium.h"
 
-using namespace Napi;
-
 // As per Libsodium install docs
 #define SODIUM_STATIC
 
