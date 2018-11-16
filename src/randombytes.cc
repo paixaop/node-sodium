@@ -13,68 +13,59 @@
 // Lib Sodium Random
 
 // void randombytes_buf(void *const buf, const size_t size)
-NAN_METHOD(bind_randombytes_buf) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_buf(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument must be a buffer");
+    ARGS(1,"argument must be a buffer");
 
-    GET_ARG_AS_VOID(0, buffer);
+    ARG_TO_UCHAR_BUFFER(buffer);
     randombytes_buf(buffer, buffer_size);
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 // void randombytes_stir()
-NAN_METHOD(bind_randombytes_stir) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_stir(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
     randombytes_stir();
 
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
-NAN_METHOD(bind_randombytes_close) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_close(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     // int randombytes_close()
-    return info.GetReturnValue().Set(
-        Nan::New<Integer>(randombytes_close())
-    );
+    return 
+        Napi::Number::New(env, randombytes_close());
 }
 
-NAN_METHOD(bind_randombytes_random) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_randombytes_random(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     // uint_32 randombytes_random()
-    return info.GetReturnValue().Set(
-        Nan::New<Uint32>(randombytes_random())
-    );
+    return 
+        Napi::Value::From(env, randombytes_random());
 }
 
-NAN_METHOD(bind_randombytes_uniform) {
-    Nan::EscapableHandleScope scope;
-    uint32_t upper_bound;
+Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-    NUMBER_OF_MANDATORY_ARGS(1,"argument size must be a positive number");
-
-    if (info[0]->IsUint32()) {
-        upper_bound = info[0]->Int32Value();
-    } else {
-        return Nan::ThrowError("argument size must be a positive number");
-    }
+    ARGS(1,"argument size must be a positive number");
+    ARG_TO_NUMBER(upper_bound);
 
     // uint32_t randombytes_uniform(const uint32_t upper_bound)
-    return info.GetReturnValue().Set(
-        Nan::New<Uint32>(randombytes_uniform(upper_bound))
-    );
+    return 
+        Napi::Value::From(env, randombytes_uniform(upper_bound));
 }
 
 /**
  * Register function calls in node binding
  */
-void register_randombytes(Handle<Object> target) {
+void register_randombytes(Napi::Env env, Napi::Object exports) {
    
     NEW_METHOD(randombytes_buf);
-    Nan::SetMethod(target, "randombytes", bind_randombytes_buf);
+    exports.Set(Napi::String::New(env, "randombytes"), Napi::Function::New(env, bind_randombytes_buf));
     NEW_METHOD(randombytes_close);
     NEW_METHOD(randombytes_stir);
     NEW_METHOD(randombytes_random);

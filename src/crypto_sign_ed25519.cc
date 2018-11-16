@@ -21,8 +21,8 @@
  * Precondition:
  *    ed25519_pk must be a ed25519 public key.
  */
-NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_pk_to_curve25519(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1, "argument ed25519_pk must be a buffer")
     ARG_TO_UCHAR_BUFFER_LEN(ed25519_pk, crypto_sign_ed25519_PUBLICKEYBYTES);
@@ -30,10 +30,11 @@ NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
     NEW_BUFFER_AND_PTR(curve25519_pk, crypto_box_PUBLICKEYBYTES);
 
     if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_pk_to_curve25519 conversion failed");
+      Napi::Error::New(env, "crypto_sign_ed25519_pk_to_curve25519 conversion failed").ThrowAsJavaScriptException();
+      return env.Null();
     }
 
-    return info.GetReturnValue().Set(curve25519_pk);
+    return curve25519_pk;
 }
 
 
@@ -50,8 +51,8 @@ NAN_METHOD(bind_crypto_sign_ed25519_pk_to_curve25519) {
  * Precondition:
  *    ed25519_sk must be a ed25519 secret key.
  */
-NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_sk_to_curve25519(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1, "argument ed25519_sk must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(ed25519_sk, crypto_sign_ed25519_SECRETKEYBYTES);
@@ -59,18 +60,19 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_curve25519) {
     NEW_BUFFER_AND_PTR(curve25519_sk, crypto_scalarmult_curve25519_BYTES);
 
     if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
-      return Nan::ThrowError("crypto_sign_ed25519_sk_to_curve25519 conversion failed");
+      Napi::Error::New(env, "crypto_sign_ed25519_sk_to_curve25519 conversion failed").ThrowAsJavaScriptException();
+      return env.Null();
     }
     
-    return info.GetReturnValue().Set(curve25519_sk);
+    return curve25519_sk;
 }
 
 /* int crypto_sign_ed25519(unsigned char *sm, unsigned long long *smlen_p,
                         const unsigned char *m, unsigned long long mlen,
                         const unsigned char *sk);
 */
-NAN_METHOD(bind_crypto_sign_ed25519) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -81,18 +83,18 @@ NAN_METHOD(bind_crypto_sign_ed25519) {
     unsigned long long slen = 0;
 
     if (crypto_sign_ed25519(sig_ptr, &slen, message, message_size, secretKey) == 0) {
-        return info.GetReturnValue().Set(sig);
+        return sig;
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 /* int crypto_sign_ed25519_open(unsigned char *m, unsigned long long *mlen_p,
                              const unsigned char *sm, unsigned long long smlen,
                              const unsigned char *pk)
 */
-NAN_METHOD(bind_crypto_sign_ed25519_open) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_open(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments signedMessage and verificationKey must be buffers");
     ARG_TO_UCHAR_BUFFER(signedMessage);
@@ -105,10 +107,10 @@ NAN_METHOD(bind_crypto_sign_ed25519_open) {
         NEW_BUFFER_AND_PTR(m, mlen);
         memcpy(m_ptr, msg_ptr, mlen);
 
-        return info.GetReturnValue().Set(m);
+        return m;
     } 
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 /* int crypto_sign_ed25519_detached(unsigned char *sig,
@@ -117,8 +119,8 @@ NAN_METHOD(bind_crypto_sign_ed25519_open) {
                                  unsigned long long mlen,
                                  const unsigned char *sk);
 */
-NAN_METHOD(bind_crypto_sign_ed25519_detached) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_detached(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -129,10 +131,10 @@ NAN_METHOD(bind_crypto_sign_ed25519_detached) {
     unsigned long long slen = 0;
 
     if (crypto_sign_ed25519_detached(sig_ptr, &slen, message, message_size, secretKey) == 0) {
-        return info.GetReturnValue().Set(sig);
+        return sig;
     }
         
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 /* int crypto_sign_ed25519_verify_detached(const unsigned char *sig,
@@ -140,8 +142,8 @@ NAN_METHOD(bind_crypto_sign_ed25519_detached) {
                                         unsigned long long mlen,
                                         const unsigned char *pk)
 */
-NAN_METHOD(bind_crypto_sign_ed25519_verify_detached) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_verify_detached(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(2,"arguments signedMessage and verificationKey must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(signature, crypto_sign_ed25519_BYTES);
@@ -149,36 +151,36 @@ NAN_METHOD(bind_crypto_sign_ed25519_verify_detached) {
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_sign_ed25519_PUBLICKEYBYTES);
 
     if (crypto_sign_ed25519_verify_detached(signature, message, message_size, publicKey) == 0) {
-        return info.GetReturnValue().Set(Nan::True());
+        return Napi::Boolean::New(env, true);
     }
     
-    return info.GetReturnValue().Set(Nan::False());
+    return Napi::Boolean::New(env, false);
 }
 
 /* int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk);
  */
-NAN_METHOD(bind_crypto_sign_ed25519_keypair) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_keypair(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(vk, crypto_sign_ed25519_PUBLICKEYBYTES);
     NEW_BUFFER_AND_PTR(sk, crypto_sign_ed25519_SECRETKEYBYTES);
 
     if (crypto_sign_ed25519_keypair(vk_ptr, sk_ptr) == 0) {
-        Local<Object> result = Nan::New<Object>();
-        Nan::DefineOwnProperty(result, Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        Nan::DefineOwnProperty(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        Napi::Object result = Napi::Object::New(env);
+        result.Set(Napi::String::New(env, "publicKey"), vk);
+        result.Set(Napi::String::New(env, "secretKey"), sk);
 
-        return info.GetReturnValue().Set(result);
+        return result;
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 /* crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
                                      const unsigned char *seed);
 */
-NAN_METHOD(bind_crypto_sign_ed25519_seed_keypair) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_seed_keypair(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sd, crypto_sign_ed25519_SEEDBYTES);
@@ -187,22 +189,22 @@ NAN_METHOD(bind_crypto_sign_ed25519_seed_keypair) {
     NEW_BUFFER_AND_PTR(sk, crypto_sign_ed25519_SECRETKEYBYTES);
 
     if (crypto_sign_ed25519_seed_keypair(vk_ptr, sk_ptr, sd) == 0) {
-        Local<Object> result = Nan::New<Object>();
+        Napi::Object result = Napi::Object::New(env);
 
-        Nan::DefineOwnProperty(result, Nan::New<String>("publicKey").ToLocalChecked(), vk, DontDelete);
-        Nan::DefineOwnProperty(result, Nan::New<String>("secretKey").ToLocalChecked(), sk, DontDelete);
+        result.Set(Napi::String::New(env, "publicKey"), vk);
+        result.Set(Napi::String::New(env, "secretKey"), sk);
 
-        return info.GetReturnValue().Set(result);
+        return result;
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 /* int crypto_sign_ed25519_sk_to_seed(unsigned char *seed,
                                    const unsigned char *sk);
 */
-NAN_METHOD(bind_crypto_sign_ed25519_sk_to_seed) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_sk_to_seed(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_sign_ed25519_SECRETKEYBYTES);
@@ -210,17 +212,17 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_seed) {
     NEW_BUFFER_AND_PTR(seed, crypto_sign_ed25519_SEEDBYTES);
 
     if (crypto_sign_ed25519_sk_to_seed(seed_ptr, sk) == 0) {
-        return info.GetReturnValue().Set(seed);
+        return seed;
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 
 /* int crypto_sign_ed25519_sk_to_pk(unsigned char *pk, const unsigned char *sk);
 */
-NAN_METHOD(bind_crypto_sign_ed25519_sk_to_pk) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_sign_ed25519_sk_to_pk(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_sign_ed25519_SECRETKEYBYTES);
@@ -228,17 +230,17 @@ NAN_METHOD(bind_crypto_sign_ed25519_sk_to_pk) {
     NEW_BUFFER_AND_PTR(pk, crypto_sign_ed25519_PUBLICKEYBYTES);
 
     if (crypto_sign_ed25519_sk_to_pk(pk_ptr, sk) == 0) {
-        return info.GetReturnValue().Set(pk);
+        return pk;
     }
     
-    return info.GetReturnValue().Set(Nan::Undefined());
+    return env.Undefined();
 }
 
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_sign_ed25519(Handle<Object> target) {
+void register_crypto_sign_ed25519(Napi::Env env, Napi::Object exports) {
     
     NEW_METHOD(crypto_sign_ed25519);
     NEW_METHOD(crypto_sign_ed25519_open);

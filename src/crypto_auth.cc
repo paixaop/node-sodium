@@ -12,7 +12,8 @@
 /**
  * Register function calls in node binding
  */
-void register_crypto_auth(Handle<Object> target) {
+void register_crypto_auth(Napi::Env env, Napi::Object exports) {
+
     // Auth
     NEW_METHOD_ALIAS(crypto_auth, crypto_auth_hmacsha512256);
     NEW_METHOD_ALIAS(crypto_auth_verify, crypto_auth_hmacsha512256_verify);

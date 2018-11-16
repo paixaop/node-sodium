@@ -11,7 +11,8 @@
 /**
  * Register function calls in node binding
  */
-void register_crypto_onetimeauth(Handle<Object> target) {
+void register_crypto_onetimeauth(Napi::Env env, Napi::Object exports) {
+
     NEW_METHOD_ALIAS(crypto_onetimeauth, crypto_onetimeauth_poly1305);
     NEW_METHOD_ALIAS(crypto_onetimeauth_verify, crypto_onetimeauth_poly1305_verify);
     NEW_METHOD_ALIAS(crypto_onetimeauth_init, crypto_onetimeauth_poly1305_init);

@@ -8,7 +8,7 @@
 #ifndef __CRYPTO_SCALARMULT_CURVE25519_H__
 #define __CRYPTO_SCALARMULT_CURVE25519_H__
 
-NAN_METHOD(bind_crypto_scalarmult_curve25519);
-NAN_METHOD(bind_crypto_scalarmult_curve25519_base);
+Napi::Value bind_crypto_scalarmult_curve25519(const Napi::CallbackInfo& info);
+Napi::Value bind_crypto_scalarmult_curve25519_base(const Napi::CallbackInfo& info);
 
 #endif

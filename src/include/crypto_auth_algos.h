@@ -9,58 +9,58 @@
 #define __CRYPTO_AUTH_ALGOS_H__
 
 #define CRYPTO_AUTH_DEF(ALGO) \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO) { \
-        Nan::EscapableHandleScope scope; \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO) { \
+         Napi::Env env = info.Env(); \
         ARGS(2,"arguments message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(msg);\
         ARG_TO_UCHAR_BUFFER(key); \
         NEW_BUFFER_AND_PTR(token, crypto_auth_ ## ALGO ## _BYTES); \
         if( crypto_auth_ ## ALGO (token_ptr, msg, msg_size, key) == 0 ) { \
-            return info.GetReturnValue().Set(token); \
+            return token; \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return env.Null(); \
     }\
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _verify) { \
-        Nan::EscapableHandleScope scope; \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _verify) { \
+         Napi::Env env = info.Env(); \
         ARGS(3,"arguments token, message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER_LEN(token, crypto_auth_ ## ALGO ## _BYTES); \
         ARG_TO_UCHAR_BUFFER(message); \
         ARG_TO_UCHAR_BUFFER(key); \
-        return info.GetReturnValue().Set( \
-            Nan::New<Integer>(crypto_auth_ ## ALGO ## _verify(token, message, message_size, key))\
-        );\
+        return  \
+            Napi::Number::New(env, crypto_auth_ ## ALGO ## _verify(token, message, message_size, key)) \
+        ;\
     }\
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _init) { \
-        Nan::EscapableHandleScope scope; \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _init) { \
+         Napi::Env env = info.Env(); \
         ARGS(1,"argument key must a buffer"); \
         ARG_TO_UCHAR_BUFFER(key); \
         NEW_BUFFER_AND_PTR(state, crypto_auth_ ## ALGO ## _statebytes()); \
         if( crypto_auth_ ## ALGO ## _init((crypto_auth_ ## ALGO ## _state*) state_ptr, key, key_size) == 0 ) { \
-            return info.GetReturnValue().Set(state); \
+            return state; \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return env.Null(); \
     } \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
-        Nan::EscapableHandleScope scope; \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
+         Napi::Env env = info.Env(); \
         ARGS(2,"arguments must be two buffers: hash state, message part"); \
-        ARG_TO_VOID_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); \
+        ARG_TO_UCHAR_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); /* VOID */\
         ARG_TO_UCHAR_BUFFER(msg); \
         NEW_BUFFER_AND_PTR(state2, crypto_auth_ ## ALGO ## _statebytes()); \
         memcpy(state2_ptr, state, crypto_auth_ ## ALGO ## _statebytes()); \
         if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state2_ptr, msg, msg_size) == 0 ) { \
-            return info.GetReturnValue().Set(state2); \
+            return state2; \
         } \
-        return info.GetReturnValue().Set(Nan::Null()); \
+        return env.Null(); \
     } \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _final) { \
-        Nan::EscapableHandleScope scope; \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _final) { \
+         Napi::Env env = info.Env(); \
         ARGS(1,"arguments must be a hash state buffer"); \
-        ARG_TO_VOID_BUFFER(state); \
+        ARG_TO_UCHAR_BUFFER(state);  /* VOID */\
         NEW_BUFFER_AND_PTR(token, crypto_auth_ ## ALGO ## _BYTES); \
         if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, token_ptr) == 0 ) { \
-            return info.GetReturnValue().Set(token); \
+            return token; \
         } \
-        return info.GetReturnValue().Set(Nan::False()); \
+        return Napi::Boolean::New(env, false); \
     }
 
 
@@ -73,15 +73,15 @@
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _BYTES); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _KEYBYTES);
 
-#define NAN_METHODS(ALGO) \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO); \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _verify); \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _init); \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _update); \
-    NAN_METHOD(bind_crypto_auth_ ## ALGO ## _final);
+#define NAPI_PROTOTYPES(ALGO) \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO); \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _verify); \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _init); \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _update); \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _final);
 
-NAN_METHODS(hmacsha256);
-NAN_METHODS(hmacsha512);
-NAN_METHODS(hmacsha512256);
+NAPI_PROTOTYPES(hmacsha256);
+NAPI_PROTOTYPES(hmacsha512);
+NAPI_PROTOTYPES(hmacsha512256);
 
 #endif

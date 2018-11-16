@@ -13,8 +13,8 @@
  *    const unsigned char * msg,
  *    unsigned long long mlen)
  */
-NAN_METHOD(bind_crypto_hash) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_hash(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     NUMBER_OF_MANDATORY_ARGS(1,"argument message must be a buffer");
 
@@ -23,16 +23,16 @@ NAN_METHOD(bind_crypto_hash) {
     NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);
 
     if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
-        return info.GetReturnValue().Set(hash);
+        return hash;
     } else {
-        return info.GetReturnValue().Set(Nan::Null());
+        return env.Null();
     }
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_hash(Handle<Object> target) {
+void register_crypto_hash(Napi::Env env, Napi::Object exports) {
     
     // Hash
     NEW_METHOD(crypto_hash);

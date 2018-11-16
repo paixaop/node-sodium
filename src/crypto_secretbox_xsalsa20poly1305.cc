@@ -7,8 +7,8 @@
  */
 #include "node_sodium.h"
 
-NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_xsalsa20poly1305(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -30,14 +30,14 @@ NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305) {
     NEW_BUFFER_AND_PTR(ctxt, message_size);
 
     if( crypto_secretbox_xsalsa20poly1305(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(ctxt);
+        return ctxt;
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
-NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305_open) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_xsalsa20poly1305_open(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
@@ -50,7 +50,8 @@ NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305_open) {
     if (cipher_text_size < crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "argument cipherText must have at least " << crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     unsigned int i;
@@ -61,7 +62,8 @@ NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305_open) {
     if (i < crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "the first " << crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     if (crypto_secretbox_xsalsa20poly1305_open(message_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
@@ -70,16 +72,17 @@ NAN_METHOD(bind_crypto_secretbox_xsalsa20poly1305_open) {
         NEW_BUFFER_AND_PTR(plain_text, cipher_text_size - crypto_secretbox_xsalsa20poly1305_ZEROBYTES);
         memcpy(plain_text_ptr,(void*) (message_ptr + crypto_secretbox_xsalsa20poly1305_ZEROBYTES), cipher_text_size - crypto_secretbox_xsalsa20poly1305_ZEROBYTES);
 
-        return info.GetReturnValue().Set(plain_text);
+        return plain_text;
     } else {
-        return;
+        return env.Null();
     }
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_secretbox_xsalsa20poly1305(Handle<Object> target) {
+void register_crypto_secretbox_xsalsa20poly1305(Napi::Env env, Napi::Object exports) {
+
     // Secret Box
     NEW_METHOD(crypto_secretbox_xsalsa20poly1305);
     NEW_METHOD(crypto_secretbox_xsalsa20poly1305_open);

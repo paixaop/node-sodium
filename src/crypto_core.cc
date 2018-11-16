@@ -17,7 +17,8 @@ CRYPTO_CORE_DEF(salsa208)
 /**
  * Register function calls in node binding
  */
-void register_crypto_core(Handle<Object> target) {
+void register_crypto_core(Napi::Env env, Napi::Object exports) {
+
     METHOD_AND_PROPS(hchacha20);
     METHOD_AND_PROPS(hsalsa20);
     METHOD_AND_PROPS(salsa20);

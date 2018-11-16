@@ -31,8 +31,8 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
 */
 
 #define CRYPTO_AEAD_DEF(ALGO) \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _encrypt) { \
-        Nan::EscapableHandleScope scope; \
+    Napi::Value bind_crypto_aead_ ## ALGO ## _encrypt (const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
         ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
@@ -42,18 +42,19 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         sodium_memzero(c_ptr, crypto_aead_ ## ALGO ## _ABYTES + m_size); \
         unsigned long long clen;\
         if( crypto_aead_ ## ALGO ## _encrypt (c_ptr, &clen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
-            return info.GetReturnValue().Set(c); \
+            return c; \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return env.Undefined(); \
     } \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt) { \
-        Nan::EscapableHandleScope scope; \
+    Napi::Value bind_crypto_aead_ ## ALGO ## _decrypt(const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
         ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         if( c_size < crypto_aead_ ## ALGO ## _ABYTES ) { \
             std::ostringstream oss; \
             oss << "argument cipher text must be at least " <<  crypto_aead_ ## ALGO ## _ABYTES << " bytes long" ; \
-            return Nan::ThrowError(oss.str().c_str()); \
+            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
+            return env.Null(); \
         } \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
@@ -61,9 +62,9 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         NEW_BUFFER_AND_PTR(m, c_size - crypto_aead_ ## ALGO ## _ABYTES); \
         unsigned long long mlen;\
         if( crypto_aead_ ## ALGO ## _decrypt (m_ptr, &mlen, NULL, c, c_size, ad, ad_size, npub, k) == 0 ) { \
-            return info.GetReturnValue().Set(m); \
+            return m; \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return env.Undefined(); \
     }
 
 
@@ -91,8 +92,8 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
                                            const unsigned char *k)
 */
 #define CRYPTO_AEAD_DETACHED_DEF(ALGO) \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _encrypt_detached) { \
-        Nan::EscapableHandleScope scope; \
+    Napi::Value bind_crypto_aead_ ## ALGO ## _encrypt_detached(const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
         ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
@@ -102,15 +103,15 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         NEW_BUFFER_AND_PTR(mac, crypto_aead_ ## ALGO ## _ABYTES); \
         unsigned long long maclen;\
         if( crypto_aead_ ## ALGO ## _encrypt_detached (c_ptr, mac_ptr, &maclen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
-            Local<Object> result = Nan::New<Object>(); \
-            Nan::DefineOwnProperty(result, Nan::New<String>("cipherText").ToLocalChecked(), c, DontDelete); \
-            Nan::DefineOwnProperty(result, Nan::New<String>("mac").ToLocalChecked(), mac, DontDelete); \
-            return info.GetReturnValue().Set(result); \
+            Napi::Object result = Napi::Object::New(env); \
+            result.Set(Napi::String::New(env, "cipherText"), c); \
+            result.Set(Napi::String::New(env, "mac"), mac); \
+            return result; \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return env.Undefined(); \
     }\
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt_detached) { \
-        Nan::EscapableHandleScope scope; \
+    Napi::Value bind_crypto_aead_ ## ALGO ## _decrypt_detached(const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
         ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         ARG_TO_UCHAR_BUFFER(mac); \
@@ -118,15 +119,16 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         if( mac_size > crypto_aead_ ## ALGO ## _ABYTES ) { \
             std::ostringstream oss; \
             oss << "argument mac cannot be longer than " <<  crypto_aead_ ## ALGO ## _ABYTES << " bytes" ; \
-            return Nan::ThrowError(oss.str().c_str()); \
+            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
+            return env.Null(); \
         }\
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(k, crypto_aead_ ## ALGO ## _KEYBYTES); \
         NEW_BUFFER_AND_PTR(m, c_size); \
         if( crypto_aead_ ## ALGO ## _decrypt_detached (m_ptr, NULL, c, c_size, mac, ad, ad_size, npub, k) == 0 ) { \
-            return info.GetReturnValue().Set(m); \
+            return m; \
         } \
-        return info.GetReturnValue().Set(Nan::Undefined()); \
+        return env.Undefined(); \
     }
 
 #define METHOD_AND_PROPS(ALGO) \
@@ -139,11 +141,11 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _NPUBBYTES); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _NSECBYTES); 
 
-#define NAN_METHODS(ALGO) \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt); \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _decrypt_detached); \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _encrypt); \
-    NAN_METHOD(bind_crypto_aead_ ## ALGO ## _encrypt_detached); \
+#define METHODS(ALGO) \
+    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _decrypt); \
+    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _decrypt_detached); \
+    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _encrypt); \
+    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _encrypt_detached); \
 
 
 #endif

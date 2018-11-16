@@ -12,7 +12,8 @@
 /**
  * Register function calls in node binding
  */
-void register_crypto_stream(Handle<Object> target) {
+void register_crypto_stream(Napi::Env env, Napi::Object exports) {    
+
     // Stream
     NEW_METHOD_ALIAS(crypto_stream, crypto_stream_xsalsa20);
     NEW_METHOD_ALIAS(crypto_stream_xor, crypto_stream_xsalsa20_xor);

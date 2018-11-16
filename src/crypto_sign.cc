@@ -12,7 +12,8 @@
 /**
  * Register function calls in node binding
  */
-void register_crypto_sign(Handle<Object> target) {
+void register_crypto_sign(Napi::Env env, Napi::Object exports) {
+
      // Sign
     NEW_METHOD_ALIAS(crypto_sign, crypto_sign_ed25519);
     NEW_METHOD_ALIAS(crypto_sign_open, crypto_sign_ed25519_open);

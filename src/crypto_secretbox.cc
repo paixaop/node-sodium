@@ -34,8 +34,8 @@
  *    first crypto_secretbox_BOXZERBYTES of ctxt be all 0.
  *    first mlen bytes of ctxt will contain the ciphertext.
  */
-NAN_METHOD(bind_crypto_secretbox) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -57,10 +57,10 @@ NAN_METHOD(bind_crypto_secretbox) {
     NEW_BUFFER_AND_PTR(ctxt, message_size);
 
     if( crypto_secretbox(ctxt_ptr, pmb_ptr, message_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(ctxt);
+        return ctxt;
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 /**
@@ -94,8 +94,8 @@ NAN_METHOD(bind_crypto_secretbox) {
  * Warning:
  *    if verification fails msg may contain data from the computation.
  */
-NAN_METHOD(bind_crypto_secretbox_open) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_open(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
@@ -108,7 +108,8 @@ NAN_METHOD(bind_crypto_secretbox_open) {
     if (cipher_text_size < crypto_secretbox_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "argument cipherText must have at least " << crypto_secretbox_BOXZEROBYTES << " bytes";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     unsigned int i;
@@ -119,7 +120,8 @@ NAN_METHOD(bind_crypto_secretbox_open) {
     if (i < crypto_secretbox_BOXZEROBYTES) {
         std::ostringstream oss;
         oss << "the first " << crypto_secretbox_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        return Nan::ThrowError(oss.str().c_str());
+        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
+        return env.Null();
     }
 
     if (crypto_secretbox_open(message_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
@@ -128,9 +130,9 @@ NAN_METHOD(bind_crypto_secretbox_open) {
         NEW_BUFFER_AND_PTR(plain_text, cipher_text_size - crypto_secretbox_ZEROBYTES);
         memcpy(plain_text_ptr,(void*) (message_ptr + crypto_secretbox_ZEROBYTES), cipher_text_size - crypto_secretbox_ZEROBYTES);
 
-        return info.GetReturnValue().Set(plain_text);
+        return plain_text;
     } else {
-        return;
+        return env.Null();
     }
 }
 
@@ -159,8 +161,8 @@ NAN_METHOD(bind_crypto_secretbox_open) {
  * Postcondition:
  *    first mlen + crypto_secretbox_MACLENGTH bytes of ctxt will contain the ciphertext.
  */
-NAN_METHOD(bind_crypto_secretbox_easy) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_easy(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
@@ -170,10 +172,10 @@ NAN_METHOD(bind_crypto_secretbox_easy) {
     NEW_BUFFER_AND_PTR(c, message_size + crypto_secretbox_MACBYTES);
 
     if (crypto_secretbox_easy(c_ptr, message, message_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(c);
+        return c;
     } 
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 /**
@@ -203,8 +205,8 @@ NAN_METHOD(bind_crypto_secretbox_easy) {
  *    if verification fails msg may contain data from the computation.
  */
 
-NAN_METHOD(bind_crypto_secretbox_open_easy) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_open_easy(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
@@ -214,10 +216,10 @@ NAN_METHOD(bind_crypto_secretbox_open_easy) {
     NEW_BUFFER_AND_PTR(c, cipher_text_size - crypto_secretbox_MACBYTES);
 
     if (crypto_secretbox_open_easy(c_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(c);
+        return c;
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 /*
@@ -228,8 +230,8 @@ int crypto_secretbox_detached(unsigned char *c,
                               const unsigned char *n,
                               const unsigned char *k);
 */
-NAN_METHOD(bind_crypto_secretbox_detached) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_detached(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(4,"arguments mac, message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
@@ -240,10 +242,10 @@ NAN_METHOD(bind_crypto_secretbox_detached) {
     NEW_BUFFER_AND_PTR(c, message_size);
 
     if (crypto_secretbox_detached(c_ptr, mac, message, message_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(c);
+        return c;
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 /*
@@ -254,8 +256,8 @@ int crypto_secretbox_open_detached(unsigned char *m,
                                    const unsigned char *n,
                                    const unsigned char *k)
 */
-NAN_METHOD(bind_crypto_secretbox_open_detached) {
-    Nan::EscapableHandleScope scope;
+Napi::Value bind_crypto_secretbox_open_detached(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
     ARGS(4,"arguments encrypted message, mac, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(c);
@@ -266,16 +268,17 @@ NAN_METHOD(bind_crypto_secretbox_open_detached) {
     NEW_BUFFER_AND_PTR(m, c_size);
 
     if (crypto_secretbox_open_detached(m_ptr, c, mac, c_size, nonce, key) == 0) {
-        return info.GetReturnValue().Set(m);
+        return m;
     }
     
-    return info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
 }
 
 /**
  * Register function calls in node binding
  */
-void register_crypto_secretbox(Handle<Object> target) {
+void register_crypto_secretbox(Napi::Env env, Napi::Object exports) {
+
     // Secret Box
     NEW_METHOD(crypto_secretbox);
     NEW_METHOD(crypto_secretbox_open);
