@@ -58,6 +58,7 @@
         },
       },
     },
+    'defines': [ 'NAPI_CPP_EXCEPTIONS' ],
     'conditions': [
       ['OS=="mac"', {
         'libraries': [
