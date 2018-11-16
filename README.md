@@ -6,6 +6,8 @@ Versions 2.0 and above are no longer compatible with Node 0.x. If you're still u
 
 Uses Libsodium 1.0.16
 
+Refactored to use N-API, instead of NaN, so it should be more resistent to node version upgrades.
+
 Port of the [lib sodium](https://github.com/jedisct1/libsodium) Encryption Library to Node.js.
 
 As of libsodium 1.0.11 all functions except memory allocation have been implemented.
