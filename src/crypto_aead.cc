@@ -580,6 +580,23 @@ CRYPTO_AEAD_DEF(chacha20poly1305_ietf)
  */
 CRYPTO_AEAD_DETACHED_DEF(chacha20poly1305_ietf)
 
+/**
+ * crypto_aead_chacha20poly1305_ietf_decrypt:
+ * Dencrypt Message in Combined Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_decrypt](#crypto_aead_aes256gcm_decrypt)
+ */
+CRYPTO_AEAD_DEF(xchacha20poly1305_ietf)
+
+/**
+ * crypto_aead_chacha20poly1305_decrypt_detached:
+ * Dencrypt Message in Detached Mode using ChaCha20-Poly1305-IETF
+ *
+ * See [crypto_aead_aes256gcm_decrypt_detached](#crypto_aead_aes256gcm_decrypt_detached)
+ */
+CRYPTO_AEAD_DETACHED_DEF(xchacha20poly1305_ietf)
+
+
 /*
  * Register function calls in node binding
  */
@@ -594,4 +611,5 @@ void register_crypto_aead(Napi::Env env, Napi::Object exports) {
     METHOD_AND_PROPS(aes256gcm);
     METHOD_AND_PROPS(chacha20poly1305);
     METHOD_AND_PROPS(chacha20poly1305_ietf);
+    METHOD_AND_PROPS(xchacha20poly1305_ietf);
 }

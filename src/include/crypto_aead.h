@@ -65,6 +65,11 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
             return m; \
         } \
         return env.Undefined(); \
+    } \
+    Napi::Value bind_crypto_aead_ ## ALGO ## _keygen (const Napi::CallbackInfo& info) { \
+        NEW_BUFFER_AND_PTR(buffer, crypto_aead_ ## ALGO ## _KEYBYTES); \
+        crypto_aead_ ## ALGO ## _keygen(buffer_ptr); \
+        return buffer; \
     }
 
 
@@ -135,6 +140,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     NEW_METHOD(crypto_aead_ ## ALGO ## _decrypt); \
     NEW_METHOD(crypto_aead_ ## ALGO ## _decrypt_detached); \
     NEW_METHOD(crypto_aead_ ## ALGO ## _encrypt); \
+    NEW_METHOD(crypto_aead_ ## ALGO ## _keygen); \
     NEW_METHOD(crypto_aead_ ## ALGO ## _encrypt_detached); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _ABYTES); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _KEYBYTES); \
