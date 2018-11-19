@@ -97,7 +97,7 @@ Napi::Value bind_crypto_box_easy(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
-    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_OR_NULL(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
