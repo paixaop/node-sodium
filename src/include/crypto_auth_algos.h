@@ -65,6 +65,11 @@
     NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _statebytes) { \
         Napi::Env env = info.Env(); \
         return Napi::Number::New(env, crypto_auth_ ## ALGO ## _statebytes()); \
+    } \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _keygen) { \
+        NEW_BUFFER_AND_PTR(buffer, crypto_auth_ ## ALGO ## _KEYBYTES); \
+        randombytes_buf(buffer_ptr, crypto_auth_ ## ALGO ## _KEYBYTES); \
+        return buffer; \
     }
 
 #define METHOD_AND_PROPS(ALGO) \
@@ -74,6 +79,7 @@
     NEW_METHOD(crypto_auth_ ## ALGO ## _update); \
     NEW_METHOD(crypto_auth_ ## ALGO ## _final); \
     NEW_METHOD(crypto_auth_ ## ALGO ## _statebytes); \
+    NEW_METHOD(crypto_auth_ ## ALGO ## _keygen); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _BYTES); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _KEYBYTES);
 
@@ -83,7 +89,8 @@
     NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _init); \
     NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _update); \
     NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _final); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _statebytes);
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _statebytes); \
+    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _keygen);
 
 NAPI_PROTOTYPES(hmacsha256);
 NAPI_PROTOTYPES(hmacsha512);
