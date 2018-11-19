@@ -3075,7 +3075,7 @@ describe("libsodium_aead_aes256gcm", function () {
         var nonce = Buffer.from(tests[i][1], 'hex');
         var message = Buffer.from(tests[i][2], 'hex');
         var ad = Buffer.from(tests[i][3], 'hex');
-        var ciphertext = Buffer.from(tests[i][4], 'hex');
+        var cipherText = Buffer.from(tests[i][4], 'hex');
         var mac = Buffer.from(tests[i][5], 'hex');
     
         it('should have exported the right constants for vector ' + i, function() {
@@ -3086,17 +3086,19 @@ describe("libsodium_aead_aes256gcm", function () {
 
         it('detached: Should match known cipher text to encrypted text, and should decrypt for vector ' + i, function() {
             var c = sodium.crypto_aead_aes256gcm_encrypt_detached(message, ad, nonce, key);
-            assert(c.cipherText, ciphertext);
-            assert(c.mac.length, sodium.crypto_aead_aes256gcm_ABYTES);
+            assert(c.cipherText.equals(cipherText));
+            assert.equal(c.mac.length, sodium.crypto_aead_aes256gcm_ABYTES);
             var plainTextSodium = sodium.crypto_aead_aes256gcm_decrypt_detached(c.cipherText, c.mac, ad, nonce, key);
-            assert(plainTextSodium, message);
+            assert(plainTextSodium.equals(message));
         });
         
         it('Should match known cipher text to encrypted text, and should decrypt for vector ' + i, function() {
             var cipherTextSodium = sodium.crypto_aead_aes256gcm_encrypt(message, null, nonce, key);
-            assert(cipherTextSodium, ciphertext);
-            plainTextSodium = sodium.crypto_aead_aes256gcm_decrypt(cipherTextSodium, null, nonce, key);
-            assert(plainTextSodium, message);
+            //Get just the cipher text and compare
+            var temp = cipherTextSodium.slice(0, cipherText.length);
+            assert(cipherText.equals(temp));
+            var plainTextSodium = sodium.crypto_aead_aes256gcm_decrypt(cipherTextSodium, null, nonce, key);
+            assert(plainTextSodium.equals(message));
         });
     }
 });

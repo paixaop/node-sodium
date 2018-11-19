@@ -73,7 +73,7 @@ describe("libsodium_aead_chacha20poly1305_ietf", function () {
         var nonce = Buffer.from(
             [0x07, 0x00, 0x00, 0x00, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47]);
 
-        assert(nonce.length, sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
+        assert.equal(nonce.length, sodium.crypto_aead_chacha20poly1305_ietf_NPUBBYTES);
 
         var ad = Buffer.from(
             [0x50, 0x51, 0x52, 0x53, 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7 ]);
@@ -81,12 +81,12 @@ describe("libsodium_aead_chacha20poly1305_ietf", function () {
         var cipherTextSodium = sodium.crypto_aead_chacha20poly1305_ietf_encrypt(
             m, ad, nonce, firstKey);
 
-        assert(cipherTextSodium.length, clen);
+        assert.equal(cipherTextSodium.length, clen);
 
         var c = sodium.crypto_aead_chacha20poly1305_ietf_encrypt_detached(
             m, ad, nonce, firstKey);
 
-        assert(c.mac.length, sodium.crypto_aead_chacha20poly1305_ietf_ABYTES);
+        assert.equal(c.mac.length, sodium.crypto_aead_chacha20poly1305_ietf_ABYTES);
         
         //Get just the cipher text and compare
         var temp = cipherTextSodium.slice(0, m.length);
@@ -107,7 +107,7 @@ describe("libsodium_aead_chacha20poly1305_ietf", function () {
             var plainText = sodium.crypto_aead_chacha20poly1305_ietf_decrypt(
                 cipherTextSodium, null, nonce, firstKey);
 
-            assert(typeof plainText, undefined);
+            assert.equal(typeof plainText, 'undefined');
             cipherTextSodium[i] ^= (i + 1);
         }
     });

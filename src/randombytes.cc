@@ -59,6 +59,14 @@ Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
         Napi::Value::From(env, randombytes_uniform(upper_bound));
 }
 
+/*
+Napi::Value bind_randombytes_keygen(const Napi::CallbackInfo& info) {
+    NEW_BUFFER_AND_PTR(buffer, randombytes_SEEDBYTES);
+    randombytes_keygen(buffer_ptr);
+    return buffer;
+}
+*/
+
 Napi::Value bind_randombytes_buf_deterministic(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     
