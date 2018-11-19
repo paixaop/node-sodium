@@ -61,9 +61,9 @@ Napi::Value bind_crypto_box(const Napi::CallbackInfo& info) {
 
     if (crypto_box(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
         return ctxt;
-    } else {
-        return env.Null();
     }
+
+    return env.Null();
 }
 
 /**
@@ -107,9 +107,9 @@ Napi::Value bind_crypto_box_easy(const Napi::CallbackInfo& info) {
 
     if (crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
         return ctxt;
-    } else {
-        return env.Null();
-    }
+    } 
+
+    return env.Null();
 }
 
 
@@ -148,9 +148,9 @@ Napi::Value bind_crypto_box_keypair(const Napi::CallbackInfo& info) {
         result.Set(Napi::String::New(env, "secretKey"), sk);
 
         return result;
-    } else {
-        return env.Null();
     }
+    
+    return env.Null();
 }
 
 /**
@@ -222,9 +222,9 @@ Napi::Value bind_crypto_box_open(const Napi::CallbackInfo& info) {
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
 
         return plain_text;
-    } else {
-        return env.Null();
-    }
+    } 
+    
+    return env.Null();
 }
 
 /**
@@ -276,9 +276,9 @@ Napi::Value bind_crypto_box_open_easy(const Napi::CallbackInfo& info) {
 
     if( crypto_box_open_easy(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
         return msg;
-    } else {
-        return env.Null();
-    }
+    } 
+    
+    return env.Null();
 }
 
 /**
@@ -307,12 +307,11 @@ Napi::Value bind_crypto_box_beforenm(const Napi::CallbackInfo& info) {
 
     NEW_BUFFER_AND_PTR(k, crypto_box_BEFORENMBYTES);
 
-    if( crypto_box_beforenm(k_ptr, publicKey, secretKey) != 0) {
-      Napi::Error::New(env, "crypto_box_beforenm failed").ThrowAsJavaScriptException();
-      return env.Null();
+    if( crypto_box_beforenm(k_ptr, publicKey, secretKey) == 0) {
+        return k;
     }
 
-    return k;
+    return env.Null();
 }
 
 /**
@@ -359,9 +358,9 @@ Napi::Value bind_crypto_box_afternm(const Napi::CallbackInfo& info) {
 
     if (crypto_box_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
         return ctxt;
-    } else {
-        return env.Null();
-    }
+    } 
+    
+    return env.Null();
 }
 
 /**
@@ -428,9 +427,9 @@ Napi::Value bind_crypto_box_open_afternm(const Napi::CallbackInfo& info) {
         memcpy(plain_text_ptr,(void*) (msg_ptr + crypto_box_ZEROBYTES), cipherText_size - crypto_box_ZEROBYTES);
 
         return plain_text;
-    } else {
-        return env.Null();
     }
+        
+    return env.Null();
 }
 
 /*
@@ -445,17 +444,20 @@ int crypto_box_detached(unsigned char *c,
 Napi::Value bind_crypto_box_detached(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    ARGS(5,"arguments mac, message, nonce, and public and private key must be buffers");
-    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
+    ARGS(4,"arguments mac, message, nonce, and public and private key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(pk, crypto_box_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_box_SECRETKEYBYTES);
     
     NEW_BUFFER_AND_PTR(c, message_size);
+    NEW_BUFFER_AND_PTR(mac, crypto_secretbox_MACBYTES);
 
-    if (crypto_box_detached(c_ptr, mac, message, message_size, nonce, pk, sk) == 0) {
-        return c;
+    if (crypto_box_detached(c_ptr, mac_ptr, message, message_size, nonce, pk, sk) == 0) {
+        Napi::Object result = Napi::Object::New(env);
+        result.Set(Napi::String::New(env, "cipherText"), c);
+        result.Set(Napi::String::New(env, "mac"), mac);
+        return result;
     }
     
     return env.Null();
@@ -565,17 +567,20 @@ int crypto_box_detached_afternm(unsigned char *c, unsigned char *mac,
 Napi::Value bind_crypto_box_detached_afternm(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, nonce and k must be buffers");
+    ARGS(3,"arguments message, nonce and k must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
-    ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_box_MACBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
     // Pad the message with crypto_box_ZEROBYTES zeros
-    NEW_BUFFER_AND_PTR(ctxt, message_size);
+    NEW_BUFFER_AND_PTR(c, message_size);
+    NEW_BUFFER_AND_PTR(mac, crypto_secretbox_MACBYTES);
 
-    if (crypto_box_detached_afternm(ctxt_ptr, mac, message, message_size, nonce, k) == 0) {
-        return ctxt;
+    if (crypto_box_detached_afternm(c_ptr, mac_ptr, message, message_size, nonce, k) == 0) {
+        Napi::Object result = Napi::Object::New(env);
+        result.Set(Napi::String::New(env, "cipherText"), c);
+        result.Set(Napi::String::New(env, "mac"), mac);
+        return result;
     }
     
     return env.Null();   
@@ -615,7 +620,7 @@ Napi::Value bind_crypto_box_easy_afternm(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce and k must be buffers");
-    ARG_TO_UCHAR_BUFFER(message);
+    ARG_TO_UCHAR_BUFFER_OR_NULL(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
 
