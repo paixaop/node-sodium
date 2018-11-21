@@ -73,13 +73,13 @@
     }
 
 #define METHOD_AND_PROPS(ALGO) \
-    NEW_METHOD(crypto_auth_ ## ALGO); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _verify); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _init); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _update); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _final); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _statebytes); \
-    NEW_METHOD(crypto_auth_ ## ALGO ## _keygen); \
+    EXPORT(crypto_auth_ ## ALGO); \
+    EXPORT(crypto_auth_ ## ALGO ## _verify); \
+    EXPORT(crypto_auth_ ## ALGO ## _init); \
+    EXPORT(crypto_auth_ ## ALGO ## _update); \
+    EXPORT(crypto_auth_ ## ALGO ## _final); \
+    EXPORT(crypto_auth_ ## ALGO ## _statebytes); \
+    EXPORT(crypto_auth_ ## ALGO ## _keygen); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _BYTES); \
     NEW_INT_PROP(crypto_auth_ ## ALGO ## _KEYBYTES);
 

@@ -602,12 +602,12 @@ CRYPTO_AEAD_DETACHED_DEF(xchacha20poly1305_ietf)
  */
 void register_crypto_aead(Napi::Env env, Napi::Object exports) {
 
-    NEW_METHOD(crypto_aead_aes256gcm_is_available);
-    NEW_METHOD(crypto_aead_aes256gcm_beforenm);
-    NEW_METHOD(crypto_aead_aes256gcm_encrypt_afternm);
-    NEW_METHOD(crypto_aead_aes256gcm_decrypt_afternm);
-    NEW_METHOD(crypto_aead_aes256gcm_encrypt_detached_afternm);
-    NEW_METHOD(crypto_aead_aes256gcm_decrypt_detached_afternm);
+    EXPORT(crypto_aead_aes256gcm_is_available);
+    EXPORT(crypto_aead_aes256gcm_beforenm);
+    EXPORT(crypto_aead_aes256gcm_encrypt_afternm);
+    EXPORT(crypto_aead_aes256gcm_decrypt_afternm);
+    EXPORT(crypto_aead_aes256gcm_encrypt_detached_afternm);
+    EXPORT(crypto_aead_aes256gcm_decrypt_detached_afternm);
     METHOD_AND_PROPS(aes256gcm);
     METHOD_AND_PROPS(chacha20poly1305);
     METHOD_AND_PROPS(chacha20poly1305_ietf);

@@ -23,7 +23,7 @@
     }
 
 #define METHOD_AND_PROPS(ALGO) \
-    NEW_METHOD(crypto_core_ ## ALGO); \
+    EXPORT(crypto_core_ ## ALGO); \
     NEW_INT_PROP(crypto_core_ ## ALGO ## _CONSTBYTES); \
     NEW_INT_PROP(crypto_core_ ## ALGO ## _INPUTBYTES); \
     NEW_INT_PROP(crypto_core_ ## ALGO ## _KEYBYTES); \

@@ -280,12 +280,12 @@ Napi::Value bind_crypto_secretbox_open_detached(const Napi::CallbackInfo& info) 
 void register_crypto_secretbox(Napi::Env env, Napi::Object exports) {
 
     // Secret Box
-    NEW_METHOD(crypto_secretbox);
-    NEW_METHOD(crypto_secretbox_open);
-    NEW_METHOD(crypto_secretbox_easy);
-    NEW_METHOD(crypto_secretbox_open_easy);
-    NEW_METHOD(crypto_secretbox_detached);
-    NEW_METHOD(crypto_secretbox_open_detached);
+    EXPORT(crypto_secretbox);
+    EXPORT(crypto_secretbox_open);
+    EXPORT(crypto_secretbox_easy);
+    EXPORT(crypto_secretbox_open_easy);
+    EXPORT(crypto_secretbox_detached);
+    EXPORT(crypto_secretbox_open_detached);
     
     NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
     NEW_INT_PROP(crypto_secretbox_MACBYTES);

@@ -52,8 +52,8 @@ Napi::Value bind_crypto_scalarmult_curve25519(const Napi::CallbackInfo& info) {
 void register_crypto_scalarmult_curve25519(Napi::Env env, Napi::Object exports) {
 
     // Scalar Mult
-    NEW_METHOD(crypto_scalarmult_curve25519);
-    NEW_METHOD(crypto_scalarmult_curve25519_base);
+    EXPORT(crypto_scalarmult_curve25519);
+    EXPORT(crypto_scalarmult_curve25519_base);
     NEW_INT_PROP(crypto_scalarmult_curve25519_SCALARBYTES);
     NEW_INT_PROP(crypto_scalarmult_curve25519_BYTES);
 }

@@ -130,11 +130,11 @@ Napi::Value bind_crypto_onetimeauth_poly1305_final(const Napi::CallbackInfo& inf
 void register_crypto_onetimeauth_poly1305(Napi::Env env, Napi::Object exports) {
 
     // One Time Auth
-    NEW_METHOD(crypto_onetimeauth_poly1305);
-    NEW_METHOD(crypto_onetimeauth_poly1305_verify);
-    NEW_METHOD(crypto_onetimeauth_poly1305_init);
-    NEW_METHOD(crypto_onetimeauth_poly1305_update);
-    NEW_METHOD(crypto_onetimeauth_poly1305_final);
+    EXPORT(crypto_onetimeauth_poly1305);
+    EXPORT(crypto_onetimeauth_poly1305_verify);
+    EXPORT(crypto_onetimeauth_poly1305_init);
+    EXPORT(crypto_onetimeauth_poly1305_update);
+    EXPORT(crypto_onetimeauth_poly1305_final);
     NEW_INT_PROP(crypto_onetimeauth_poly1305_BYTES);
     NEW_INT_PROP(crypto_onetimeauth_poly1305_KEYBYTES);
 }

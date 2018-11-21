@@ -185,29 +185,29 @@ Napi::Value bind_is_zero(const Napi::CallbackInfo& info) {
  */
 void register_helpers(Napi::Env env, Napi::Object exports) {
     // Register version functions
-    NEW_METHOD(sodium_version_string);
-    NEW_METHOD(sodium_library_version_minor);
-    NEW_METHOD(sodium_library_version_major);
+    EXPORT(sodium_version_string);
+    EXPORT(sodium_library_version_minor);
+    EXPORT(sodium_library_version_major);
     
     // Constant-time test for equality
-    NEW_METHOD(memcmp);
-    NEW_METHOD(memzero);
+    EXPORT(memcmp);
+    EXPORT(memzero);
 
     // String comparisons
-    NEW_METHOD(crypto_verify_16);
-    NEW_METHOD(crypto_verify_32);
-    NEW_METHOD(crypto_verify_64);
+    EXPORT(crypto_verify_16);
+    EXPORT(crypto_verify_32);
+    EXPORT(crypto_verify_64);
     NEW_INT_PROP(crypto_verify_16_BYTES);
     NEW_INT_PROP(crypto_verify_32_BYTES);
     NEW_INT_PROP(crypto_verify_64_BYTES);
     
     // Hexadecimal encoding/decoding
-    NEW_METHOD(bin2hex);
-    NEW_METHOD(hex2bin);
+    EXPORT(bin2hex);
+    EXPORT(hex2bin);
     
     // Large Numbers
-    NEW_METHOD(increment);
-    NEW_METHOD(add);
-    NEW_METHOD(compare);
-    NEW_METHOD(is_zero);
+    EXPORT(increment);
+    EXPORT(add);
+    EXPORT(compare);
+    EXPORT(is_zero);
 }

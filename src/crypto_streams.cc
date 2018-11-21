@@ -33,11 +33,11 @@ CRYPTO_STREAM_DEF_IC(chacha20_ietf)
 void register_crypto_streams(Napi::Env env, Napi::Object exports) {    
     
     METHODS(xsalsa20);
-    NEW_METHOD(crypto_stream_xsalsa20_xor_ic);
+    EXPORT(crypto_stream_xsalsa20_xor_ic);
     PROPS(xsalsa20);
     
     METHODS(salsa20);
-    NEW_METHOD(crypto_stream_salsa20_xor_ic);
+    EXPORT(crypto_stream_salsa20_xor_ic);
     PROPS(salsa20);
     
     METHODS(salsa208);
@@ -47,10 +47,10 @@ void register_crypto_streams(Napi::Env env, Napi::Object exports) {
     PROPS(salsa2012);
     
     METHODS(chacha20);
-    NEW_METHOD(crypto_stream_chacha20_xor_ic);
+    EXPORT(crypto_stream_chacha20_xor_ic);
     PROPS(chacha20);
     
     METHODS(chacha20_ietf);
-    NEW_METHOD(crypto_stream_chacha20_ietf_xor_ic);
+    EXPORT(crypto_stream_chacha20_ietf_xor_ic);
     PROPS(chacha20_ietf);
 }

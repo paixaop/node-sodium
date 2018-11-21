@@ -438,14 +438,14 @@ Napi::Value bind_crypto_box_open_afternm(const Napi::CallbackInfo& info) {
 void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object exports) {
 
      // Box
-    NEW_METHOD(crypto_box);
-    NEW_METHOD(crypto_box_easy);
-    NEW_METHOD(crypto_box_keypair);
-    NEW_METHOD(crypto_box_open);
-    NEW_METHOD(crypto_box_open_easy);
-    NEW_METHOD(crypto_box_beforenm);
-    NEW_METHOD(crypto_box_afternm);
-    NEW_METHOD(crypto_box_open_afternm);
+    EXPORT(crypto_box);
+    EXPORT(crypto_box_easy);
+    EXPORT(crypto_box_keypair);
+    EXPORT(crypto_box_open);
+    EXPORT(crypto_box_open_easy);
+    EXPORT(crypto_box_beforenm);
+    EXPORT(crypto_box_afternm);
+    EXPORT(crypto_box_open_afternm);
     
     NEW_INT_PROP(crypto_box_NONCEBYTES);
     NEW_INT_PROP(crypto_box_MACBYTES);

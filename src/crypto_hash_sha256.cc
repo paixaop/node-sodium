@@ -91,9 +91,9 @@ Napi::Value bind_crypto_hash_sha256_final(const Napi::CallbackInfo& info) {
 void register_crypto_hash_sha256(Napi::Env env, Napi::Object exports) {
 
     // Hash
-    NEW_METHOD(crypto_hash_sha256);
-    NEW_METHOD(crypto_hash_sha256_init);
-    NEW_METHOD(crypto_hash_sha256_update);
-    NEW_METHOD(crypto_hash_sha256_final);
+    EXPORT(crypto_hash_sha256);
+    EXPORT(crypto_hash_sha256_init);
+    EXPORT(crypto_hash_sha256_update);
+    EXPORT(crypto_hash_sha256_final);
     NEW_INT_PROP(crypto_hash_sha256_BYTES);
 }

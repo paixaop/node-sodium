@@ -84,8 +84,8 @@ Napi::Value bind_crypto_secretbox_xsalsa20poly1305_open(const Napi::CallbackInfo
 void register_crypto_secretbox_xsalsa20poly1305(Napi::Env env, Napi::Object exports) {
 
     // Secret Box
-    NEW_METHOD(crypto_secretbox_xsalsa20poly1305);
-    NEW_METHOD(crypto_secretbox_xsalsa20poly1305_open);
+    EXPORT(crypto_secretbox_xsalsa20poly1305);
+    EXPORT(crypto_secretbox_xsalsa20poly1305_open);
     NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES);
     NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_MACBYTES);
     NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_KEYBYTES);

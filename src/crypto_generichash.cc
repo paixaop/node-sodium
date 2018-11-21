@@ -122,10 +122,10 @@ Napi::Value bind_crypto_generichash_final(const Napi::CallbackInfo& info) {
 void register_crypto_generichash(Napi::Env env, Napi::Object exports) {
 
      // Generic Hash
-    NEW_METHOD(crypto_generichash);
-    NEW_METHOD(crypto_generichash_init);
-    NEW_METHOD(crypto_generichash_update);
-    NEW_METHOD(crypto_generichash_final);
+    EXPORT(crypto_generichash);
+    EXPORT(crypto_generichash_init);
+    EXPORT(crypto_generichash_update);
+    EXPORT(crypto_generichash_final);
     NEW_STRING_PROP(crypto_generichash_PRIMITIVE);
     NEW_INT_PROP(crypto_generichash_BYTES);
     NEW_INT_PROP(crypto_generichash_BYTES_MIN);

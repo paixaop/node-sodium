@@ -282,16 +282,16 @@ Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_str_verify(const Napi::Callb
 void register_crypto_pwhash(Napi::Env env, Napi::Object exports) {
 
     // Methods
-    NEW_METHOD(crypto_pwhash);
-    NEW_METHOD(crypto_pwhash_str);
-    NEW_METHOD(crypto_pwhash_str_verify);
-    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256);
-    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_ll);
-    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str);
-    NEW_METHOD(crypto_pwhash_scryptsalsa208sha256_str_verify);
-    NEW_METHOD(crypto_pwhash_argon2i);
-    NEW_METHOD(crypto_pwhash_argon2i_str);
-    NEW_METHOD(crypto_pwhash_argon2i_str_verify);
+    EXPORT(crypto_pwhash);
+    EXPORT(crypto_pwhash_str);
+    EXPORT(crypto_pwhash_str_verify);
+    EXPORT(crypto_pwhash_scryptsalsa208sha256);
+    EXPORT(crypto_pwhash_scryptsalsa208sha256_ll);
+    EXPORT(crypto_pwhash_scryptsalsa208sha256_str);
+    EXPORT(crypto_pwhash_scryptsalsa208sha256_str_verify);
+    EXPORT(crypto_pwhash_argon2i);
+    EXPORT(crypto_pwhash_argon2i_str);
+    EXPORT(crypto_pwhash_argon2i_str_verify);
 
     // Properties
     NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);

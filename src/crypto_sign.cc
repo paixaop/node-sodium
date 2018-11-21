@@ -15,12 +15,12 @@
 void register_crypto_sign(Napi::Env env, Napi::Object exports) {
 
      // Sign
-    NEW_METHOD_ALIAS(crypto_sign, crypto_sign_ed25519);
-    NEW_METHOD_ALIAS(crypto_sign_open, crypto_sign_ed25519_open);
-    NEW_METHOD_ALIAS(crypto_sign_detached, crypto_sign_ed25519_detached);
-    NEW_METHOD_ALIAS(crypto_sign_verify_detached, crypto_sign_ed25519_verify_detached);
-    NEW_METHOD_ALIAS(crypto_sign_keypair, crypto_sign_ed25519_keypair);
-    NEW_METHOD_ALIAS(crypto_sign_seed_keypair, crypto_sign_ed25519_seed_keypair);
+    EXPORT_ALIAS(crypto_sign, crypto_sign_ed25519);
+    EXPORT_ALIAS(crypto_sign_open, crypto_sign_ed25519_open);
+    EXPORT_ALIAS(crypto_sign_detached, crypto_sign_ed25519_detached);
+    EXPORT_ALIAS(crypto_sign_verify_detached, crypto_sign_ed25519_verify_detached);
+    EXPORT_ALIAS(crypto_sign_keypair, crypto_sign_ed25519_keypair);
+    EXPORT_ALIAS(crypto_sign_seed_keypair, crypto_sign_ed25519_seed_keypair);
     
     NEW_INT_PROP(crypto_sign_SEEDBYTES);
     NEW_INT_PROP(crypto_sign_BYTES);

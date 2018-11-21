@@ -34,7 +34,7 @@ Napi::Value bind_crypto_hash(const Napi::CallbackInfo& info) {
 void register_crypto_hash(Napi::Env env, Napi::Object exports) {
     
     // Hash
-    NEW_METHOD(crypto_hash);
+    EXPORT(crypto_hash);
     NEW_INT_PROP(crypto_hash_BYTES);
     //NEW_INT_PROP(crypto_hash_BLOCKBYTES);
     NEW_STRING_PROP(crypto_hash_PRIMITIVE);   

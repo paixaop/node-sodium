@@ -14,8 +14,8 @@
 void register_crypto_scalarmult(Napi::Env env, Napi::Object exports) {
 
     // Scalar Mult
-    NEW_METHOD_ALIAS(crypto_scalarmult, crypto_scalarmult_curve25519);
-    NEW_METHOD_ALIAS(crypto_scalarmult_base, crypto_scalarmult_curve25519_base);
+    EXPORT_ALIAS(crypto_scalarmult, crypto_scalarmult_curve25519);
+    EXPORT_ALIAS(crypto_scalarmult_base, crypto_scalarmult_curve25519_base);
     
     NEW_INT_PROP(crypto_scalarmult_SCALARBYTES);
     NEW_INT_PROP(crypto_scalarmult_BYTES);

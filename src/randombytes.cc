@@ -82,13 +82,13 @@ Napi::Value bind_randombytes_buf_deterministic(const Napi::CallbackInfo& info) {
  */
 void register_randombytes(Napi::Env env, Napi::Object exports) {
    
-    NEW_METHOD(randombytes_buf);
-    NEW_METHOD_ALIAS(randombytes, randombytes_buf);
-    NEW_METHOD(randombytes_close);
-    NEW_METHOD(randombytes_stir);
-    NEW_METHOD(randombytes_random);
-    NEW_METHOD(randombytes_uniform);
-    NEW_METHOD(randombytes_buf_deterministic);
+    EXPORT(randombytes_buf);
+    EXPORT_ALIAS(randombytes, randombytes_buf);
+    EXPORT(randombytes_close);
+    EXPORT(randombytes_stir);
+    EXPORT(randombytes_random);
+    EXPORT(randombytes_uniform);
+    EXPORT(randombytes_buf_deterministic);
 
     NEW_INT_PROP(randombytes_SEEDBYTES);
 }

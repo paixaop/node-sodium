@@ -157,11 +157,11 @@ Napi::Value bind_crypto_generichash_blake2b_salt_personal(const Napi::CallbackIn
 void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
 
      // Generic Hash
-    NEW_METHOD(crypto_generichash_blake2b);
-    NEW_METHOD(crypto_generichash_blake2b_init);
-    NEW_METHOD(crypto_generichash_blake2b_update);
-    NEW_METHOD(crypto_generichash_blake2b_final);
-    NEW_METHOD(crypto_generichash_blake2b_salt_personal);
+    EXPORT(crypto_generichash_blake2b);
+    EXPORT(crypto_generichash_blake2b_init);
+    EXPORT(crypto_generichash_blake2b_update);
+    EXPORT(crypto_generichash_blake2b_final);
+    EXPORT(crypto_generichash_blake2b_salt_personal);
 
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES);
     NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MIN);

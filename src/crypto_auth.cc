@@ -15,9 +15,9 @@
 void register_crypto_auth(Napi::Env env, Napi::Object exports) {
 
     // Auth
-    NEW_METHOD_ALIAS(crypto_auth, crypto_auth_hmacsha512256);
-    NEW_METHOD_ALIAS(crypto_auth_verify, crypto_auth_hmacsha512256_verify);
-    NEW_METHOD_ALIAS(crypto_auth_keygen, crypto_auth_hmacsha512256_keygen);
+    EXPORT_ALIAS(crypto_auth, crypto_auth_hmacsha512256);
+    EXPORT_ALIAS(crypto_auth_verify, crypto_auth_hmacsha512256_verify);
+    EXPORT_ALIAS(crypto_auth_keygen, crypto_auth_hmacsha512256_keygen);
 
     NEW_INT_PROP(crypto_auth_BYTES);
     NEW_INT_PROP(crypto_auth_KEYBYTES);

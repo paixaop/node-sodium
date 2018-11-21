@@ -204,12 +204,12 @@ NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_messagebytes_max)
 void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object exports) {
 
      // Box
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305);
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_keypair);
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_open);
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_beforenm);
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_afternm);
-    NEW_METHOD(crypto_box_curve25519xsalsa20poly1305_open_afternm);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_keypair);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_open);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_beforenm);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_afternm);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_open_afternm);
     
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_MACBYTES);
@@ -220,13 +220,13 @@ void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object 
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_SEEDBYTES);
 
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_noncebytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_macbytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_beforenmbytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_boxzerobytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_publickeybytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_secretkeybytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_zerobytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_seedbytes);
-    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_messagebytes_max);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_noncebytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_macbytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_beforenmbytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_boxzerobytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_publickeybytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_secretkeybytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_zerobytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_seedbytes);
+    EXPORT_(crypto_box_curve25519xsalsa20poly1305_messagebytes_max);
 }

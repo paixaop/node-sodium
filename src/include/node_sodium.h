@@ -162,15 +162,15 @@
         ) \
     )
     
-#define NEW_METHOD(NAME) \
+#define EXPORT(NAME) \
     exports.Set(Napi::String::New(env, #NAME), \
                 Napi::Function::New(env, bind_ ## NAME))
 
-#define NEW_METHOD_ALIAS(NAME, LINK_TO) \
+#define EXPORT_ALIAS(NAME, LINK_TO) \
     exports.Set(Napi::String::New(env, #NAME), \
                 Napi::Function::New(env, bind_ ## LINK_TO))
 
-#define NEW_METHOD_(NAME) \
+#define EXPORT_(NAME) \
     exports.Set(Napi::String::New(env, #NAME), \
                 Napi::Function::New(env, bind_ ## NAME ## _))
 

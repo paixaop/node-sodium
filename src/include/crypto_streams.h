@@ -51,8 +51,8 @@
 
 
 #define METHODS(ALGO) \
-    NEW_METHOD(crypto_stream_ ## ALGO); \
-    NEW_METHOD(crypto_stream_ ## ALGO ## _xor);
+    EXPORT(crypto_stream_ ## ALGO); \
+    EXPORT(crypto_stream_ ## ALGO ## _xor);
 
 #define PROPS(ALGO) \
     NEW_INT_PROP(crypto_stream_ ## ALGO ## _KEYBYTES); \

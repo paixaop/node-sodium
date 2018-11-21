@@ -147,8 +147,6 @@ describe("libsodium_box", function () {
                    sodium.crypto_box_macbytes());
             assert(sodium.crypto_box_curve25519xsalsa20poly1305_messagebytes_max() ==
                    sodium.crypto_box_messagebytes_max());
-        
-
     });
 
 });

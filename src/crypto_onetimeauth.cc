@@ -13,11 +13,11 @@
  */
 void register_crypto_onetimeauth(Napi::Env env, Napi::Object exports) {
 
-    NEW_METHOD_ALIAS(crypto_onetimeauth, crypto_onetimeauth_poly1305);
-    NEW_METHOD_ALIAS(crypto_onetimeauth_verify, crypto_onetimeauth_poly1305_verify);
-    NEW_METHOD_ALIAS(crypto_onetimeauth_init, crypto_onetimeauth_poly1305_init);
-    NEW_METHOD_ALIAS(crypto_onetimeauth_update, crypto_onetimeauth_poly1305_update);
-    NEW_METHOD_ALIAS(crypto_onetimeauth_final, crypto_onetimeauth_poly1305_final);
+    EXPORT_ALIAS(crypto_onetimeauth, crypto_onetimeauth_poly1305);
+    EXPORT_ALIAS(crypto_onetimeauth_verify, crypto_onetimeauth_poly1305_verify);
+    EXPORT_ALIAS(crypto_onetimeauth_init, crypto_onetimeauth_poly1305_init);
+    EXPORT_ALIAS(crypto_onetimeauth_update, crypto_onetimeauth_poly1305_update);
+    EXPORT_ALIAS(crypto_onetimeauth_final, crypto_onetimeauth_poly1305_final);
 
     NEW_INT_PROP(crypto_onetimeauth_BYTES);
     NEW_INT_PROP(crypto_onetimeauth_KEYBYTES);

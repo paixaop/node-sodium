@@ -137,11 +137,11 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     }
 
 #define METHOD_AND_PROPS(ALGO) \
-    NEW_METHOD(crypto_aead_ ## ALGO ## _decrypt); \
-    NEW_METHOD(crypto_aead_ ## ALGO ## _decrypt_detached); \
-    NEW_METHOD(crypto_aead_ ## ALGO ## _encrypt); \
-    NEW_METHOD(crypto_aead_ ## ALGO ## _keygen); \
-    NEW_METHOD(crypto_aead_ ## ALGO ## _encrypt_detached); \
+    EXPORT(crypto_aead_ ## ALGO ## _decrypt); \
+    EXPORT(crypto_aead_ ## ALGO ## _decrypt_detached); \
+    EXPORT(crypto_aead_ ## ALGO ## _encrypt); \
+    EXPORT(crypto_aead_ ## ALGO ## _keygen); \
+    EXPORT(crypto_aead_ ## ALGO ## _encrypt_detached); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _ABYTES); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _KEYBYTES); \
     NEW_INT_PROP(crypto_aead_ ## ALGO ## _NPUBBYTES); \

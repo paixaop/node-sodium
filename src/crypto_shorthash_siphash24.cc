@@ -51,7 +51,7 @@ Napi::Value bind_crypto_shorthash_siphash24(const Napi::CallbackInfo& info) {
 void register_crypto_shorthash_siphash24(Napi::Env env, Napi::Object exports) {
 
     // Short Hash
-    NEW_METHOD(crypto_shorthash_siphash24);
+    EXPORT(crypto_shorthash_siphash24);
     NEW_INT_PROP(crypto_shorthash_siphash24_BYTES);
     NEW_INT_PROP(crypto_shorthash_siphash24_KEYBYTES);
 }

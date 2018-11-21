@@ -91,9 +91,9 @@ Napi::Value bind_crypto_hash_sha512_final(const Napi::CallbackInfo& info) {
 void register_crypto_hash_sha512(Napi::Env env, Napi::Object exports) {
 
     // Hash
-    NEW_METHOD(crypto_hash_sha512);
-    NEW_METHOD(crypto_hash_sha512_init);
-    NEW_METHOD(crypto_hash_sha512_update);
-    NEW_METHOD(crypto_hash_sha512_final);
+    EXPORT(crypto_hash_sha512);
+    EXPORT(crypto_hash_sha512_init);
+    EXPORT(crypto_hash_sha512_update);
+    EXPORT(crypto_hash_sha512_final);
     NEW_INT_PROP(crypto_hash_sha512_BYTES);
 }

@@ -242,16 +242,16 @@ Napi::Value bind_crypto_sign_ed25519_sk_to_pk(const Napi::CallbackInfo& info) {
  */
 void register_crypto_sign_ed25519(Napi::Env env, Napi::Object exports) {
     
-    NEW_METHOD(crypto_sign_ed25519);
-    NEW_METHOD(crypto_sign_ed25519_open);
-    NEW_METHOD(crypto_sign_ed25519_detached);
-    NEW_METHOD(crypto_sign_ed25519_verify_detached);
-    NEW_METHOD(crypto_sign_ed25519_keypair);
-    NEW_METHOD(crypto_sign_ed25519_seed_keypair);
-    NEW_METHOD(crypto_sign_ed25519_pk_to_curve25519);
-    NEW_METHOD(crypto_sign_ed25519_sk_to_curve25519);
-    NEW_METHOD(crypto_sign_ed25519_sk_to_seed);
-    NEW_METHOD(crypto_sign_ed25519_sk_to_pk);
+    EXPORT(crypto_sign_ed25519);
+    EXPORT(crypto_sign_ed25519_open);
+    EXPORT(crypto_sign_ed25519_detached);
+    EXPORT(crypto_sign_ed25519_verify_detached);
+    EXPORT(crypto_sign_ed25519_keypair);
+    EXPORT(crypto_sign_ed25519_seed_keypair);
+    EXPORT(crypto_sign_ed25519_pk_to_curve25519);
+    EXPORT(crypto_sign_ed25519_sk_to_curve25519);
+    EXPORT(crypto_sign_ed25519_sk_to_seed);
+    EXPORT(crypto_sign_ed25519_sk_to_pk);
     
     NEW_INT_PROP(crypto_sign_ed25519_PUBLICKEYBYTES);
     NEW_INT_PROP(crypto_sign_ed25519_SECRETKEYBYTES);

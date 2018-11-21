@@ -75,13 +75,13 @@ Napi::Value bind_sodium_runtime_has_pclmul(const Napi::CallbackInfo& info) {
  */
 void register_runtime(Napi::Env env, Napi::Object exports) {
 
-    NEW_METHOD(sodium_runtime_has_aesni);
-    NEW_METHOD(sodium_runtime_has_avx);
-    NEW_METHOD(sodium_runtime_has_avx2);
-    NEW_METHOD(sodium_runtime_has_neon);
-    NEW_METHOD(sodium_runtime_has_pclmul);
-    NEW_METHOD(sodium_runtime_has_sse2);
-    NEW_METHOD(sodium_runtime_has_sse3);
-    NEW_METHOD(sodium_runtime_has_sse41);
-    NEW_METHOD(sodium_runtime_has_ssse3);
+    EXPORT(sodium_runtime_has_aesni);
+    EXPORT(sodium_runtime_has_avx);
+    EXPORT(sodium_runtime_has_avx2);
+    EXPORT(sodium_runtime_has_neon);
+    EXPORT(sodium_runtime_has_pclmul);
+    EXPORT(sodium_runtime_has_sse2);
+    EXPORT(sodium_runtime_has_sse3);
+    EXPORT(sodium_runtime_has_sse41);
+    EXPORT(sodium_runtime_has_ssse3);
 }

@@ -682,28 +682,28 @@ NAPI_METHOD_FROM_STRING(crypto_box_primitive)
 void register_crypto_box(Napi::Env env, Napi::Object exports) {
 
      // Box
-    NEW_METHOD(crypto_box);
-    NEW_METHOD(crypto_box_keypair);
+    EXPORT(crypto_box);
+    EXPORT(crypto_box_keypair);
     
-    NEW_METHOD(crypto_box_easy);
-    NEW_METHOD(crypto_box_easy_afternm);
+    EXPORT(crypto_box_easy);
+    EXPORT(crypto_box_easy_afternm);
     
-    NEW_METHOD(crypto_box_beforenm);
-    NEW_METHOD(crypto_box_afternm);
-    NEW_METHOD(crypto_box_seed_keypair);
+    EXPORT(crypto_box_beforenm);
+    EXPORT(crypto_box_afternm);
+    EXPORT(crypto_box_seed_keypair);
     
-    NEW_METHOD(crypto_box_detached);
-    NEW_METHOD(crypto_box_detached_afternm);
+    EXPORT(crypto_box_detached);
+    EXPORT(crypto_box_detached_afternm);
     
-    NEW_METHOD(crypto_box_open);
-    NEW_METHOD(crypto_box_open_afternm);
-    NEW_METHOD(crypto_box_open_easy);
-    NEW_METHOD(crypto_box_open_detached);
-    NEW_METHOD(crypto_box_open_detached_afternm);
-    NEW_METHOD(crypto_box_open_easy_afternm);
+    EXPORT(crypto_box_open);
+    EXPORT(crypto_box_open_afternm);
+    EXPORT(crypto_box_open_easy);
+    EXPORT(crypto_box_open_detached);
+    EXPORT(crypto_box_open_detached_afternm);
+    EXPORT(crypto_box_open_easy_afternm);
     
-    NEW_METHOD(crypto_box_seal);
-    NEW_METHOD(crypto_box_seal_open);
+    EXPORT(crypto_box_seal);
+    EXPORT(crypto_box_seal_open);
     
     NEW_INT_PROP(crypto_box_NONCEBYTES);
     NEW_INT_PROP(crypto_box_MACBYTES);
@@ -716,17 +716,17 @@ void register_crypto_box(Napi::Env env, Napi::Object exports) {
     NEW_INT_PROP(crypto_box_SEALBYTES);
     NEW_INT_PROP(crypto_box_MESSAGEBYTES_MAX);
 
-    NEW_METHOD_(crypto_box_noncebytes);
-    NEW_METHOD_(crypto_box_macbytes);
-    NEW_METHOD_(crypto_box_beforenmbytes);
-    NEW_METHOD_(crypto_box_boxzerobytes);
-    NEW_METHOD_(crypto_box_publickeybytes);
-    NEW_METHOD_(crypto_box_secretkeybytes);
-    NEW_METHOD_(crypto_box_zerobytes);
-    NEW_METHOD_(crypto_box_seedbytes);
-    NEW_METHOD_(crypto_box_sealbytes);
-    NEW_METHOD_(crypto_box_messagebytes_max);
+    EXPORT_(crypto_box_noncebytes);
+    EXPORT_(crypto_box_macbytes);
+    EXPORT_(crypto_box_beforenmbytes);
+    EXPORT_(crypto_box_boxzerobytes);
+    EXPORT_(crypto_box_publickeybytes);
+    EXPORT_(crypto_box_secretkeybytes);
+    EXPORT_(crypto_box_zerobytes);
+    EXPORT_(crypto_box_seedbytes);
+    EXPORT_(crypto_box_sealbytes);
+    EXPORT_(crypto_box_messagebytes_max);
 
-    NEW_METHOD_(crypto_box_primitive);
+    EXPORT_(crypto_box_primitive);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
 }
