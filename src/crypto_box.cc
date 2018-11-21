@@ -664,7 +664,17 @@ Napi::Value bind_crypto_box_open_easy_afternm(const Napi::CallbackInfo& info) {
     return env.Null();   
 }
 
-
+NAPI_METHOD_FROM_INT(crypto_box_noncebytes)
+NAPI_METHOD_FROM_INT(crypto_box_macbytes)
+NAPI_METHOD_FROM_INT(crypto_box_beforenmbytes)
+NAPI_METHOD_FROM_INT(crypto_box_boxzerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_publickeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_secretkeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_zerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_seedbytes)
+NAPI_METHOD_FROM_INT(crypto_box_sealbytes)
+NAPI_METHOD_FROM_INT(crypto_box_messagebytes_max)
+NAPI_METHOD_FROM_STRING(crypto_box_primitive)
 
 /**
  * Register function calls in node binding
@@ -704,5 +714,19 @@ void register_crypto_box(Napi::Env env, Napi::Object exports) {
     NEW_INT_PROP(crypto_box_ZEROBYTES);
     NEW_INT_PROP(crypto_box_SEEDBYTES);
     NEW_INT_PROP(crypto_box_SEALBYTES);
+    NEW_INT_PROP(crypto_box_MESSAGEBYTES_MAX);
+
+    NEW_METHOD_(crypto_box_noncebytes);
+    NEW_METHOD_(crypto_box_macbytes);
+    NEW_METHOD_(crypto_box_beforenmbytes);
+    NEW_METHOD_(crypto_box_boxzerobytes);
+    NEW_METHOD_(crypto_box_publickeybytes);
+    NEW_METHOD_(crypto_box_secretkeybytes);
+    NEW_METHOD_(crypto_box_zerobytes);
+    NEW_METHOD_(crypto_box_seedbytes);
+    NEW_METHOD_(crypto_box_sealbytes);
+    NEW_METHOD_(crypto_box_messagebytes_max);
+
+    NEW_METHOD_(crypto_box_primitive);
     NEW_STRING_PROP(crypto_box_PRIMITIVE);
 }

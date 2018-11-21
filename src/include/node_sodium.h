@@ -170,7 +170,25 @@
     exports.Set(Napi::String::New(env, #NAME), \
                 Napi::Function::New(env, bind_ ## LINK_TO))
 
+#define NEW_METHOD_(NAME) \
+    exports.Set(Napi::String::New(env, #NAME), \
+                Napi::Function::New(env, bind_ ## NAME ## _))
+
 #define NAPI_METHOD(name) \
     Napi::Value name(const Napi::CallbackInfo& info)
+
+#define NAPI_METHOD_FROM_INT(NAME) \
+    Napi::Value bind_ ## NAME ## _(const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
+        return Napi::Number::New(env, NAME()); \
+    }
+
+#define NAPI_METHOD_FROM_STRING(NAME) \
+    Napi::Value bind_ ## NAME ## _(const Napi::CallbackInfo& info) { \
+        Napi::Env env = info.Env(); \
+        return Napi::String::New(env, NAME()); \
+    }
+
+
 
 #endif

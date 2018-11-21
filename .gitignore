@@ -34,6 +34,7 @@ html-report
 coverage.html
 .vscode-upload.json
 .vscode
+test/default
 deps/libsodium/m4/libtool.m4
 deps/libsodium/m4/ltoptions.m4
 deps/libsodium/m4/ltsugar.m4

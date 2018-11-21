@@ -187,6 +187,17 @@ Napi::Value bind_crypto_box_curve25519xsalsa20poly1305_open_afternm(const Napi::
     }
 }
 
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_noncebytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_macbytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_beforenmbytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_boxzerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_publickeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_secretkeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_zerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_seedbytes)
+NAPI_METHOD_FROM_INT(crypto_box_curve25519xsalsa20poly1305_messagebytes_max)
+
+
 /**
  * Register function calls in node binding
  */
@@ -208,4 +219,14 @@ void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object 
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES);
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_ZEROBYTES);
     NEW_INT_PROP(crypto_box_curve25519xsalsa20poly1305_SEEDBYTES);
+
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_noncebytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_macbytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_beforenmbytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_boxzerobytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_publickeybytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_secretkeybytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_zerobytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_seedbytes);
+    NEW_METHOD_(crypto_box_curve25519xsalsa20poly1305_messagebytes_max);
 }
