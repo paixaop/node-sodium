@@ -8,20 +8,20 @@
 #include "node_sodium.h"
 
 // Lib Sodium Version Functions
-Napi::Value bind_sodium_version_string(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_version_string) {
     Napi::Env env = info.Env();
 
     return Napi::String::New(env, sodium_version_string());
 }
 
-Napi::Value bind_sodium_library_version_minor(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_library_version_minor) {
     Napi::Env env = info.Env();
 
     return 
         Napi::Value::From(env, sodium_library_version_minor());
 }
 
-Napi::Value bind_sodium_library_version_major(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_library_version_major) {
     Napi::Env env = info.Env();
 
     return 
@@ -29,7 +29,7 @@ Napi::Value bind_sodium_library_version_major(const Napi::CallbackInfo& info) {
 }
 
 // Lib Sodium Utils
-Napi::Value bind_memzero(const Napi::CallbackInfo& info) {
+NAPI_METHOD(memzero) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
@@ -42,7 +42,7 @@ Napi::Value bind_memzero(const Napi::CallbackInfo& info) {
 /**
  * int sodium_memcmp(const void * const b1_, const void * const b2_, size_t size);
  */
-Napi::Value bind_memcmp(const Napi::CallbackInfo& info) {
+NAPI_METHOD(memcmp) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: buffer, buffer, positive number");
@@ -66,21 +66,21 @@ Napi::Value bind_memcmp(const Napi::CallbackInfo& info) {
  * char *sodium_bin2hex(char * const hex, const size_t hexlen,
  *                    const unsigned char *bin, const size_t binlen);
  */
-Napi::Value bind_bin2hex(const Napi::CallbackInfo& info) {
+NAPI_METHOD(bin2hex) {
     Napi::Env env = info.Env();
 
     Napi::Error::New(env, "use node's native Buffer.toString()").ThrowAsJavaScriptException();
     return env.Null();
 }
 
-Napi::Value bind_hex2bin(const Napi::CallbackInfo& info) {
+NAPI_METHOD(hex2bin) {
     Napi::Env env = info.Env();
 
     Napi::Error::New(env, "use node's native Buffer.toString()").ThrowAsJavaScriptException();
     return env.Null();
 }
 
-Napi::Value bind_crypto_verify_16(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_verify_16) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers");
@@ -92,7 +92,7 @@ Napi::Value bind_crypto_verify_16(const Napi::CallbackInfo& info) {
 }
 
 // int crypto_verify_16(const unsigned char * string1, const unsigned char * string2)
-Napi::Value bind_crypto_verify_32(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_verify_32) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers");
@@ -104,7 +104,7 @@ Napi::Value bind_crypto_verify_32(const Napi::CallbackInfo& info) {
 }
 
 // int crypto_verify_64(const unsigned char * string1, const unsigned char * string2)
-Napi::Value bind_crypto_verify_64(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_verify_64) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers");
@@ -119,7 +119,7 @@ Napi::Value bind_crypto_verify_64(const Napi::CallbackInfo& info) {
  * void sodium_increment(unsigned char *n, const size_t nlen);
  *
  */
-Napi::Value bind_increment(const Napi::CallbackInfo& info) {
+NAPI_METHOD(increment) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
@@ -133,7 +133,7 @@ Napi::Value bind_increment(const Napi::CallbackInfo& info) {
 /**
  * int sodium_compare(const unsigned char *b1_, const unsigned char *b2, size_t len);
  */
-Napi::Value bind_compare(const Napi::CallbackInfo& info) {
+NAPI_METHOD(compare) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers");
@@ -152,7 +152,7 @@ Napi::Value bind_compare(const Napi::CallbackInfo& info) {
 /**
  * void sodium_add(unsigned char *a, const unsigned char *b, const size_t len);
  */
-Napi::Value bind_add(const Napi::CallbackInfo& info) {
+NAPI_METHOD(add) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers");
@@ -170,7 +170,7 @@ Napi::Value bind_add(const Napi::CallbackInfo& info) {
 /**
  * `int sodium_is_zero(const unsigned char *n, const size_t nlen);
  */
-Napi::Value bind_is_zero(const Napi::CallbackInfo& info) {
+NAPI_METHOD(is_zero) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
@@ -197,9 +197,9 @@ void register_helpers(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_verify_16);
     EXPORT(crypto_verify_32);
     EXPORT(crypto_verify_64);
-    NEW_INT_PROP(crypto_verify_16_BYTES);
-    NEW_INT_PROP(crypto_verify_32_BYTES);
-    NEW_INT_PROP(crypto_verify_64_BYTES);
+    EXPORT_INT(crypto_verify_16_BYTES);
+    EXPORT_INT(crypto_verify_32_BYTES);
+    EXPORT_INT(crypto_verify_64_BYTES);
     
     // Hexadecimal encoding/decoding
     EXPORT(bin2hex);

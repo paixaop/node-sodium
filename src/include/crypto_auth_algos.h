@@ -9,7 +9,7 @@
 #define __CRYPTO_AUTH_ALGOS_H__
 
 #define CRYPTO_AUTH_DEF(ALGO) \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO) { \
          Napi::Env env = info.Env(); \
         ARGS(2,"arguments message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(msg);\
@@ -20,7 +20,7 @@
         } \
         return env.Null(); \
     }\
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _verify) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _verify) { \
          Napi::Env env = info.Env(); \
         ARGS(3,"arguments token, message, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER_LEN(token, crypto_auth_ ## ALGO ## _BYTES); \
@@ -30,7 +30,7 @@
             Napi::Number::New(env, crypto_auth_ ## ALGO ## _verify(token, message, message_size, key)) \
         ;\
     }\
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _init) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _init) { \
          Napi::Env env = info.Env(); \
         ARGS(1,"argument key must a buffer"); \
         ARG_TO_UCHAR_BUFFER(key); \
@@ -40,7 +40,7 @@
         } \
         return env.Null(); \
     } \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _update) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _update) { \
          Napi::Env env = info.Env(); \
         ARGS(2,"arguments must be two buffers: hash state, message part"); \
         ARG_TO_UCHAR_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); /* VOID */\
@@ -52,7 +52,7 @@
         } \
         return env.Null(); \
     } \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _final) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _final) { \
         Napi::Env env = info.Env(); \
         ARGS(1,"arguments must be a hash state buffer"); \
         ARG_TO_UCHAR_BUFFER(state);  /* VOID */\
@@ -62,11 +62,11 @@
         } \
         return env.Null(); \
     } \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _statebytes) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _statebytes) { \
         Napi::Env env = info.Env(); \
         return Napi::Number::New(env, crypto_auth_ ## ALGO ## _statebytes()); \
     } \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _keygen) { \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _keygen) { \
         NEW_BUFFER_AND_PTR(buffer, crypto_auth_ ## ALGO ## _KEYBYTES); \
         randombytes_buf(buffer_ptr, crypto_auth_ ## ALGO ## _KEYBYTES); \
         return buffer; \
@@ -80,17 +80,17 @@
     EXPORT(crypto_auth_ ## ALGO ## _final); \
     EXPORT(crypto_auth_ ## ALGO ## _statebytes); \
     EXPORT(crypto_auth_ ## ALGO ## _keygen); \
-    NEW_INT_PROP(crypto_auth_ ## ALGO ## _BYTES); \
-    NEW_INT_PROP(crypto_auth_ ## ALGO ## _KEYBYTES);
+    EXPORT_INT(crypto_auth_ ## ALGO ## _BYTES); \
+    EXPORT_INT(crypto_auth_ ## ALGO ## _KEYBYTES);
 
 #define NAPI_PROTOTYPES(ALGO) \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _verify); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _init); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _update); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _final); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _statebytes); \
-    NAPI_METHOD(bind_crypto_auth_ ## ALGO ## _keygen);
+    NAPI_METHOD(crypto_auth_ ## ALGO); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _verify); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _init); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _update); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _final); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _statebytes); \
+    NAPI_METHOD(crypto_auth_ ## ALGO ## _keygen);
 
 NAPI_PROTOTYPES(hmacsha256);
 NAPI_PROTOTYPES(hmacsha512);

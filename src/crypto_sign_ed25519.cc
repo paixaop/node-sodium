@@ -21,7 +21,7 @@
  * Precondition:
  *    ed25519_pk must be a ed25519 public key.
  */
-Napi::Value bind_crypto_sign_ed25519_pk_to_curve25519(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_pk_to_curve25519) {
     Napi::Env env = info.Env();
 
     ARGS(1, "argument ed25519_pk must be a buffer")
@@ -51,7 +51,7 @@ Napi::Value bind_crypto_sign_ed25519_pk_to_curve25519(const Napi::CallbackInfo& 
  * Precondition:
  *    ed25519_sk must be a ed25519 secret key.
  */
-Napi::Value bind_crypto_sign_ed25519_sk_to_curve25519(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_sk_to_curve25519) {
     Napi::Env env = info.Env();
 
     ARGS(1, "argument ed25519_sk must be a buffer");
@@ -71,7 +71,7 @@ Napi::Value bind_crypto_sign_ed25519_sk_to_curve25519(const Napi::CallbackInfo& 
                         const unsigned char *m, unsigned long long mlen,
                         const unsigned char *sk);
 */
-Napi::Value bind_crypto_sign_ed25519(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and secretKey must be buffers");
@@ -93,7 +93,7 @@ Napi::Value bind_crypto_sign_ed25519(const Napi::CallbackInfo& info) {
                              const unsigned char *sm, unsigned long long smlen,
                              const unsigned char *pk)
 */
-Napi::Value bind_crypto_sign_ed25519_open(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_open) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments signedMessage and verificationKey must be buffers");
@@ -119,7 +119,7 @@ Napi::Value bind_crypto_sign_ed25519_open(const Napi::CallbackInfo& info) {
                                  unsigned long long mlen,
                                  const unsigned char *sk);
 */
-Napi::Value bind_crypto_sign_ed25519_detached(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_detached) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and secretKey must be buffers");
@@ -142,7 +142,7 @@ Napi::Value bind_crypto_sign_ed25519_detached(const Napi::CallbackInfo& info) {
                                         unsigned long long mlen,
                                         const unsigned char *pk)
 */
-Napi::Value bind_crypto_sign_ed25519_verify_detached(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_verify_detached) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments signedMessage and verificationKey must be buffers");
@@ -159,7 +159,7 @@ Napi::Value bind_crypto_sign_ed25519_verify_detached(const Napi::CallbackInfo& i
 
 /* int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk);
  */
-Napi::Value bind_crypto_sign_ed25519_keypair(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_keypair) {
     Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(vk, crypto_sign_ed25519_PUBLICKEYBYTES);
@@ -179,7 +179,7 @@ Napi::Value bind_crypto_sign_ed25519_keypair(const Napi::CallbackInfo& info) {
 /* crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
                                      const unsigned char *seed);
 */
-Napi::Value bind_crypto_sign_ed25519_seed_keypair(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_seed_keypair) {
     Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
@@ -203,7 +203,7 @@ Napi::Value bind_crypto_sign_ed25519_seed_keypair(const Napi::CallbackInfo& info
 /* int crypto_sign_ed25519_sk_to_seed(unsigned char *seed,
                                    const unsigned char *sk);
 */
-Napi::Value bind_crypto_sign_ed25519_sk_to_seed(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_sk_to_seed) {
     Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
@@ -221,7 +221,7 @@ Napi::Value bind_crypto_sign_ed25519_sk_to_seed(const Napi::CallbackInfo& info) 
 
 /* int crypto_sign_ed25519_sk_to_pk(unsigned char *pk, const unsigned char *sk);
 */
-Napi::Value bind_crypto_sign_ed25519_sk_to_pk(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_sign_ed25519_sk_to_pk) {
     Napi::Env env = info.Env();
 
     ARGS(1,"the argument seed must be a buffer");
@@ -253,8 +253,8 @@ void register_crypto_sign_ed25519(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_sign_ed25519_sk_to_seed);
     EXPORT(crypto_sign_ed25519_sk_to_pk);
     
-    NEW_INT_PROP(crypto_sign_ed25519_PUBLICKEYBYTES);
-    NEW_INT_PROP(crypto_sign_ed25519_SECRETKEYBYTES);
-    NEW_INT_PROP(crypto_sign_ed25519_BYTES);
-    NEW_INT_PROP(crypto_sign_ed25519_SEEDBYTES);
+    EXPORT_INT(crypto_sign_ed25519_PUBLICKEYBYTES);
+    EXPORT_INT(crypto_sign_ed25519_SECRETKEYBYTES);
+    EXPORT_INT(crypto_sign_ed25519_BYTES);
+    EXPORT_INT(crypto_sign_ed25519_SEEDBYTES);
 }

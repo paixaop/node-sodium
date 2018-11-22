@@ -8,15 +8,17 @@
 #ifndef __CRYPTO_SIGN_ED25519_H__
 #define __CRYPTO_SIGN_ED25519_H__
 
-Napi::Value bind_crypto_sign_ed25519(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_open(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_detached(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_verify_detached(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_keypair(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_seed_keypair(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_pk_to_curve25519(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_sk_to_curve25519(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_sk_to_seed(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_sign_ed25519_sk_to_pk(const Napi::CallbackInfo& info);
+#include "node_sodium.h"
+
+NAPI_METHOD(crypto_sign_ed25519);
+NAPI_METHOD(crypto_sign_ed25519_open);
+NAPI_METHOD(crypto_sign_ed25519_detached);
+NAPI_METHOD(crypto_sign_ed25519_verify_detached);
+NAPI_METHOD(crypto_sign_ed25519_keypair);
+NAPI_METHOD(crypto_sign_ed25519_seed_keypair);
+NAPI_METHOD(crypto_sign_ed25519_pk_to_curve25519);
+NAPI_METHOD(crypto_sign_ed25519_sk_to_curve25519);
+NAPI_METHOD(crypto_sign_ed25519_sk_to_seed);
+NAPI_METHOD(crypto_sign_ed25519_sk_to_pk);
     
 #endif

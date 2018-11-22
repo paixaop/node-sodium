@@ -34,7 +34,7 @@
  *    first crypto_secretbox_BOXZERBYTES of ctxt be all 0.
  *    first mlen bytes of ctxt will contain the ciphertext.
  */
-Napi::Value bind_crypto_secretbox(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
@@ -94,7 +94,7 @@ Napi::Value bind_crypto_secretbox(const Napi::CallbackInfo& info) {
  * Warning:
  *    if verification fails msg may contain data from the computation.
  */
-Napi::Value bind_crypto_secretbox_open(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_open) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, and key must be buffers");
@@ -161,7 +161,7 @@ Napi::Value bind_crypto_secretbox_open(const Napi::CallbackInfo& info) {
  * Postcondition:
  *    first mlen + crypto_secretbox_MACLENGTH bytes of ctxt will contain the ciphertext.
  */
-Napi::Value bind_crypto_secretbox_easy(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_easy) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
@@ -205,7 +205,7 @@ Napi::Value bind_crypto_secretbox_easy(const Napi::CallbackInfo& info) {
  *    if verification fails msg may contain data from the computation.
  */
 
-Napi::Value bind_crypto_secretbox_open_easy(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_open_easy) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
@@ -230,7 +230,7 @@ int crypto_secretbox_detached(unsigned char *c,
                               const unsigned char *n,
                               const unsigned char *k);
 */
-Napi::Value bind_crypto_secretbox_detached(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_detached) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments mac, message, nonce, and key must be buffers");
@@ -256,7 +256,7 @@ int crypto_secretbox_open_detached(unsigned char *m,
                                    const unsigned char *n,
                                    const unsigned char *k)
 */
-Napi::Value bind_crypto_secretbox_open_detached(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_open_detached) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments encrypted message, mac, nonce, and key must be buffers");
@@ -287,10 +287,10 @@ void register_crypto_secretbox(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_secretbox_detached);
     EXPORT(crypto_secretbox_open_detached);
     
-    NEW_INT_PROP(crypto_secretbox_BOXZEROBYTES);
-    NEW_INT_PROP(crypto_secretbox_MACBYTES);
-    NEW_INT_PROP(crypto_secretbox_KEYBYTES);
-    NEW_INT_PROP(crypto_secretbox_NONCEBYTES);
-    NEW_INT_PROP(crypto_secretbox_ZEROBYTES);
-    NEW_STRING_PROP(crypto_secretbox_PRIMITIVE);
+    EXPORT_INT(crypto_secretbox_BOXZEROBYTES);
+    EXPORT_INT(crypto_secretbox_MACBYTES);
+    EXPORT_INT(crypto_secretbox_KEYBYTES);
+    EXPORT_INT(crypto_secretbox_NONCEBYTES);
+    EXPORT_INT(crypto_secretbox_ZEROBYTES);
+    EXPORT_STRING(crypto_secretbox_PRIMITIVE);
 }

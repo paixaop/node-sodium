@@ -36,7 +36,7 @@
  *    first crypto_box_BOXZEROBYTES of ctxt be all 0.
  *    first mlen bytes of ctxt will contain the ciphertext.
  */
-Napi::Value bind_crypto_box(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
@@ -93,7 +93,7 @@ Napi::Value bind_crypto_box(const Napi::CallbackInfo& info) {
  * Postcondition:
  *    first mlen bytes of ctxt will contain the ciphertext.
  */
-Napi::Value bind_crypto_box_easy(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_easy) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
@@ -134,7 +134,7 @@ Napi::Value bind_crypto_box_easy(const Napi::CallbackInfo& info) {
  *    first crypto_box_PUBLICKEYTBYTES of pk will be the key data.
  *    first crypto_box_SECRETKEYTBYTES of sk will be the key data.
  */
-Napi::Value bind_crypto_box_keypair(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_keypair) {
     Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(pk, crypto_box_PUBLICKEYBYTES);
@@ -182,7 +182,7 @@ Napi::Value bind_crypto_box_keypair(const Napi::CallbackInfo& info) {
  *     first clen bytes of msg will contain the plaintext.
  *     first crypto_box_ZEROBYTES of msg will be all 0.
  */
-Napi::Value bind_crypto_box_open(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_open) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
@@ -254,7 +254,7 @@ Napi::Value bind_crypto_box_open(const Napi::CallbackInfo& info) {
  * Postcondition:
  *     first clen bytes of msg will contain the plaintext.
  */
-Napi::Value bind_crypto_box_open_easy(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_open_easy) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
@@ -297,7 +297,7 @@ Napi::Value bind_crypto_box_open_easy(const Napi::CallbackInfo& info) {
  * crypto_box_afternm and crypto_box_open_afternm, and can be reused for any
  * number of messages.
  */
-Napi::Value bind_crypto_box_beforenm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_beforenm) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments publicKey, and secretKey must be buffers");
@@ -334,7 +334,7 @@ Napi::Value bind_crypto_box_beforenm(const Napi::CallbackInfo& info) {
  * Returns:
  *    0 if operation is successful.
  */
-Napi::Value bind_crypto_box_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce and k must be buffers");
@@ -390,7 +390,7 @@ Napi::Value bind_crypto_box_afternm(const Napi::CallbackInfo& info) {
  *    first clen bytes of msg will contain the plaintext.
  *    first crypto_box_ZEROBYTES of msg will be all 0.
  */
-Napi::Value bind_crypto_box_open_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_box_open_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, k");
@@ -447,14 +447,14 @@ void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object 
     EXPORT(crypto_box_afternm);
     EXPORT(crypto_box_open_afternm);
     
-    NEW_INT_PROP(crypto_box_NONCEBYTES);
-    NEW_INT_PROP(crypto_box_MACBYTES);
-    NEW_INT_PROP(crypto_box_BEFORENMBYTES);
-    NEW_INT_PROP(crypto_box_BOXZEROBYTES);
-    NEW_INT_PROP(crypto_box_PUBLICKEYBYTES);
-    NEW_INT_PROP(crypto_box_SECRETKEYBYTES);
-    NEW_INT_PROP(crypto_box_ZEROBYTES);
-    NEW_INT_PROP(crypto_box_SEEDBYTES);
-    NEW_INT_PROP(crypto_box_SEALBYTES);
-    NEW_STRING_PROP(crypto_box_PRIMITIVE);
+    EXPORT_INT(crypto_box_NONCEBYTES);
+    EXPORT_INT(crypto_box_MACBYTES);
+    EXPORT_INT(crypto_box_BEFORENMBYTES);
+    EXPORT_INT(crypto_box_BOXZEROBYTES);
+    EXPORT_INT(crypto_box_PUBLICKEYBYTES);
+    EXPORT_INT(crypto_box_SECRETKEYBYTES);
+    EXPORT_INT(crypto_box_ZEROBYTES);
+    EXPORT_INT(crypto_box_SEEDBYTES);
+    EXPORT_INT(crypto_box_SEALBYTES);
+    EXPORT_STRING(crypto_box_PRIMITIVE);
 }

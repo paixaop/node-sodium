@@ -8,10 +8,12 @@
 #ifndef __CRYPTO_ONETIMEAUTH_POLY1305_H__
 #define __CRYPTO_ONETIMEAUTH_POLY1305_H__
 
-Napi::Value bind_crypto_onetimeauth_poly1305(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_onetimeauth_poly1305_verify(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_onetimeauth_poly1305_init(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_onetimeauth_poly1305_update(const Napi::CallbackInfo& info);
-Napi::Value bind_crypto_onetimeauth_poly1305_final(const Napi::CallbackInfo& info);
+#include "node_sodium.h"
+
+NAPI_METHOD(crypto_onetimeauth_poly1305);
+NAPI_METHOD(crypto_onetimeauth_poly1305_verify);
+NAPI_METHOD(crypto_onetimeauth_poly1305_init);
+NAPI_METHOD(crypto_onetimeauth_poly1305_update);
+NAPI_METHOD(crypto_onetimeauth_poly1305_final);
 
 #endif

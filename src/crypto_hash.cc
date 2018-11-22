@@ -13,7 +13,7 @@
  *    const unsigned char * msg,
  *    unsigned long long mlen)
  */
-Napi::Value bind_crypto_hash(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_hash) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument message must be a buffer");
@@ -35,7 +35,7 @@ void register_crypto_hash(Napi::Env env, Napi::Object exports) {
     
     // Hash
     EXPORT(crypto_hash);
-    NEW_INT_PROP(crypto_hash_BYTES);
-    //NEW_INT_PROP(crypto_hash_BLOCKBYTES);
-    NEW_STRING_PROP(crypto_hash_PRIMITIVE);   
+    EXPORT_INT(crypto_hash_BYTES);
+    //EXPORT_INT(crypto_hash_BLOCKBYTES);
+    EXPORT_STRING(crypto_hash_PRIMITIVE);   
 }

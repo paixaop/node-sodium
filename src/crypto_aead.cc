@@ -126,7 +126,7 @@
  *   }
  *
  */
-Napi::Value bind_crypto_aead_aes256gcm_is_available(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_is_available) {
     // Napi::Env env = info.Env();
     Napi::Env env = info.Env();
 
@@ -157,7 +157,7 @@ Napi::Value bind_crypto_aead_aes256gcm_is_available(const Napi::CallbackInfo& in
  *     sodium.randombytes_buf(key);
  *     var state = sodium.crypto_aead_aes256gcm_beforenm(key);
  */
-Napi::Value bind_crypto_aead_aes256gcm_beforenm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_beforenm) {
     // Napi::Env env = info.Env();
     Napi::Env env = info.Env();
 
@@ -195,7 +195,7 @@ Napi::Value bind_crypto_aead_aes256gcm_beforenm(const Napi::CallbackInfo& info) 
  * ~ undefined: if `message` fails to encrypt
  *
  */
-Napi::Value bind_crypto_aead_aes256gcm_encrypt_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_encrypt_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, additional data, nonce, and key must be buffers");
@@ -235,7 +235,7 @@ Napi::Value bind_crypto_aead_aes256gcm_encrypt_afternm(const Napi::CallbackInfo&
  * ~ undefined: if `cipherText` is not valid
  *
  */
-Napi::Value bind_crypto_aead_aes256gcm_decrypt_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_decrypt_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers");
@@ -312,7 +312,7 @@ Napi::Value bind_crypto_aead_aes256gcm_decrypt_afternm(const Napi::CallbackInfo&
  *     var plainText = sodium.crypto_aead_aes256gcm_decrypt_detached_afternm(
  *        c.cipherText, c.mac, nonce, state);
  */
-Napi::Value bind_crypto_aead_aes256gcm_encrypt_detached_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_encrypt_detached_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments message, additional data, nonce, and key must be buffers");
@@ -358,7 +358,7 @@ Napi::Value bind_crypto_aead_aes256gcm_encrypt_detached_afternm(const Napi::Call
  * See: [crypto_aead_aes256gcm_encrypt_detached_afternm](#crypto_aead_aes256gcm_encrypt_detached_afternm)
  *
  */
-Napi::Value bind_crypto_aead_aes256gcm_decrypt_detached_afternm(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_aead_aes256gcm_decrypt_detached_afternm) {
     Napi::Env env = info.Env();
 
     ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers");

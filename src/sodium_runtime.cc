@@ -8,63 +8,63 @@
 #include "node_sodium.h"
 
 // int sodium_runtime_has_aesni(void);
-Napi::Value bind_sodium_runtime_has_aesni(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_aesni) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_aesni());
 }
 
 //int sodium_runtime_has_neon(void);
-Napi::Value bind_sodium_runtime_has_neon(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_neon) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_neon());
 }
 
 //int sodium_runtime_has_sse2(void);
-Napi::Value bind_sodium_runtime_has_sse2(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_sse2) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_sse2());
 }
 
 //int sodium_runtime_has_sse3(void);
-Napi::Value bind_sodium_runtime_has_sse3(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_sse3) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_sse3());
 }
 
 //int sodium_runtime_has_ssse3(void);
-Napi::Value bind_sodium_runtime_has_ssse3(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_ssse3) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_ssse3());
 }
 
 //int sodium_runtime_has_sse41(void);
-Napi::Value bind_sodium_runtime_has_sse41(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_sse41) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_sse41());
 }
 
 //int sodium_runtime_has_avx(void);
-Napi::Value bind_sodium_runtime_has_avx(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_avx) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_avx());
 }
 
 //int sodium_runtime_has_avx2(void);
-Napi::Value bind_sodium_runtime_has_avx2(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_avx2) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_avx2());
 }
 
 //int sodium_runtime_has_pclmul(void);
-Napi::Value bind_sodium_runtime_has_pclmul(const Napi::CallbackInfo& info) {
+NAPI_METHOD(sodium_runtime_has_pclmul) {
     Napi::Env env = info.Env();
     return 
         Napi::Number::New(env, sodium_runtime_has_pclmul());

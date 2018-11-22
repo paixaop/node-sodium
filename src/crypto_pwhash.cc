@@ -15,7 +15,7 @@
                           unsigned long long opslimit, size_t memlimit,
                           int alg)
 */
-Napi::Value bind_crypto_pwhash_argon2i(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_argon2i) {
     Napi::Env env = info.Env();
 
     ARGS(6,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit, algorithm");
@@ -39,7 +39,7 @@ Napi::Value bind_crypto_pwhash_argon2i(const Napi::CallbackInfo& info) {
                               unsigned long long passwdlen,
                               unsigned long long opslimit, size_t memlimit)
 */
-Napi::Value bind_crypto_pwhash_argon2i_str(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_argon2i_str) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
@@ -63,7 +63,7 @@ Napi::Value bind_crypto_pwhash_argon2i_str(const Napi::CallbackInfo& info) {
                                      const char * const passwd,
                                      unsigned long long passwdlen)
 */
-Napi::Value bind_crypto_pwhash_argon2i_str_verify(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_argon2i_str_verify) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: pwhash string, password");
@@ -92,7 +92,7 @@ Napi::Value bind_crypto_pwhash_argon2i_str_verify(const Napi::CallbackInfo& info
     Number algorithm
 
 */
-Napi::Value bind_crypto_pwhash(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash) {
     Napi::Env env = info.Env();
 
     ARGS(6,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit, algorithm");
@@ -122,7 +122,7 @@ Napi::Value bind_crypto_pwhash(const Napi::CallbackInfo& info) {
     Number oppsLimit
     Number memLimit
 */
-Napi::Value bind_crypto_pwhash_str(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_str) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
@@ -148,7 +148,7 @@ Napi::Value bind_crypto_pwhash_str(const Napi::CallbackInfo& info) {
     Buffer hash String
     Buffer password
  */
-Napi::Value bind_crypto_pwhash_str_verify(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_str_verify) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: pwhash string, password");
@@ -179,7 +179,7 @@ Napi::Value bind_crypto_pwhash_str_verify(const Napi::CallbackInfo& info) {
     number opslimit
     number memlimit
  */
-Napi::Value bind_crypto_pwhash_scryptsalsa208sha256(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_scryptsalsa208sha256) {
     Napi::Env env = info.Env();
 
     ARGS(5,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit");
@@ -209,7 +209,7 @@ Napi::Value bind_crypto_pwhash_scryptsalsa208sha256(const Napi::CallbackInfo& in
  * Number p
  * Buffer scrypt hash output
  */
-Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_ll(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_scryptsalsa208sha256_ll) {
     Napi::Env env = info.Env();
 
     ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p, output buffer");
@@ -237,7 +237,7 @@ Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_ll(const Napi::CallbackInfo&
 
 
  */
-Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_str(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_scryptsalsa208sha256_str) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: password buffer, oLimit, memLimit");
@@ -260,7 +260,7 @@ Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_str(const Napi::CallbackInfo
                                                   const char * const passwd,
                                                   unsigned long long passwdlen);
  */
-Napi::Value bind_crypto_pwhash_scryptsalsa208sha256_str_verify(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_pwhash_scryptsalsa208sha256_str_verify) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: pwhash string, password");
@@ -294,34 +294,34 @@ void register_crypto_pwhash(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_pwhash_argon2i_str_verify);
 
     // Properties
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
-    NEW_INT_PROP(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
-    NEW_STRING_PROP(crypto_pwhash_scryptsalsa208sha256_STRPREFIX);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_SALTBYTES);
+    EXPORT_INT(crypto_pwhash_scryptsalsa208sha256_STRBYTES);
+    EXPORT_STRING(crypto_pwhash_scryptsalsa208sha256_STRPREFIX);
 
-    NEW_INT_PROP(crypto_pwhash_ALG_DEFAULT);
-    NEW_INT_PROP(crypto_pwhash_SALTBYTES);
-    NEW_INT_PROP(crypto_pwhash_STRBYTES);
-    NEW_STRING_PROP(crypto_pwhash_STRPREFIX);
-    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_MODERATE);
-    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_MODERATE);
-    NEW_INT_PROP(crypto_pwhash_OPSLIMIT_SENSITIVE);
-    NEW_INT_PROP(crypto_pwhash_MEMLIMIT_SENSITIVE);
-    NEW_STRING_PROP(crypto_pwhash_PRIMITIVE);
+    EXPORT_INT(crypto_pwhash_ALG_DEFAULT);
+    EXPORT_INT(crypto_pwhash_SALTBYTES);
+    EXPORT_INT(crypto_pwhash_STRBYTES);
+    EXPORT_STRING(crypto_pwhash_STRPREFIX);
+    EXPORT_INT(crypto_pwhash_OPSLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_MEMLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_OPSLIMIT_MODERATE);
+    EXPORT_INT(crypto_pwhash_MEMLIMIT_MODERATE);
+    EXPORT_INT(crypto_pwhash_OPSLIMIT_SENSITIVE);
+    EXPORT_INT(crypto_pwhash_MEMLIMIT_SENSITIVE);
+    EXPORT_STRING(crypto_pwhash_PRIMITIVE);
 
-    NEW_INT_PROP(crypto_pwhash_argon2i_ALG_ARGON2I13);
-    NEW_INT_PROP(crypto_pwhash_argon2i_SALTBYTES);
-    NEW_INT_PROP(crypto_pwhash_argon2i_STRBYTES);
-    NEW_STRING_PROP(crypto_pwhash_argon2i_STRPREFIX);
-    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
-    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
-    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
-    NEW_INT_PROP(crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
-    NEW_INT_PROP(crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);
+    EXPORT_INT(crypto_pwhash_argon2i_ALG_ARGON2I13);
+    EXPORT_INT(crypto_pwhash_argon2i_SALTBYTES);
+    EXPORT_INT(crypto_pwhash_argon2i_STRBYTES);
+    EXPORT_STRING(crypto_pwhash_argon2i_STRPREFIX);
+    EXPORT_INT(crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+    EXPORT_INT(crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
+    EXPORT_INT(crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
+    EXPORT_INT(crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
+    EXPORT_INT(crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);
 }

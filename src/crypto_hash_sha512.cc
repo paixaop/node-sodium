@@ -13,7 +13,7 @@
  *    const unsigned char * msg,
  *    unsigned long long mlen)
  */
-Napi::Value bind_crypto_hash_sha512(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_hash_sha512) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument message must be a buffer");
@@ -31,7 +31,7 @@ Napi::Value bind_crypto_hash_sha512(const Napi::CallbackInfo& info) {
 /*
  * int crypto_hash_sha512_init(crypto_hash_sha512_state *state);
  */
-Napi::Value bind_crypto_hash_sha512_init(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_hash_sha512_init) {
     Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(state, crypto_hash_sha512_statebytes());
@@ -50,7 +50,7 @@ Napi::Value bind_crypto_hash_sha512_init(const Napi::CallbackInfo& info) {
     Buffer state
     Buffer inStr
  */
-Napi::Value bind_crypto_hash_sha512_update(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_hash_sha512_update) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers: hash state, message part");
@@ -71,7 +71,7 @@ Napi::Value bind_crypto_hash_sha512_update(const Napi::CallbackInfo& info) {
                              unsigned char *out);
 
  */
-Napi::Value bind_crypto_hash_sha512_final(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_hash_sha512_final) {
     Napi::Env env = info.Env();
 
     ARGS(1,"arguments must be a hash state buffer");
@@ -95,5 +95,5 @@ void register_crypto_hash_sha512(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_hash_sha512_init);
     EXPORT(crypto_hash_sha512_update);
     EXPORT(crypto_hash_sha512_final);
-    NEW_INT_PROP(crypto_hash_sha512_BYTES);
+    EXPORT_INT(crypto_hash_sha512_BYTES);
 }

@@ -19,7 +19,7 @@ void register_crypto_onetimeauth(Napi::Env env, Napi::Object exports) {
     EXPORT_ALIAS(crypto_onetimeauth_update, crypto_onetimeauth_poly1305_update);
     EXPORT_ALIAS(crypto_onetimeauth_final, crypto_onetimeauth_poly1305_final);
 
-    NEW_INT_PROP(crypto_onetimeauth_BYTES);
-    NEW_INT_PROP(crypto_onetimeauth_KEYBYTES);
-    NEW_STRING_PROP(crypto_onetimeauth_PRIMITIVE);
+    EXPORT_INT(crypto_onetimeauth_BYTES);
+    EXPORT_INT(crypto_onetimeauth_KEYBYTES);
+    EXPORT_STRING(crypto_onetimeauth_PRIMITIVE);
 }

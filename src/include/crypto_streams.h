@@ -9,7 +9,7 @@
 #define __CRYPTO_STREAMS_H__
 
 #define CRYPTO_STREAM_DEF(ALGO) \
-    NAPI_METHOD(bind_crypto_stream_##ALGO) { \
+    NAPI_METHOD(crypto_stream_##ALGO) { \
         Napi::Env env = info.Env(); \
         ARGS(3,"argument length must be a positive number, arguments nonce, and key must be buffers"); \
         ARG_TO_NUMBER(slen); \
@@ -21,7 +21,7 @@
         } \
         return env.Null(); \
     } \
-    NAPI_METHOD(bind_crypto_stream_ ## ALGO ## _xor) { \
+    NAPI_METHOD(crypto_stream_ ## ALGO ## _xor) { \
         Napi::Env env = info.Env(); \
         ARGS(3,"arguments message, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(message); \
@@ -35,7 +35,7 @@
     }
 
 #define CRYPTO_STREAM_DEF_IC(ALGO) \
-    NAPI_METHOD(bind_crypto_stream_ ## ALGO ## _xor_ic) { \
+    NAPI_METHOD(crypto_stream_ ## ALGO ## _xor_ic) { \
         Napi::Env env = info.Env(); \
         ARGS(4,"arguments message, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(message); \
@@ -55,12 +55,12 @@
     EXPORT(crypto_stream_ ## ALGO ## _xor);
 
 #define PROPS(ALGO) \
-    NEW_INT_PROP(crypto_stream_ ## ALGO ## _KEYBYTES); \
-    NEW_INT_PROP(crypto_stream_ ## ALGO ## _NONCEBYTES)
+    EXPORT_INT(crypto_stream_ ## ALGO ## _KEYBYTES); \
+    EXPORT_INT(crypto_stream_ ## ALGO ## _NONCEBYTES)
 
 #define NAPI_PROTOTYPES(ALGO) \
-    NAPI_METHOD(bind_crypto_stream_ ## ALGO); \
-    NAPI_METHOD(bind_crypto_stream_ ## ALGO ## _xor);
+    NAPI_METHOD(crypto_stream_ ## ALGO); \
+    NAPI_METHOD(crypto_stream_ ## ALGO ## _xor);
 
 
 NAPI_PROTOTYPES(xsalsa20);

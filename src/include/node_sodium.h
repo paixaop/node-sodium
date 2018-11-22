@@ -144,7 +144,7 @@
         return env.Null();     \
     }
 
-#define NEW_INT_PROP(NAME) \
+#define EXPORT_INT(NAME) \
     exports.DefineProperty( \
         Napi::PropertyDescriptor::Value( \
             Napi::String::New(env, #NAME), \
@@ -153,7 +153,7 @@
         ) \
     )
 
-#define NEW_STRING_PROP(NAME) \
+#define EXPORT_STRING(NAME) \
     exports.DefineProperty( \
         Napi::PropertyDescriptor::Value( \
             Napi::String::New(env, #NAME), \
@@ -164,18 +164,14 @@
     
 #define EXPORT(NAME) \
     exports.Set(Napi::String::New(env, #NAME), \
-                Napi::Function::New(env, bind_ ## NAME))
+                Napi::Function::New(env, bind_ ## NAME ## _))
 
 #define EXPORT_ALIAS(NAME, LINK_TO) \
     exports.Set(Napi::String::New(env, #NAME), \
-                Napi::Function::New(env, bind_ ## LINK_TO))
+                Napi::Function::New(env, bind_ ## LINK_TO ## _))
 
-#define EXPORT_(NAME) \
-    exports.Set(Napi::String::New(env, #NAME), \
-                Napi::Function::New(env, bind_ ## NAME ## _))
-
-#define NAPI_METHOD(name) \
-    Napi::Value name(const Napi::CallbackInfo& info)
+#define NAPI_METHOD(NAME) \
+    Napi::Value bind_ ## NAME ## _(const Napi::CallbackInfo& info)
 
 #define NAPI_METHOD_FROM_INT(NAME) \
     Napi::Value bind_ ## NAME ## _(const Napi::CallbackInfo& info) { \
@@ -188,7 +184,6 @@
         Napi::Env env = info.Env(); \
         return Napi::String::New(env, NAME()); \
     }
-
 
 
 #endif

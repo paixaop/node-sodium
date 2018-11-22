@@ -7,7 +7,7 @@
  */
 #include "node_sodium.h"
 
-Napi::Value bind_crypto_secretbox_xsalsa20poly1305(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_xsalsa20poly1305) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments message, nonce, and key must be buffers");
@@ -36,7 +36,7 @@ Napi::Value bind_crypto_secretbox_xsalsa20poly1305(const Napi::CallbackInfo& inf
     return env.Null();
 }
 
-Napi::Value bind_crypto_secretbox_xsalsa20poly1305_open(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments cipherText, nonce, and key must be buffers");
@@ -86,9 +86,9 @@ void register_crypto_secretbox_xsalsa20poly1305(Napi::Env env, Napi::Object expo
     // Secret Box
     EXPORT(crypto_secretbox_xsalsa20poly1305);
     EXPORT(crypto_secretbox_xsalsa20poly1305_open);
-    NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES);
-    NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_MACBYTES);
-    NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_KEYBYTES);
-    NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_NONCEBYTES);
-    NEW_INT_PROP(crypto_secretbox_xsalsa20poly1305_ZEROBYTES);
+    EXPORT_INT(crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES);
+    EXPORT_INT(crypto_secretbox_xsalsa20poly1305_MACBYTES);
+    EXPORT_INT(crypto_secretbox_xsalsa20poly1305_KEYBYTES);
+    EXPORT_INT(crypto_secretbox_xsalsa20poly1305_NONCEBYTES);
+    EXPORT_INT(crypto_secretbox_xsalsa20poly1305_ZEROBYTES);
 }

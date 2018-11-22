@@ -20,7 +20,7 @@
  *  [in] 	mlen 	the length of msg.
  *  [in] 	key 	the key used to compute the token.
  */
-Napi::Value bind_crypto_onetimeauth_poly1305(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_onetimeauth_poly1305) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments message, and key must be buffers");
@@ -49,7 +49,7 @@ Napi::Value bind_crypto_onetimeauth_poly1305(const Napi::CallbackInfo& info) {
  *  [in] 	mlen 	the length of msg.
  *  [in] 	key 	the key used to compute the token.
  */
-Napi::Value bind_crypto_onetimeauth_poly1305_verify(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_onetimeauth_poly1305_verify) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments token, message, and key must be buffers");
@@ -69,7 +69,7 @@ int crypto_onetimeauth_poly1305_init(crypto_onetimeauth_poly1305_state *state,
     buffer key
     return state
 */
-Napi::Value bind_crypto_onetimeauth_poly1305_init(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_onetimeauth_poly1305_init) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument key must be a buffer");
@@ -89,7 +89,7 @@ int crypto_onetimeauth_poly1305_update(crypto_onetimeauth_poly1305_state *state,
                                        const unsigned char *in,
                                        unsigned long long inlen);
 */
-Napi::Value bind_crypto_onetimeauth_poly1305_update(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
@@ -109,7 +109,7 @@ Napi::Value bind_crypto_onetimeauth_poly1305_update(const Napi::CallbackInfo& in
 int crypto_onetimeauth_poly1305_final(crypto_onetimeauth_poly1305_state *state,
                                       unsigned char *out);
 */
-Napi::Value bind_crypto_onetimeauth_poly1305_final(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_onetimeauth_poly1305_final) {
     Napi::Env env = info.Env();
 
     ARGS(1,"arguments must be: state buffer");
@@ -135,6 +135,6 @@ void register_crypto_onetimeauth_poly1305(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_onetimeauth_poly1305_init);
     EXPORT(crypto_onetimeauth_poly1305_update);
     EXPORT(crypto_onetimeauth_poly1305_final);
-    NEW_INT_PROP(crypto_onetimeauth_poly1305_BYTES);
-    NEW_INT_PROP(crypto_onetimeauth_poly1305_KEYBYTES);
+    EXPORT_INT(crypto_onetimeauth_poly1305_BYTES);
+    EXPORT_INT(crypto_onetimeauth_poly1305_KEYBYTES);
 }

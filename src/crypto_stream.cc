@@ -18,7 +18,7 @@ void register_crypto_stream(Napi::Env env, Napi::Object exports) {
     EXPORT_ALIAS(crypto_stream, crypto_stream_xsalsa20);
     EXPORT_ALIAS(crypto_stream_xor, crypto_stream_xsalsa20_xor);
     
-    NEW_INT_PROP(crypto_stream_KEYBYTES);
-    NEW_INT_PROP(crypto_stream_NONCEBYTES);
-    NEW_STRING_PROP(crypto_stream_PRIMITIVE);
+    EXPORT_INT(crypto_stream_KEYBYTES);
+    EXPORT_INT(crypto_stream_NONCEBYTES);
+    EXPORT_STRING(crypto_stream_PRIMITIVE);
 }

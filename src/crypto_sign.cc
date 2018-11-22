@@ -22,9 +22,9 @@ void register_crypto_sign(Napi::Env env, Napi::Object exports) {
     EXPORT_ALIAS(crypto_sign_keypair, crypto_sign_ed25519_keypair);
     EXPORT_ALIAS(crypto_sign_seed_keypair, crypto_sign_ed25519_seed_keypair);
     
-    NEW_INT_PROP(crypto_sign_SEEDBYTES);
-    NEW_INT_PROP(crypto_sign_BYTES);
-    NEW_INT_PROP(crypto_sign_PUBLICKEYBYTES);
-    NEW_INT_PROP(crypto_sign_SECRETKEYBYTES);
-    NEW_STRING_PROP(crypto_sign_PRIMITIVE);
+    EXPORT_INT(crypto_sign_SEEDBYTES);
+    EXPORT_INT(crypto_sign_BYTES);
+    EXPORT_INT(crypto_sign_PUBLICKEYBYTES);
+    EXPORT_INT(crypto_sign_SECRETKEYBYTES);
+    EXPORT_STRING(crypto_sign_PRIMITIVE);
 }

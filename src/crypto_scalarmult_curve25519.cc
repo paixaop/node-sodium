@@ -10,7 +10,7 @@
 /**
  * int crypto_scalarmult_curve25519_base(unsigned char *q, const unsigned char *n)
  */
-Napi::Value bind_crypto_scalarmult_curve25519_base(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_scalarmult_curve25519_base) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
@@ -30,7 +30,7 @@ Napi::Value bind_crypto_scalarmult_curve25519_base(const Napi::CallbackInfo& inf
  * int crypto_scalarmult_curve25519(unsigned char *q, const unsigned char *n,
  *                  const unsigned char *p)
  */
-Napi::Value bind_crypto_scalarmult_curve25519(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_scalarmult_curve25519) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be buffers");
@@ -54,6 +54,6 @@ void register_crypto_scalarmult_curve25519(Napi::Env env, Napi::Object exports) 
     // Scalar Mult
     EXPORT(crypto_scalarmult_curve25519);
     EXPORT(crypto_scalarmult_curve25519_base);
-    NEW_INT_PROP(crypto_scalarmult_curve25519_SCALARBYTES);
-    NEW_INT_PROP(crypto_scalarmult_curve25519_BYTES);
+    EXPORT_INT(crypto_scalarmult_curve25519_SCALARBYTES);
+    EXPORT_INT(crypto_scalarmult_curve25519_BYTES);
 }

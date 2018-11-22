@@ -19,7 +19,7 @@
  *  buffer in,
  *  buffer key
  */
-Napi::Value bind_crypto_generichash(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: hash size, message, key");
@@ -52,7 +52,7 @@ int crypto_generichash_init(crypto_generichash_state *state,
   state = sodium_malloc((crypto_generichash_statebytes() + (size_t) 63U)
  *                       & ~(size_t) 63U);
 */
-Napi::Value bind_crypto_generichash_init(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_init) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: key buffer, output size");
@@ -80,7 +80,7 @@ int crypto_generichash_update(crypto_generichash_state *state,
     buffer state
     buffer message
 */
-Napi::Value bind_crypto_generichash_update(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_update) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
@@ -99,7 +99,7 @@ Napi::Value bind_crypto_generichash_update(const Napi::CallbackInfo& info) {
 int crypto_generichash_final(crypto_generichash_state *state,
                              unsigned char *out, const size_t outlen);
 */
-Napi::Value bind_crypto_generichash_final(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_final) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, output size");
@@ -126,11 +126,11 @@ void register_crypto_generichash(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_generichash_init);
     EXPORT(crypto_generichash_update);
     EXPORT(crypto_generichash_final);
-    NEW_STRING_PROP(crypto_generichash_PRIMITIVE);
-    NEW_INT_PROP(crypto_generichash_BYTES);
-    NEW_INT_PROP(crypto_generichash_BYTES_MIN);
-    NEW_INT_PROP(crypto_generichash_BYTES_MAX);
-    NEW_INT_PROP(crypto_generichash_KEYBYTES);
-    NEW_INT_PROP(crypto_generichash_KEYBYTES_MIN);
-    NEW_INT_PROP(crypto_generichash_KEYBYTES_MAX);
+    EXPORT_STRING(crypto_generichash_PRIMITIVE);
+    EXPORT_INT(crypto_generichash_BYTES);
+    EXPORT_INT(crypto_generichash_BYTES_MIN);
+    EXPORT_INT(crypto_generichash_BYTES_MAX);
+    EXPORT_INT(crypto_generichash_KEYBYTES);
+    EXPORT_INT(crypto_generichash_KEYBYTES_MIN);
+    EXPORT_INT(crypto_generichash_KEYBYTES_MAX);
 }

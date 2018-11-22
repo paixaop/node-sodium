@@ -9,7 +9,7 @@
 #define __CRYPTO_CORE_H__
 
 #define CRYPTO_CORE_DEF(ALGO) \
-    NAPI_METHOD(bind_crypto_core_##ALGO) { \
+    NAPI_METHOD(crypto_core_##ALGO) { \
         Napi::Env env = info.Env(); \
         ARGS(3,"arguments are: input buffer, key buffer, c constant buffer"); \
         ARG_TO_UCHAR_BUFFER_LEN(in, crypto_core_ ## ALGO ## _INPUTBYTES); \
@@ -24,9 +24,9 @@
 
 #define METHOD_AND_PROPS(ALGO) \
     EXPORT(crypto_core_ ## ALGO); \
-    NEW_INT_PROP(crypto_core_ ## ALGO ## _CONSTBYTES); \
-    NEW_INT_PROP(crypto_core_ ## ALGO ## _INPUTBYTES); \
-    NEW_INT_PROP(crypto_core_ ## ALGO ## _KEYBYTES); \
-    NEW_INT_PROP(crypto_core_ ## ALGO ## _OUTPUTBYTES)  
+    EXPORT_INT(crypto_core_ ## ALGO ## _CONSTBYTES); \
+    EXPORT_INT(crypto_core_ ## ALGO ## _INPUTBYTES); \
+    EXPORT_INT(crypto_core_ ## ALGO ## _KEYBYTES); \
+    EXPORT_INT(crypto_core_ ## ALGO ## _OUTPUTBYTES)  
 
 #endif

@@ -13,7 +13,7 @@
 // Lib Sodium Random
 
 // void randombytes_buf(void *const buf, const size_t size)
-Napi::Value bind_randombytes_buf(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_buf) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument must be a buffer");
@@ -25,14 +25,14 @@ Napi::Value bind_randombytes_buf(const Napi::CallbackInfo& info) {
 }
 
 // void randombytes_stir()
-Napi::Value bind_randombytes_stir(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_stir) {
     Napi::Env env = info.Env();
     randombytes_stir();
 
     return env.Null();
 }
 
-Napi::Value bind_randombytes_close(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_close) {
     Napi::Env env = info.Env();
 
     // int randombytes_close()
@@ -40,7 +40,7 @@ Napi::Value bind_randombytes_close(const Napi::CallbackInfo& info) {
         Napi::Number::New(env, randombytes_close());
 }
 
-Napi::Value bind_randombytes_random(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_random) {
     Napi::Env env = info.Env();
 
     // uint_32 randombytes_random()
@@ -48,7 +48,7 @@ Napi::Value bind_randombytes_random(const Napi::CallbackInfo& info) {
         Napi::Value::From(env, randombytes_random());
 }
 
-Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_uniform) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument size must be a positive number");
@@ -60,14 +60,14 @@ Napi::Value bind_randombytes_uniform(const Napi::CallbackInfo& info) {
 }
 
 /*
-Napi::Value bind_randombytes_keygen(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_keygen) {
     NEW_BUFFER_AND_PTR(buffer, randombytes_SEEDBYTES);
     randombytes_keygen(buffer_ptr);
     return buffer;
 }
 */
 
-Napi::Value bind_randombytes_buf_deterministic(const Napi::CallbackInfo& info) {
+NAPI_METHOD(randombytes_buf_deterministic) {
     Napi::Env env = info.Env();
     
     ARGS(2,"arguments buf and seed must be buffers");
@@ -90,5 +90,5 @@ void register_randombytes(Napi::Env env, Napi::Object exports) {
     EXPORT(randombytes_uniform);
     EXPORT(randombytes_buf_deterministic);
 
-    NEW_INT_PROP(randombytes_SEEDBYTES);
+    EXPORT_INT(randombytes_SEEDBYTES);
 }

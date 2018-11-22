@@ -19,7 +19,7 @@
  *  buffer in,
  *  buffer key
  */
-Napi::Value bind_crypto_generichash_blake2b(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_blake2b) {
     Napi::Env env = info.Env();
 
     ARGS(3,"arguments must be: hash size, message, key");
@@ -50,7 +50,7 @@ int crypto_generichash_blake2b_init(crypto_generichash_blake2b_state *state,
   state = sodium_malloc((crypto_generichash_blake2b_statebytes() + (size_t) 63U)
  *                       & ~(size_t) 63U);
 */
-Napi::Value bind_crypto_generichash_blake2b_init(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_blake2b_init) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: key buffer, output size");
@@ -78,7 +78,7 @@ int crypto_generichash_blake2b_update(crypto_generichash_blake2b_state *state,
     buffer state
     buffer message
 */
-Napi::Value bind_crypto_generichash_blake2b_update(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_blake2b_update) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, message buffer");
@@ -97,7 +97,7 @@ Napi::Value bind_crypto_generichash_blake2b_update(const Napi::CallbackInfo& inf
 int crypto_generichash_blake2b_final(crypto_generichash_blake2b_state *state,
                              unsigned char *out, const size_t outlen);
 */
-Napi::Value bind_crypto_generichash_blake2b_final(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_blake2b_final) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: state buffer, output size");
@@ -130,7 +130,7 @@ Napi::Value bind_crypto_generichash_blake2b_final(const Napi::CallbackInfo& info
     Buffer salt
     Buffer personal
  */
-Napi::Value bind_crypto_generichash_blake2b_salt_personal(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_generichash_blake2b_salt_personal) {
     Napi::Env env = info.Env();
 
     ARGS(5,"arguments must five buffers: output, message, key, salt, personal");
@@ -163,12 +163,12 @@ void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_generichash_blake2b_final);
     EXPORT(crypto_generichash_blake2b_salt_personal);
 
-    NEW_INT_PROP(crypto_generichash_blake2b_BYTES);
-    NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MIN);
-    NEW_INT_PROP(crypto_generichash_blake2b_BYTES_MAX);
-    NEW_INT_PROP(crypto_generichash_blake2b_KEYBYTES);
-    NEW_INT_PROP(crypto_generichash_blake2b_KEYBYTES_MIN);
-    NEW_INT_PROP(crypto_generichash_blake2b_KEYBYTES_MAX);
-    NEW_INT_PROP(crypto_generichash_blake2b_SALTBYTES);
-    NEW_INT_PROP(crypto_generichash_blake2b_PERSONALBYTES);
+    EXPORT_INT(crypto_generichash_blake2b_BYTES);
+    EXPORT_INT(crypto_generichash_blake2b_BYTES_MIN);
+    EXPORT_INT(crypto_generichash_blake2b_BYTES_MAX);
+    EXPORT_INT(crypto_generichash_blake2b_KEYBYTES);
+    EXPORT_INT(crypto_generichash_blake2b_KEYBYTES_MIN);
+    EXPORT_INT(crypto_generichash_blake2b_KEYBYTES_MAX);
+    EXPORT_INT(crypto_generichash_blake2b_SALTBYTES);
+    EXPORT_INT(crypto_generichash_blake2b_PERSONALBYTES);
 }

@@ -31,7 +31,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
 */
 
 #define CRYPTO_AEAD_DEF(ALGO) \
-    Napi::Value bind_crypto_aead_ ## ALGO ## _encrypt (const Napi::CallbackInfo& info) { \
+    NAPI_METHOD(crypto_aead_ ## ALGO ## _encrypt ) { \
         Napi::Env env = info.Env(); \
         ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
@@ -46,7 +46,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         } \
         return env.Undefined(); \
     } \
-    Napi::Value bind_crypto_aead_ ## ALGO ## _decrypt(const Napi::CallbackInfo& info) { \
+    NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt) { \
         Napi::Env env = info.Env(); \
         ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
@@ -66,7 +66,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         } \
         return env.Undefined(); \
     } \
-    Napi::Value bind_crypto_aead_ ## ALGO ## _keygen (const Napi::CallbackInfo& info) { \
+    NAPI_METHOD(crypto_aead_ ## ALGO ## _keygen ) { \
         NEW_BUFFER_AND_PTR(buffer, crypto_aead_ ## ALGO ## _KEYBYTES); \
         crypto_aead_ ## ALGO ## _keygen(buffer_ptr); \
         return buffer; \
@@ -97,7 +97,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
                                            const unsigned char *k)
 */
 #define CRYPTO_AEAD_DETACHED_DEF(ALGO) \
-    Napi::Value bind_crypto_aead_ ## ALGO ## _encrypt_detached(const Napi::CallbackInfo& info) { \
+    NAPI_METHOD(crypto_aead_ ## ALGO ## _encrypt_detached) { \
         Napi::Env env = info.Env(); \
         ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
@@ -115,7 +115,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         } \
         return env.Undefined(); \
     }\
-    Napi::Value bind_crypto_aead_ ## ALGO ## _decrypt_detached(const Napi::CallbackInfo& info) { \
+    NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt_detached) { \
         Napi::Env env = info.Env(); \
         ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
@@ -142,10 +142,10 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     EXPORT(crypto_aead_ ## ALGO ## _encrypt); \
     EXPORT(crypto_aead_ ## ALGO ## _keygen); \
     EXPORT(crypto_aead_ ## ALGO ## _encrypt_detached); \
-    NEW_INT_PROP(crypto_aead_ ## ALGO ## _ABYTES); \
-    NEW_INT_PROP(crypto_aead_ ## ALGO ## _KEYBYTES); \
-    NEW_INT_PROP(crypto_aead_ ## ALGO ## _NPUBBYTES); \
-    NEW_INT_PROP(crypto_aead_ ## ALGO ## _NSECBYTES); 
+    EXPORT_INT(crypto_aead_ ## ALGO ## _ABYTES); \
+    EXPORT_INT(crypto_aead_ ## ALGO ## _KEYBYTES); \
+    EXPORT_INT(crypto_aead_ ## ALGO ## _NPUBBYTES); \
+    EXPORT_INT(crypto_aead_ ## ALGO ## _NSECBYTES); 
 
 #define METHODS(ALGO) \
     Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _decrypt); \

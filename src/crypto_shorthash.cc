@@ -29,7 +29,7 @@
  * outputs short, but unpredictable (without knowing the secret key) values
  * suitable for picking a list in a hash table for a given key.
  */
-Napi::Value bind_crypto_shorthash(const Napi::CallbackInfo& info) {
+NAPI_METHOD(crypto_shorthash) {
     Napi::Env env = info.Env();
 
     ARGS(1,"argument message must be a buffer");
@@ -52,7 +52,7 @@ void register_crypto_shorthash(Napi::Env env, Napi::Object exports) {
 
     // Short Hash
     EXPORT(crypto_shorthash);
-    NEW_INT_PROP(crypto_shorthash_BYTES);
-    NEW_INT_PROP(crypto_shorthash_KEYBYTES);
-    NEW_STRING_PROP(crypto_shorthash_PRIMITIVE);
+    EXPORT_INT(crypto_shorthash_BYTES);
+    EXPORT_INT(crypto_shorthash_KEYBYTES);
+    EXPORT_STRING(crypto_shorthash_PRIMITIVE);
 }
