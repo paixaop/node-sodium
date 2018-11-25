@@ -25,9 +25,11 @@ NAPI_METHOD(crypto_generichash_blake2b) {
     ARGS(3,"arguments must be: hash size, message, key");
     ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
-    ARG_TO_UCHAR_BUFFER(key);
+    ARG_TO_UCHAR_BUFFER_OR_NULL(key);
 
-    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
+    if (key != NULL) {
+        CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
+    }
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
 
     NEW_BUFFER_AND_PTR(hash, out_size);
@@ -54,10 +56,12 @@ NAPI_METHOD(crypto_generichash_blake2b_init) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: key buffer, output size");
-    ARG_TO_UCHAR_BUFFER(key);
+    ARG_TO_UCHAR_BUFFER_OR_NULL(key);
     ARG_TO_NUMBER(out_size);
 
-    CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
+    if (key != NULL) {
+        CHECK_SIZE(key_size, crypto_generichash_blake2b_KEYBYTES_MIN, crypto_generichash_blake2b_KEYBYTES_MAX);
+    }
     CHECK_SIZE(out_size, crypto_generichash_blake2b_BYTES_MIN, crypto_generichash_blake2b_BYTES_MAX);
 
     NEW_BUFFER_AND_PTR(state, (crypto_generichash_blake2b_statebytes() + (size_t) 63U) & ~(size_t) 63U);
