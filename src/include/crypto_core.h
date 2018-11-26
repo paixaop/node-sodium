@@ -20,10 +20,19 @@
             return out; \
         } \
         return env.Null(); \
-    }
+    } \
+    NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _constbytes); \
+    NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _inputbytes); \
+    NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _keybytes); \
+    NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _outputbytes)  
+
 
 #define METHOD_AND_PROPS(ALGO) \
     EXPORT(crypto_core_ ## ALGO); \
+    EXPORT(crypto_core_ ## ALGO ## _constbytes); \
+    EXPORT(crypto_core_ ## ALGO ## _inputbytes); \
+    EXPORT(crypto_core_ ## ALGO ## _keybytes); \
+    EXPORT(crypto_core_ ## ALGO ## _outputbytes); \
     EXPORT_INT(crypto_core_ ## ALGO ## _CONSTBYTES); \
     EXPORT_INT(crypto_core_ ## ALGO ## _INPUTBYTES); \
     EXPORT_INT(crypto_core_ ## ALGO ## _KEYBYTES); \

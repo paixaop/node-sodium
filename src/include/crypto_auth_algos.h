@@ -70,7 +70,9 @@
         NEW_BUFFER_AND_PTR(buffer, crypto_auth_ ## ALGO ## _KEYBYTES); \
         randombytes_buf(buffer_ptr, crypto_auth_ ## ALGO ## _KEYBYTES); \
         return buffer; \
-    }
+    } \
+    NAPI_METHOD_FROM_INT(crypto_auth_ ## ALGO ## _bytes) \
+    NAPI_METHOD_FROM_INT(crypto_auth_ ## ALGO ## _keybytes)
 
 #define METHOD_AND_PROPS(ALGO) \
     EXPORT(crypto_auth_ ## ALGO); \
@@ -80,6 +82,8 @@
     EXPORT(crypto_auth_ ## ALGO ## _final); \
     EXPORT(crypto_auth_ ## ALGO ## _statebytes); \
     EXPORT(crypto_auth_ ## ALGO ## _keygen); \
+    EXPORT(crypto_auth_ ## ALGO ## _bytes); \
+    EXPORT(crypto_auth_ ## ALGO ## _keybytes); \
     EXPORT_INT(crypto_auth_ ## ALGO ## _BYTES); \
     EXPORT_INT(crypto_auth_ ## ALGO ## _KEYBYTES);
 

@@ -15,5 +15,6 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_verify);
 NAPI_METHOD(crypto_onetimeauth_poly1305_init);
 NAPI_METHOD(crypto_onetimeauth_poly1305_update);
 NAPI_METHOD(crypto_onetimeauth_poly1305_final);
+NAPI_METHOD(crypto_onetimeauth_poly1305_keygen);
 
 #endif

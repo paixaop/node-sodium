@@ -151,6 +151,17 @@ NAPI_METHOD(crypto_generichash_blake2b_salt_personal) {
     return Napi::Boolean::New(env, false);
 }
 
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_bytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_bytes_min)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_bytes_max)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_keybytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_keybytes_min)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_keybytes_max)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_saltbytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_personalbytes)
+
+NAPI_METHOD_KEYGEN(crypto_generichash_blake2b)
+
 /**
  * Register function calls in node binding
  */
@@ -162,6 +173,7 @@ void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_generichash_blake2b_update);
     EXPORT(crypto_generichash_blake2b_final);
     EXPORT(crypto_generichash_blake2b_salt_personal);
+    EXPORT(crypto_generichash_blake2b_keygen);
 
     EXPORT_INT(crypto_generichash_blake2b_BYTES);
     EXPORT_INT(crypto_generichash_blake2b_BYTES_MIN);
@@ -171,4 +183,13 @@ void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
     EXPORT_INT(crypto_generichash_blake2b_KEYBYTES_MAX);
     EXPORT_INT(crypto_generichash_blake2b_SALTBYTES);
     EXPORT_INT(crypto_generichash_blake2b_PERSONALBYTES);
+
+    EXPORT(crypto_generichash_blake2b_bytes);
+    EXPORT(crypto_generichash_blake2b_bytes_min);
+    EXPORT(crypto_generichash_blake2b_bytes_max);
+    EXPORT(crypto_generichash_blake2b_keybytes);
+    EXPORT(crypto_generichash_blake2b_keybytes_min);
+    EXPORT(crypto_generichash_blake2b_keybytes_max);
+    EXPORT(crypto_generichash_blake2b_saltbytes);
+    EXPORT(crypto_generichash_blake2b_personalbytes);
 }

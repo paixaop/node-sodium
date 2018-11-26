@@ -104,7 +104,6 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     return state2;
 }
 
-
 /*
 int crypto_onetimeauth_poly1305_final(crypto_onetimeauth_poly1305_state *state,
                                       unsigned char *out);
@@ -124,6 +123,11 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_final) {
     return env.Null();
 }
 
+NAPI_METHOD_FROM_INT(crypto_onetimeauth_poly1305_bytes)
+NAPI_METHOD_FROM_INT(crypto_onetimeauth_poly1305_keybytes)
+NAPI_METHOD_FROM_INT(crypto_onetimeauth_poly1305_statebytes)
+NAPI_METHOD_KEYGEN(crypto_onetimeauth_poly1305)
+
 /**
  * Register function calls in node binding
  */
@@ -135,6 +139,11 @@ void register_crypto_onetimeauth_poly1305(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_onetimeauth_poly1305_init);
     EXPORT(crypto_onetimeauth_poly1305_update);
     EXPORT(crypto_onetimeauth_poly1305_final);
+    EXPORT(crypto_onetimeauth_poly1305_bytes);
+    EXPORT(crypto_onetimeauth_poly1305_keybytes);
+    EXPORT(crypto_onetimeauth_poly1305_keygen);
+    EXPORT(crypto_onetimeauth_poly1305_statebytes);
+
     EXPORT_INT(crypto_onetimeauth_poly1305_BYTES);
     EXPORT_INT(crypto_onetimeauth_poly1305_KEYBYTES);
 }

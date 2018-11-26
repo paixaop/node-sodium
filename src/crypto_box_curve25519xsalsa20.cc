@@ -432,6 +432,17 @@ NAPI_METHOD(crypto_box_open_afternm) {
     }
 }
 
+NAPI_METHOD_FROM_INT(crypto_box_noncebytes)
+NAPI_METHOD_FROM_INT(crypto_box_macbytes)
+NAPI_METHOD_FROM_INT(crypto_box_beforenmbytes)
+NAPI_METHOD_FROM_INT(crypto_box_boxzerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_publickeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_secretkeybytes)
+NAPI_METHOD_FROM_INT(crypto_box_zerobytes)
+NAPI_METHOD_FROM_INT(crypto_box_seedbytes)
+NAPI_METHOD_FROM_INT(crypto_box_sealbytes)
+NAPI_METHOD_FROM_STRING(crypto_box_primitive)
+
 /**
  * Register function calls in node binding
  */
@@ -446,6 +457,17 @@ void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object 
     EXPORT(crypto_box_beforenm);
     EXPORT(crypto_box_afternm);
     EXPORT(crypto_box_open_afternm);
+
+    EXPORT(crypto_box_noncebytes);
+    EXPORT(crypto_box_macbytes);
+    EXPORT(crypto_box_beforenmbytes);
+    EXPORT(crypto_box_boxzerobytes);
+    EXPORT(crypto_box_publickeybytes);
+    EXPORT(crypto_box_secretkeybytes);
+    EXPORT(crypto_box_zerobytes);
+    EXPORT(crypto_box_seedbytes);
+    EXPORT(crypto_box_sealbytes);
+    EXPORT(crypto_box_primitive);
     
     EXPORT_INT(crypto_box_NONCEBYTES);
     EXPORT_INT(crypto_box_MACBYTES);

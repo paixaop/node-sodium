@@ -21,6 +21,7 @@ Napi::Object RegisterModule(Napi::Env env, Napi::Object exports) {
     register_helpers(env, exports);
     register_runtime(env, exports);
     register_randombytes(env, exports);
+    register_crypto_pwhash_algos(env, exports);
     register_crypto_pwhash(env, exports);
     register_crypto_hash(env, exports);
     register_crypto_hash_sha256(env, exports);

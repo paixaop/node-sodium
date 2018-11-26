@@ -134,7 +134,12 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
             return m; \
         } \
         return env.Undefined(); \
-    }
+    } \
+    NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _abytes); \
+    NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _keybytes); \
+    NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _npubbytes); \
+    NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _nsecbytes); \
+    NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _messagebytes_max)
 
 #define METHOD_AND_PROPS(ALGO) \
     EXPORT(crypto_aead_ ## ALGO ## _decrypt); \
@@ -142,16 +147,15 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     EXPORT(crypto_aead_ ## ALGO ## _encrypt); \
     EXPORT(crypto_aead_ ## ALGO ## _keygen); \
     EXPORT(crypto_aead_ ## ALGO ## _encrypt_detached); \
+    EXPORT(crypto_aead_ ## ALGO ## _abytes); \
+    EXPORT(crypto_aead_ ## ALGO ## _keybytes); \
+    EXPORT(crypto_aead_ ## ALGO ## _npubbytes); \
+    EXPORT(crypto_aead_ ## ALGO ## _nsecbytes); \
+    EXPORT(crypto_aead_ ## ALGO ## _messagebytes_max); \
     EXPORT_INT(crypto_aead_ ## ALGO ## _ABYTES); \
     EXPORT_INT(crypto_aead_ ## ALGO ## _KEYBYTES); \
     EXPORT_INT(crypto_aead_ ## ALGO ## _NPUBBYTES); \
-    EXPORT_INT(crypto_aead_ ## ALGO ## _NSECBYTES); 
-
-#define METHODS(ALGO) \
-    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _decrypt); \
-    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _decrypt_detached); \
-    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _encrypt); \
-    Napi::SetMethod(bind_crypto_aead_ ## ALGO ## _encrypt_detached); \
+    EXPORT_INT(crypto_aead_ ## ALGO ## _NSECBYTES)
 
 
 #endif

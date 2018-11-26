@@ -186,4 +186,11 @@
     }
 
 
+#define NAPI_METHOD_KEYGEN(NAME) \
+    NAPI_METHOD(NAME ## _keygen) { \
+        NEW_BUFFER_AND_PTR(buffer, NAME ## _KEYBYTES); \
+        NAME ## _keygen(buffer_ptr); \
+        return buffer; \
+    }
+
 #endif

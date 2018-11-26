@@ -28,6 +28,9 @@ NAPI_METHOD(crypto_hash) {
     }
 }
 
+NAPI_METHOD_FROM_INT(crypto_hash_bytes)
+NAPI_METHOD_FROM_STRING(crypto_hash_primitive)
+
 /**
  * Register function calls in node binding
  */
@@ -35,7 +38,8 @@ void register_crypto_hash(Napi::Env env, Napi::Object exports) {
     
     // Hash
     EXPORT(crypto_hash);
+    EXPORT(crypto_hash_bytes);
+    EXPORT(crypto_hash_primitive);   
     EXPORT_INT(crypto_hash_BYTES);
-    //EXPORT_INT(crypto_hash_BLOCKBYTES);
     EXPORT_STRING(crypto_hash_PRIMITIVE);   
 }

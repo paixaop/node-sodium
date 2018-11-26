@@ -82,8 +82,10 @@ NAPI_METHOD(crypto_hash_sha512_final) {
         return hash;
     }
 
-    return Napi::Boolean::New(env, false);
+    return env.Null();
 }
+
+NAPI_METHOD_FROM_INT(crypto_hash_sha512_bytes)
 
 /**
  * Register function calls in node binding
@@ -95,5 +97,6 @@ void register_crypto_hash_sha512(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_hash_sha512_init);
     EXPORT(crypto_hash_sha512_update);
     EXPORT(crypto_hash_sha512_final);
+    EXPORT(crypto_hash_sha512_bytes);
     EXPORT_INT(crypto_hash_sha512_BYTES);
 }

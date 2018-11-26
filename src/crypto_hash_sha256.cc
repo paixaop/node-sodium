@@ -67,6 +67,8 @@ NAPI_METHOD(crypto_hash_sha256_update) {
     return env.Null();
 }
 
+NAPI_METHOD_FROM_INT(crypto_hash_sha256_bytes)
+
 /* int crypto_hash_sha256_final(crypto_hash_sha256_state *state,
                              unsigned char *out);
 
@@ -95,5 +97,6 @@ void register_crypto_hash_sha256(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_hash_sha256_init);
     EXPORT(crypto_hash_sha256_update);
     EXPORT(crypto_hash_sha256_final);
+    EXPORT(crypto_hash_sha256_bytes);
     EXPORT_INT(crypto_hash_sha256_BYTES);
 }
