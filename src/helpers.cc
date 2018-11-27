@@ -73,9 +73,18 @@ NAPI_METHOD(bin2hex) {
     return env.Null();
 }
 
+/* int sodium_hex2bin(unsigned char * const bin, const size_t bin_maxlen,
+ *                  const char * const hex, const size_t hex_len,
+ *                  const char * const ignore, size_t * const bin_len,
+ *                  const char ** const hex_end);
+ */
 NAPI_METHOD(hex2bin) {
     Napi::Env env = info.Env();
-
+   /* ARGS();
+    ARG_TO_NUMBER(bin_maxlen);
+    ARG_TO_STRING(hex);
+    ARG_TO_STRING(ignore);
+    ARG_TO_UCA*/
     Napi::Error::New(env, "use node's native Buffer.toString()").ThrowAsJavaScriptException();
     return env.Null();
 }

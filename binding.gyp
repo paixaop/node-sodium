@@ -24,6 +24,7 @@
       'src/crypto_streams.cc',
       'src/helpers.cc',
       'src/randombytes.cc',
+      'src/crypto_pwhash_algos.cc',
       'src/crypto_pwhash.cc',
       'src/crypto_hash.cc',
       'src/crypto_hash_sha256.cc',

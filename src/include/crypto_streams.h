@@ -32,7 +32,9 @@
             return ctxt; \
         } \
         return env.Null(); \
-    }
+    } \
+    NAPI_METHOD_FROM_INT(crypto_stream_ ## ALGO ## _keybytes); \
+    NAPI_METHOD_FROM_INT(crypto_stream_ ## ALGO ## _noncebytes)
 
 #define CRYPTO_STREAM_DEF_IC(ALGO) \
     NAPI_METHOD(crypto_stream_ ## ALGO ## _xor_ic) { \
@@ -47,12 +49,14 @@
             return ctxt; \
         } \
         return env.Null(); \
-    }
+    } 
 
 
 #define METHODS(ALGO) \
     EXPORT(crypto_stream_ ## ALGO); \
-    EXPORT(crypto_stream_ ## ALGO ## _xor);
+    EXPORT(crypto_stream_ ## ALGO ## _xor); \
+    EXPORT(crypto_stream_ ## ALGO ## _keybytes); \
+    EXPORT(crypto_stream_ ## ALGO ## _noncebytes)
 
 #define PROPS(ALGO) \
     EXPORT_INT(crypto_stream_ ## ALGO ## _KEYBYTES); \

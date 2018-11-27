@@ -87,14 +87,13 @@ NAPI_METHOD(crypto_generichash_update) {
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_UCHAR_BUFFER(state); //VOID
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_generichash_statebytes()); //VOID
     ARG_TO_UCHAR_BUFFER(message);
 
-    NEW_BUFFER_AND_PTR(state2, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-    memcpy(state2_ptr, state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-
-    crypto_generichash_update((crypto_generichash_state *)state2_ptr, message, message_size);
-    return state2;
+    if (crypto_generichash_update((crypto_generichash_state *)state, message, message_size) == 0) {
+        return Napi::Boolean::New(env, true);
+    }
+    return Napi::Boolean::New(env, false);
 }
 
 /*
@@ -118,6 +117,17 @@ NAPI_METHOD(crypto_generichash_final) {
     return env.Null();
 }
 
+NAPI_METHOD_FROM_STRING(crypto_generichash_primitive)
+NAPI_METHOD_FROM_INT(crypto_generichash_statebytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_bytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_bytes_min)
+NAPI_METHOD_FROM_INT(crypto_generichash_bytes_max)
+NAPI_METHOD_FROM_INT(crypto_generichash_keybytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_keybytes_min)
+NAPI_METHOD_FROM_INT(crypto_generichash_keybytes_max)
+
+NAPI_METHOD_KEYGEN(crypto_generichash)
+
 /**
  * Register function calls in node binding
  */
@@ -128,11 +138,23 @@ void register_crypto_generichash(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_generichash_init);
     EXPORT(crypto_generichash_update);
     EXPORT(crypto_generichash_final);
+    EXPORT(crypto_generichash_keygen);
+
     EXPORT_STRING(crypto_generichash_PRIMITIVE);
+    EXPORT(crypto_generichash_statebytes);
     EXPORT_INT(crypto_generichash_BYTES);
     EXPORT_INT(crypto_generichash_BYTES_MIN);
     EXPORT_INT(crypto_generichash_BYTES_MAX);
     EXPORT_INT(crypto_generichash_KEYBYTES);
     EXPORT_INT(crypto_generichash_KEYBYTES_MIN);
     EXPORT_INT(crypto_generichash_KEYBYTES_MAX);
+
+    EXPORT(crypto_generichash_primitive);
+    EXPORT(crypto_generichash_bytes);
+    EXPORT(crypto_generichash_bytes_min);
+    EXPORT(crypto_generichash_bytes_max);
+    EXPORT(crypto_generichash_keybytes);
+    EXPORT(crypto_generichash_keybytes_min);
+    EXPORT(crypto_generichash_keybytes_max);
 }
+

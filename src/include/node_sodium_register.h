@@ -6,6 +6,7 @@
 
 void register_helpers(Napi::Env env, Napi::Object exports);
 void register_randombytes(Napi::Env env, Napi::Object exports);
+void register_crypto_pwhash_algos(Napi::Env env, Napi::Object exports);
 void register_crypto_pwhash(Napi::Env env, Napi::Object exports);
 void register_crypto_hash(Napi::Env env, Napi::Object exports);
 void register_crypto_hash_sha256(Napi::Env env, Napi::Object exports);

@@ -2,14 +2,14 @@ var assert = require('assert');
 var sodium = require('../build/Release/sodium');
 
 
-var expected1 = Buffer([
+var expected1 = Buffer.from([
     0x16,0x4b,0x7a,0x7b,0xfc,0xf8,0x19,0xe2,
     0xe3,0x95,0xfb,0xe7,0x3b,0x56,0xe0,0xa3,
     0x87,0xbd,0x64,0x22,0x2e,0x83,0x1f,0xd6,
     0x10,0x27,0x0c,0xd7,0xea,0x25,0x05,0x54
 ]);
 
-var expected2 = Buffer([
+var expected2 = Buffer.from([
     0x7b,0x9d,0x83,0x38,0xeb,0x1e,0x3d,0xdd,
     0xba,0x8a,0x9a,0x35,0x08,0xd0,0x34,0xa1,
     0xec,0xbe,0x75,0x11,0x37,0xfa,0x1b,0xcb,
@@ -20,7 +20,7 @@ var expected2 = Buffer([
     0xc9,0x87,0x2d,0xb2,0x50,0x4b,0xf3,0x6d
 ]);
 
-var expected3 = Buffer([
+var expected3 = Buffer.from([
     0x73,0xe0,0x0d,0xcb,0xf4,0xf8,0xa3,0x33,
     0x30,0xac,0x52,0xed,0x2c,0xc9,0xd1,0xb2,
     0xef,0xb1,0x77,0x13,0xd3,0xec,0xe3,0x96,
@@ -31,7 +31,7 @@ var expected3 = Buffer([
     0x9b,0x2f,0x60,0x93,0xa8,0x60,0xc1,0xed,
 ]);
 
-var expected4 = Buffer([
+var expected4 = Buffer.from([
     0x62,0x27,0xe4,0xce,0x7c,0x7f,0xe7,0xa4,
     0xba,0x9e,0x2a,0xc3,0x42,0xc3,0x5d,0x24,
     0x03,0x3e,0x38,0x8c,0x9b,0xdc,0x29,0x9b,
@@ -64,7 +64,7 @@ var key2 = Buffer.from([
 ]);
 
 var tKey = Buffer.from("Jefe");
-var key = Buffer(32).fill(0);
+var key = Buffer.alloc(32).fill(0);
 tKey.copy(key);
 
 var c = Buffer.from("what do ya want for nothing?");
@@ -79,15 +79,15 @@ describe("libsodium_auth", function () {
 
     it('crypto_auth_hmacsha512 init, update, final', function() {
         var state = sodium.crypto_auth_hmacsha512_init(key);        
-        state = sodium.crypto_auth_hmacsha512_update(state, firstPart);
-        state = sodium.crypto_auth_hmacsha512_update(state, secondPart);
+        sodium.crypto_auth_hmacsha512_update(state, firstPart);
+        sodium.crypto_auth_hmacsha512_update(state, secondPart);
         var result2 = sodium.crypto_auth_hmacsha512_final(state);
         
         assert(result2.equals(expected2));
 
         var state2 = sodium.crypto_auth_hmacsha512_init(key2);   
-        state2 = sodium.crypto_auth_hmacsha512_update(state2, firstPart);
-        state2 = sodium.crypto_auth_hmacsha512_update(state2, secondPart);
+        sodium.crypto_auth_hmacsha512_update(state2, firstPart);
+        sodium.crypto_auth_hmacsha512_update(state2, secondPart);
         var result3 = sodium.crypto_auth_hmacsha512_final(state2);
         
         assert(result3.equals(expected3));
@@ -95,9 +95,9 @@ describe("libsodium_auth", function () {
 
     it('crypto_auth_hmacsha256 init, update, final', function() {
         var state3 = sodium.crypto_auth_hmacsha256_init(key2);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, null);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, firstPart);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, secondPart);
+        sodium.crypto_auth_hmacsha256_update(state3, null);
+        sodium.crypto_auth_hmacsha256_update(state3, firstPart);
+        sodium.crypto_auth_hmacsha256_update(state3, secondPart);
         var result4 = sodium.crypto_auth_hmacsha256_final(state3);
         assert(result4.equals(expected4));
     });

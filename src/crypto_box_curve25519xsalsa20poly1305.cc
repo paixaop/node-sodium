@@ -209,7 +209,7 @@ void register_crypto_box_curve25519xsalsa20poly1305(Napi::Env env, Napi::Object 
     EXPORT(crypto_box_curve25519xsalsa20poly1305_open);
     EXPORT(crypto_box_curve25519xsalsa20poly1305_beforenm);
     EXPORT(crypto_box_curve25519xsalsa20poly1305_afternm);
-    EXPORT(crypto_box_curve25519xsalsa20poly1305_open_afternm);
+    EXPORT(crypto_box_curve25519xsalsa20poly1305_open_afternm);    
     
     EXPORT_INT(crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     EXPORT_INT(crypto_box_curve25519xsalsa20poly1305_MACBYTES);

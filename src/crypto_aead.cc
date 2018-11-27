@@ -608,6 +608,7 @@ void register_crypto_aead(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_aead_aes256gcm_decrypt_afternm);
     EXPORT(crypto_aead_aes256gcm_encrypt_detached_afternm);
     EXPORT(crypto_aead_aes256gcm_decrypt_detached_afternm);
+
     METHOD_AND_PROPS(aes256gcm);
     METHOD_AND_PROPS(chacha20poly1305);
     METHOD_AND_PROPS(chacha20poly1305_ietf);
