@@ -85,7 +85,7 @@ NAPI_METHOD(crypto_generichash_update) {
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_UCHAR_BUFFER(state); //VOID
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_generichash_statebytes()); //VOID
     ARG_TO_UCHAR_BUFFER(message);
 
     if (crypto_generichash_update((crypto_generichash_state *)state, message, message_size) == 0) {

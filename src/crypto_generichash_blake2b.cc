@@ -83,7 +83,7 @@ NAPI_METHOD(crypto_generichash_blake2b_update) {
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_UCHAR_BUFFER(state); // VOID
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_generichash_blake2b_statebytes());
     ARG_TO_UCHAR_BUFFER(message);
 
     if (crypto_generichash_blake2b_update((crypto_generichash_blake2b_state *)state, message, message_size) == 0) {
@@ -158,6 +158,7 @@ NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_keybytes_min)
 NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_keybytes_max)
 NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_saltbytes)
 NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_personalbytes)
+NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_statebytes)
 
 NAPI_METHOD_KEYGEN(crypto_generichash_blake2b)
 
@@ -173,6 +174,7 @@ void register_crypto_generichash_blake2b(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_generichash_blake2b_final);
     EXPORT(crypto_generichash_blake2b_salt_personal);
     EXPORT(crypto_generichash_blake2b_keygen);
+    EXPORT(crypto_generichash_blake2b_statebytes);
 
     EXPORT_INT(crypto_generichash_blake2b_BYTES);
     EXPORT_INT(crypto_generichash_blake2b_BYTES_MIN);

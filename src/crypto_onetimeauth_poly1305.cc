@@ -94,7 +94,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
 
     ARGS(2,"arguments must be: state buffer, message buffer");
 
-    ARG_TO_UCHAR_BUFFER(state);  // VOID
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_onetimeauth_poly1305_statebytes());
     ARG_TO_UCHAR_BUFFER(message);
 
     if( crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state*)state, message, message_size) == 0 ) {
