@@ -33,21 +33,14 @@ function testAlgorithm(algo, k) {
 
     // Stream API
     var s1 = sodium['crypto_auth_' + algo + '_init'](k);
-    var s2 = sodium['crypto_auth_' + algo + '_update'](s1, c1);
-    var s3 = sodium['crypto_auth_' + algo + '_update'](s2, c2);
-    var a1 = sodium['crypto_auth_' + algo + '_final'](s3);
+    sodium['crypto_auth_' + algo + '_update'](s1, c1);
+    sodium['crypto_auth_' + algo + '_update'](s1, c2);
+    var a1 = sodium['crypto_auth_' + algo + '_final'](s1);
 
     // Regular API
     var a2 = sodium['crypto_auth_' + algo](c, k);
 
     describe('LibSodium Auth, with key length ' + k.length, function() {
-        it('Streamming API state is updating', function(done){
-            // Assert that the states changed with each update
-            assert.notDeepEqual(s1, s2);
-            assert.notDeepEqual(s2, s3);
-            assert.notDeepEqual(s1, s3);
-            done();
-        });
 
         it('Stream API must produce same results as regular API ' + algo, function(done) {
             // Assert that streamming API produces the same result as regular API

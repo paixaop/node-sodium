@@ -88,6 +88,19 @@ test-unit:
 		--reporter $(REPORTER) \
 		--globals setImmediate,clearImmediate
 
+test-fail:
+	@echo Report only failed tests
+	@NODE_ENV=test $(BINDIR)/mocha \
+		--reporter $(REPORTER) \
+		--globals setImmediate,clearImmediate | grep ^[^o]
+
+build-test:
+	node-gyp build
+	@echo Report only failed tests
+	@NODE_ENV=test $(BINDIR)/mocha \
+		--reporter $(REPORTER) \
+		--globals setImmediate,clearImmediate | grep ^[^o]
+
 instrument: clean
 	$(BINDIR)/istanbul instrument --output lib-cov --no-compact \
 		--variable global.__coverage__ lib

@@ -61,15 +61,10 @@ describe('LibSodium Auth', function() {
 
         var s1 = sodium.crypto_auth_hmacsha512_init(key);
         var s2 = sodium.crypto_auth_hmacsha512_update(s1, c1);
-        var s3 = sodium.crypto_auth_hmacsha512_update(s2, c2);
-        var a1 = sodium.crypto_auth_hmacsha512_final(s3);
+        var s3 = sodium.crypto_auth_hmacsha512_update(s1, c2);
+        var a1 = sodium.crypto_auth_hmacsha512_final(s1);
 
         var a2 = sodium.crypto_auth_hmacsha512(c, key);
-
-        // Assert that the states changed with each update
-        assert.notDeepEqual(s1, s2);
-        assert.notDeepEqual(s2, s3);
-        assert.notDeepEqual(s1, s3);
 
         // Assert that it matches what we expected
         assert.deepEqual(a1, a2);

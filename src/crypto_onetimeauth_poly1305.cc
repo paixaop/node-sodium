@@ -97,11 +97,10 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     ARG_TO_UCHAR_BUFFER(state);  // VOID
     ARG_TO_UCHAR_BUFFER(message);
 
-    NEW_BUFFER_AND_PTR(state2, sizeof(crypto_onetimeauth_poly1305_state));
-    memcpy(state2_ptr, state, sizeof(crypto_onetimeauth_poly1305_state));
-
-    crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state *)state2_ptr, message, message_size);
-    return state2;
+    if( crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state*)state, message, message_size) == 0 ) {
+            return Napi::Boolean::New(env, true);
+    }
+    return Napi::Boolean::New(env, false);
 }
 
 /*

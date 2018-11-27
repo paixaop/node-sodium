@@ -57,14 +57,10 @@ NAPI_METHOD(crypto_hash_sha512_update) {
     ARG_TO_UCHAR_BUFFER(state);  // VOID
     ARG_TO_UCHAR_BUFFER(msg);
 
-    NEW_BUFFER_AND_PTR(state2, crypto_hash_sha512_statebytes());
-    memcpy(state2_ptr, state, crypto_hash_sha512_statebytes());
-
-    if( crypto_hash_sha512_update((crypto_hash_sha512_state*)state2_ptr, msg, msg_size) == 0 ) {
-        return state2;
+    if( crypto_hash_sha512_update((crypto_hash_sha512_state*)state, msg, msg_size) == 0 ) {
+            return Napi::Boolean::New(env, true);
     }
-
-    return env.Null();
+    return Napi::Boolean::New(env, false);
 }
 
 /* int crypto_hash_sha512_final(crypto_hash_sha512_state *state,

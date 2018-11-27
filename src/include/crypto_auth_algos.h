@@ -45,12 +45,10 @@
         ARGS(2,"arguments must be two buffers: hash state, message part"); \
         ARG_TO_UCHAR_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); /* VOID */\
         ARG_TO_UCHAR_BUFFER_OR_NULL(msg); \
-        NEW_BUFFER_AND_PTR(state2, crypto_auth_ ## ALGO ## _statebytes()); \
-        memcpy(state2_ptr, state, crypto_auth_ ## ALGO ## _statebytes()); \
-        if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state2_ptr, msg, msg_size) == 0 ) { \
-            return state2; \
+        if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state, msg, msg_size) == 0 ) { \
+            return Napi::Boolean::New(env, true);  \
         } \
-        return env.Null(); \
+        return Napi::Boolean::New(env, false);  \
     } \
     NAPI_METHOD(crypto_auth_ ## ALGO ## _final) { \
         Napi::Env env = info.Env(); \

@@ -88,11 +88,10 @@ NAPI_METHOD(crypto_generichash_update) {
     ARG_TO_UCHAR_BUFFER(state); //VOID
     ARG_TO_UCHAR_BUFFER(message);
 
-    NEW_BUFFER_AND_PTR(state2, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-    memcpy(state2_ptr, state, (crypto_generichash_statebytes() + (size_t) 63U) & ~(size_t) 63U);
-
-    crypto_generichash_update((crypto_generichash_state *)state2_ptr, message, message_size);
-    return state2;
+    if (crypto_generichash_update((crypto_generichash_state *)state, message, message_size) == 0) {
+        return Napi::Boolean::New(env, true);
+    }
+    return Napi::Boolean::New(env, false);
 }
 
 /*

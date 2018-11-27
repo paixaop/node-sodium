@@ -79,15 +79,15 @@ describe("libsodium_auth", function () {
 
     it('crypto_auth_hmacsha512 init, update, final', function() {
         var state = sodium.crypto_auth_hmacsha512_init(key);        
-        state = sodium.crypto_auth_hmacsha512_update(state, firstPart);
-        state = sodium.crypto_auth_hmacsha512_update(state, secondPart);
+        sodium.crypto_auth_hmacsha512_update(state, firstPart);
+        sodium.crypto_auth_hmacsha512_update(state, secondPart);
         var result2 = sodium.crypto_auth_hmacsha512_final(state);
         
         assert(result2.equals(expected2));
 
         var state2 = sodium.crypto_auth_hmacsha512_init(key2);   
-        state2 = sodium.crypto_auth_hmacsha512_update(state2, firstPart);
-        state2 = sodium.crypto_auth_hmacsha512_update(state2, secondPart);
+        sodium.crypto_auth_hmacsha512_update(state2, firstPart);
+        sodium.crypto_auth_hmacsha512_update(state2, secondPart);
         var result3 = sodium.crypto_auth_hmacsha512_final(state2);
         
         assert(result3.equals(expected3));
@@ -95,9 +95,9 @@ describe("libsodium_auth", function () {
 
     it('crypto_auth_hmacsha256 init, update, final', function() {
         var state3 = sodium.crypto_auth_hmacsha256_init(key2);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, null);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, firstPart);
-        state3 = sodium.crypto_auth_hmacsha256_update(state3, secondPart);
+        sodium.crypto_auth_hmacsha256_update(state3, null);
+        sodium.crypto_auth_hmacsha256_update(state3, firstPart);
+        sodium.crypto_auth_hmacsha256_update(state3, secondPart);
         var result4 = sodium.crypto_auth_hmacsha256_final(state3);
         assert(result4.equals(expected4));
     });

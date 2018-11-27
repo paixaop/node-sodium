@@ -56,15 +56,11 @@ NAPI_METHOD(crypto_hash_sha256_update) {
     ARGS(2,"arguments must be two buffers: hash state, message part");
     ARG_TO_UCHAR_BUFFER(state); // VOID
     ARG_TO_UCHAR_BUFFER(msg);
-
-    NEW_BUFFER_AND_PTR(state2, crypto_hash_sha256_statebytes());
-    memcpy(state2_ptr, state, crypto_hash_sha256_statebytes());
-
-    if( crypto_hash_sha256_update((crypto_hash_sha256_state*)state2_ptr, msg, msg_size) == 0 ) {
-        return state2;
+    
+    if( crypto_hash_sha256_update((crypto_hash_sha256_state*)state, msg, msg_size) == 0 ) {
+            return Napi::Boolean::New(env, true);
     }
-
-    return env.Null();
+    return Napi::Boolean::New(env, false);
 }
 
 NAPI_METHOD_FROM_INT(crypto_hash_sha256_bytes)
