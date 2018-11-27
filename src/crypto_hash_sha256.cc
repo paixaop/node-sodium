@@ -16,16 +16,12 @@
 NAPI_METHOD(crypto_hash_sha256) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument message must be a buffer");
+    ARGS(1, "argument message must be a buffer");
     ARG_TO_UCHAR_BUFFER(msg);
 
     NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
-
-    if( crypto_hash_sha256(hash_ptr, msg, msg_size) == 0 ) {
-        return hash;
-    }
-
-    return env.Null();
+    THROW_IF_ERR(crypto_hash_sha256(hash_ptr, msg, msg_size));
+    return hash;
 }
 
 /*
@@ -35,12 +31,8 @@ NAPI_METHOD(crypto_hash_sha256_init) {
     Napi::Env env = info.Env();
 
     NEW_BUFFER_AND_PTR(state, crypto_hash_sha256_statebytes());
-
-    if( crypto_hash_sha256_init((crypto_hash_sha256_state*) state_ptr) == 0 ) {
-        return state;
-    }
-
-    return env.Null();
+    THROW_IF_ERR(crypto_hash_sha256_init((crypto_hash_sha256_state*) state_ptr));
+    return state;
 }
 
 /* int crypto_hash_sha256_update(crypto_hash_sha256_state *state,
@@ -53,18 +45,12 @@ NAPI_METHOD(crypto_hash_sha256_init) {
 NAPI_METHOD(crypto_hash_sha256_update) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers: hash state, message part");
-    ARG_TO_UCHAR_BUFFER(state); // VOID
+    ARGS(2, "arguments must be two buffers: hash state, message part");
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_hash_sha256_statebytes());
     ARG_TO_UCHAR_BUFFER(msg);
 
-    NEW_BUFFER_AND_PTR(state2, crypto_hash_sha256_statebytes());
-    memcpy(state2_ptr, state, crypto_hash_sha256_statebytes());
-
-    if( crypto_hash_sha256_update((crypto_hash_sha256_state*)state2_ptr, msg, msg_size) == 0 ) {
-        return state2;
-    }
-
-    return env.Null();
+    THROW_IF_ERR(crypto_hash_sha256_update((crypto_hash_sha256_state*)state, msg, msg_size));
+    return env.Undefined();
 }
 
 NAPI_METHOD_FROM_INT(crypto_hash_sha256_bytes)
@@ -76,15 +62,12 @@ NAPI_METHOD_FROM_INT(crypto_hash_sha256_bytes)
 NAPI_METHOD(crypto_hash_sha256_final) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"arguments must be a hash state buffer");
-    ARG_TO_UCHAR_BUFFER(state);  // VOID
+    ARGS(1, "arguments must be a hash state buffer");
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_hash_sha256_statebytes());
+
     NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
-
-    if( crypto_hash_sha256_final((crypto_hash_sha256_state*)state, hash_ptr) == 0 ) {
-        return hash;
-    }
-
-    return Napi::Boolean::New(env, false);
+    THROW_IF_ERR(crypto_hash_sha256_final((crypto_hash_sha256_state*)state, hash_ptr))
+    return hash;
 }
 
 /**

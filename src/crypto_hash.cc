@@ -20,12 +20,8 @@ NAPI_METHOD(crypto_hash) {
     ARG_TO_UCHAR_BUFFER(msg);
 
     NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);
-
-    if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
-        return hash;
-    } else {
-        return env.Null();
-    }
+    THROW_IF_ERR(crypto_hash(hash_ptr, msg, msg_size));
+    return hash;
 }
 
 NAPI_METHOD_FROM_INT(crypto_hash_bytes)

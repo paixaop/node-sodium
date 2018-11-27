@@ -185,6 +185,11 @@
         return Napi::String::New(env, NAME()); \
     }
 
+#define THROW_IF_ERR(ERR) \
+    if ( (ERR) != 0 ) { \
+        Napi::Error::New(env, "libsodium call failed").ThrowAsJavaScriptException(); \
+        return env.Undefined(); \
+    }
 
 #define NAPI_METHOD_KEYGEN(NAME) \
     NAPI_METHOD(NAME ## _keygen) { \
