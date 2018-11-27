@@ -226,7 +226,6 @@ describe("libsodium_pwhash_argon2i", function () {
 describe("libsodium_pwhash_argon2i str tests", function () {
 	var passwd = Buffer.from("Correct Horse Battery Staple", "ascii");
 	var salt = Buffer.from(">A 16-bytes salt", "ascii");
-
 	var out, out2, result;
 
 	it('crypto_pwhash_argon2i_str', function() {	
@@ -255,7 +254,7 @@ describe("libsodium_pwhash_argon2i str tests", function () {
 	});
 
 	it('crypto_pwhash_argon2i_str_needs_rehash should fail with an invalid hash string', function() {
-		var out3 = Buffer.allocUnsafe(out.length);
+		var out3 = Buffer.allocUnsafe(out.length).fill(0);
 		out.copy(out3);
 		out3[0]++;
 		assert(!sodium.crypto_pwhash_str_needs_rehash(out3, OPSLIMIT, MEMLIMIT));
@@ -279,7 +278,7 @@ describe("libsodium_pwhash_argon2i str tests", function () {
 	});
 
 	it('crypto_pwhash_argon2i_str_verify should not work with invalid hash', function() {
-		var out3 = Buffer.allocUnsafe(out.length);
+		var out3 = Buffer.allocUnsafe(out.length).fill(0);
 		out.copy(out3);
 		out3[14]++;
 		assert(!sodium.crypto_pwhash_argon2i_str_verify(out3, passwd));
@@ -293,11 +292,177 @@ describe("libsodium_pwhash_argon2i str tests", function () {
 		assert(!sodium.crypto_pwhash_argon2i_str(passwd, 1, MEMLIMIT));
 	});
 
-	it('crypto_pwhash_argon2i_str_verify invalid(1)) failure', function() {
-		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes());
+	it('crypto_pwhash_argon2i_str_verify invalid(1))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
 		var bStr = Buffer.from("$argon2i$m=65536,t=2,p=1c29tZXNhbHQ$9sTbSlTio3Biev89thdrlKKiCaYsjjYVJxGAL3swxpQ");
 		bStr.copy(hash);
 		var passwd = Buffer.from("password", "ascii");
     	assert(!sodium.crypto_pwhash_argon2i_str_verify(hash, passwd));
     });
+
+	it('crypto_pwhash_argon2i_str_verify invalid(2))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$m=65536,t=2,p=1$c29tZXNhbHQ9sTbSlTio3Biev89thdrlKKiCaYsjjYVJxGAL3swxpQ");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_argon2i_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(3))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$m=65536,t=2,p=1$c29tZXNhbHQ$b2G3seW+uPzerwQQC+/E1K50CLLO7YXy0JRcaTuswRo");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(4))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=19$m=65536,t=2,p=1c29tZXNhbHQ$wWKIMhR9lyDFvRz9YTZweHKfbftvj+qf+YFY4NeBbtA");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(5))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=19$m=65536,t=2,p=1$c29tZXNhbHQwWKIMhR9lyDFvRz9YTZweHKfbftvj+qf+YFY4NeBbtA");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(6))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=19$m=65536,t=2,p=1$c29tZXNhbHQ$8iIuixkI73Js3G1uMbezQXD0b8LG4SXGsOwoQkdAQIM");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+	
+	it('crypto_pwhash_str_verify valid(7))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=19$m=4096,t=3,p=2$b2RpZHVlamRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYIU+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+	
+	it('crypto_pwhash_str_verify valid(7))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=19$m=4096,t=3,p=2$b2RpZHVlamRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYIU+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("passwore", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(8))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$Argon2i$v=19$m=4096,t=3,p=2$b2RpZHVlamRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYIU+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(9))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=1$m=4096,t=3,p=2$b2RpZHVlamRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYIU+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(10))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=1$m=4096,t=3,p=2$b2RpZHVla~=mRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYIU+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_verify invalid(11))', function() {
+		var hash = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes()).fill(0);
+		var bStr = Buffer.from("$argon2i$v=1$m=4096,t=3,p=2$b2RpZHVlamRpc29kaXNrdw$TNnWIwlu1061JHrnCqIAmjs3huSxYI~=U+0jWipu7Kc9M");
+		bStr.copy(hash);
+		var passwd = Buffer.from("password", "ascii");
+    	assert(!sodium.crypto_pwhash_str_verify(hash, passwd));
+    });
+
+	it('crypto_pwhash_str_alg', function() {
+		var result = sodium.crypto_pwhash_str_alg(Buffer.from("test"), OPSLIMIT, MEMLIMIT,
+                                 sodium.crypto_pwhash_ALG_ARGON2I13);
+		assert(result !== null);
+	});
+	
+	it('crypto_pwhash_argon2i_str_verify', function() {
+    	assert(!sodium.crypto_pwhash_argon2i_str_verify(out, Buffer.from("test")));
+	});
+
+	it('crypto_pwhash_argon2i_str_needs_rehash', function() {
+		var out3 = Buffer.allocUnsafe(sodium.crypto_pwhash_argon2i_strbytes());
+		out.copy(out3, 1);
+
+		assert(sodium.crypto_pwhash_argon2i_str_needs_rehash(out, OPSLIMIT, MEMLIMIT));
+    	assert(!sodium.crypto_pwhash_argon2i_str_needs_rehash(out, OPSLIMIT / 2, MEMLIMIT));
+		assert(!sodium.crypto_pwhash_argon2i_str_needs_rehash(out,OPSLIMIT, MEMLIMIT / 2));
+		assert(!sodium.crypto_pwhash_argon2i_str_needs_rehash(out, 0, 0));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out, 0, 0));
+		assert(!sodium.crypto_pwhash_argon2i_str_needs_rehash(out3, OPSLIMIT, MEMLIMIT));
+		assert(sodium.crypto_pwhash_str_alg(Buffer.from("test"), OPSLIMIT, MEMLIMIT,
+									sodium.crypto_pwhash_ALG_ARGON2ID13));
+		assert(!sodium.crypto_pwhash_argon2id_str_verify(out, Buffer.from("test")));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out, OPSLIMIT, MEMLIMIT));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out, OPSLIMIT / 2, MEMLIMIT));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out, OPSLIMIT, MEMLIMIT / 2));
+		var out4 = Buffer.alloc(sodium.crypto_pwhash_argon2id_strbytes());
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out4, OPSLIMIT, MEMLIMIT));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out4, OPSLIMIT, MEMLIMIT));
+		assert(!sodium.crypto_pwhash_argon2id_str_needs_rehash(out3,OPSLIMIT, MEMLIMIT));
+	});
+
+	it('crypto_pwhash constants', function() {
+		assert(sodium.crypto_pwhash_argon2i_bytes_min() > 0);
+		assert(sodium.crypto_pwhash_argon2i_bytes_max() > sodium.crypto_pwhash_argon2i_bytes_min());
+		assert(sodium.crypto_pwhash_argon2i_passwd_max() > sodium.crypto_pwhash_argon2i_passwd_min());
+		assert(sodium.crypto_pwhash_argon2i_saltbytes() > 0);
+		assert(sodium.crypto_pwhash_argon2i_strbytes() > 1);
+		assert(sodium.crypto_pwhash_argon2i_strbytes() > sodium.crypto_pwhash_argon2i_strprefix().length);
+
+		assert(sodium.crypto_pwhash_argon2i_opslimit_min() > 0);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_max() > 0);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_min() > 0);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_max() > 0);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_interactive() > 0);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_interactive() > 0);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_moderate() > 0);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_moderate() > 0);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_sensitive() > 0);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_sensitive() > 0);
+
+		assert(sodium.crypto_pwhash_argon2i_bytes_min() == sodium.crypto_pwhash_argon2i_BYTES_MIN);
+		assert(sodium.crypto_pwhash_argon2i_bytes_max() == sodium.crypto_pwhash_argon2i_BYTES_MAX);
+		assert(sodium.crypto_pwhash_argon2i_passwd_min() == sodium.crypto_pwhash_argon2i_PASSWD_MIN);
+		assert(sodium.crypto_pwhash_argon2i_passwd_max() == sodium.crypto_pwhash_argon2i_PASSWD_MAX);
+		assert(sodium.crypto_pwhash_argon2i_saltbytes() == sodium.crypto_pwhash_argon2i_SALTBYTES);
+		assert(sodium.crypto_pwhash_argon2i_strbytes() == sodium.crypto_pwhash_argon2i_STRBYTES);
+
+		assert(sodium.crypto_pwhash_argon2i_opslimit_min() == sodium.crypto_pwhash_argon2i_OPSLIMIT_MIN);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_max() == sodium.crypto_pwhash_argon2i_OPSLIMIT_MAX);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_min() == sodium.crypto_pwhash_argon2i_MEMLIMIT_MIN);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_max() == sodium.crypto_pwhash_argon2i_MEMLIMIT_MAX);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_interactive() ==
+			sodium.crypto_pwhash_argon2i_OPSLIMIT_INTERACTIVE);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_interactive() ==
+			sodium.crypto_pwhash_argon2i_MEMLIMIT_INTERACTIVE);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_moderate() ==
+			sodium.crypto_pwhash_argon2i_OPSLIMIT_MODERATE);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_moderate() ==
+			sodium.crypto_pwhash_argon2i_MEMLIMIT_MODERATE);
+		assert(sodium.crypto_pwhash_argon2i_opslimit_sensitive() ==
+			sodium.crypto_pwhash_argon2i_OPSLIMIT_SENSITIVE);
+		assert(sodium.crypto_pwhash_argon2i_memlimit_sensitive() ==
+			sodium.crypto_pwhash_argon2i_MEMLIMIT_SENSITIVE);
+
+		assert(sodium.crypto_pwhash_argon2i_alg_argon2i13() == sodium.crypto_pwhash_argon2i_ALG_ARGON2I13);
+	})
 });

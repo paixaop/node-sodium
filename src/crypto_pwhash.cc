@@ -72,7 +72,7 @@ NAPI_METHOD(crypto_pwhash_str) {
         return out;
     }
 
-    return Napi::Boolean::New(env, false);
+    return env.Null();
 }
 
 /**
@@ -98,7 +98,7 @@ NAPI_METHOD(crypto_pwhash_str_verify) {
     return Napi::Boolean::New(env, false);
 }
 
- NAPI_METHOD(crypto_pwhash_str_needs_rehash) {
+NAPI_METHOD(crypto_pwhash_str_needs_rehash) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be: pwhash hash, oLimit, memLimit");
@@ -110,6 +110,30 @@ NAPI_METHOD(crypto_pwhash_str_verify) {
         return Napi::Boolean::New(env, true);
     }
     return Napi::Boolean::New(env, false);
+}
+
+/*
+crypto_pwhash_str_alg(char out[crypto_pwhash_STRBYTES],
+                      const char * const passwd, unsigned long long passwdlen,
+                      unsigned long long opslimit, size_t memlimit, int alg)
+*/
+NAPI_METHOD(crypto_pwhash_str_alg) {
+    Napi::Env env = info.Env();
+
+    ARGS(3,"arguments must be: password buffer, oLimit, memLimit, and algorithm");
+
+    ARG_TO_BUFFER_TYPE(passwd, char);
+    ARG_TO_NUMBER(oppLimit);
+    ARG_TO_NUMBER(memLimit);
+    ARG_TO_NUMBER(alg);
+
+    NEW_BUFFER_AND_PTR(out, crypto_pwhash_STRBYTES);
+
+    if (crypto_pwhash_str_alg((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit, alg) == 0) {
+        return out;
+    }
+
+    return env.Null();
 }
 
 NAPI_METHOD_FROM_INT(crypto_pwhash_bytes_max)
@@ -143,6 +167,7 @@ void register_crypto_pwhash(Napi::Env env, Napi::Object exports) {
     EXPORT(crypto_pwhash);
     EXPORT(crypto_pwhash_str);
     EXPORT(crypto_pwhash_str_verify);
+    EXPORT(crypto_pwhash_str_alg);
     EXPORT(crypto_pwhash_str_needs_rehash);
 
     EXPORT(crypto_pwhash_alg_default);
