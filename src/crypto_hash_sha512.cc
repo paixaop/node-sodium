@@ -54,7 +54,7 @@ NAPI_METHOD(crypto_hash_sha512_update) {
     Napi::Env env = info.Env();
 
     ARGS(2,"arguments must be two buffers: hash state, message part");
-    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_hash_sha256_statebytes());
+    ARG_TO_UCHAR_BUFFER_LEN(state, crypto_hash_sha512_statebytes());
     ARG_TO_UCHAR_BUFFER(msg);
 
     if( crypto_hash_sha512_update((crypto_hash_sha512_state*)state, msg, msg_size) == 0 ) {
@@ -72,7 +72,7 @@ NAPI_METHOD(crypto_hash_sha512_final) {
 
     ARGS(1,"arguments must be a hash state buffer");
     ARG_TO_UCHAR_BUFFER(state);  // VOID
-    NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
+    NEW_BUFFER_AND_PTR(hash, crypto_hash_sha512_BYTES);
 
     if( crypto_hash_sha512_final((crypto_hash_sha512_state*) state, hash_ptr) == 0 ) {
         return hash;
