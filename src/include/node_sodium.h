@@ -193,4 +193,10 @@
         return buffer; \
     }
 
+#define THROW_IF_ERR(ERR) \
+    if ( (ERR) != 0 ) { \
+        Napi::Error::New(env, "libsodium call failed").ThrowAsJavaScriptException(); \
+        return env.Undefined(); \
+    }
+
 #endif
