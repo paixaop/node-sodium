@@ -99,7 +99,7 @@ tv(void)
             continue;
         }
         sodium_bin2hex(out_hex, sizeof out_hex, out, tests[i].outlen);
-        printf("tv %d - %s\n", i, out_hex);
+        printf("%s\n", out_hex);
     } while (++i < (sizeof tests) / (sizeof tests[0]));
 }
 
@@ -150,7 +150,7 @@ tv2(void)
             continue;
         }
         sodium_bin2hex(out_hex, sizeof out_hex, out, tests[i].outlen);
-        printf("tv2 %d - %s\n", i, out_hex);
+        printf("%s\n", out_hex);
     } while (++i < (sizeof tests) / (sizeof tests[0]));
 
     if (crypto_pwhash(out, sizeof out, "password", strlen("password"), salt, 3,
