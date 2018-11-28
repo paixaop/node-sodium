@@ -180,3 +180,14 @@ describe('crypto_hash_sha256 verify parameters', function() {
         done();
     });
 });
+
+describe('issue #141', function() {
+    it('should not core dump', function() {
+        'use strict';
+        const state = sodium.crypto_hash_sha512_init();
+        assert(Buffer.isBuffer(state));
+        sodium.crypto_hash_sha512_update(state, Buffer.alloc(128));
+        const result = sodium.crypto_hash_sha512_final(state);
+        assert(Buffer.isBuffer(result));
+    })
+})
