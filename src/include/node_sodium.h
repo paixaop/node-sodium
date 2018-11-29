@@ -9,16 +9,6 @@
 #define __NODE_SODIUM_H__
 
 #include <napi.h>
-#include <uv.h>
-#include <node_buffer.h>
-
-/*
-#include <cstdlib>
-#include <ctime>
-#include <cstring>
-#include <string>
-#include <sstream>
-*/
 #include "sodium.h"
 
 // As per Libsodium install docs
