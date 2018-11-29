@@ -198,5 +198,9 @@
         Napi::Error::New(env, "libsodium call failed").ThrowAsJavaScriptException(); \
         return env.Undefined(); \
     }
+    
+#define THROW_ERROR(msg) \
+    Napi::Error::New(env, (msg)).ThrowAsJavaScriptException(); \
+    return env.Null(); \
 
 #endif
