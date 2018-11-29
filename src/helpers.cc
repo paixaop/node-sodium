@@ -32,7 +32,7 @@ NAPI_METHOD(sodium_library_version_major) {
 NAPI_METHOD(memzero) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
     ARG_TO_UCHAR_BUFFER(buffer);  // VOID
     
     sodium_memzero(buffer, buffer_size);
@@ -45,7 +45,7 @@ NAPI_METHOD(memzero) {
 NAPI_METHOD(memcmp) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments must be: buffer, buffer, positive number");
+    ARGS(3, "arguments must be: buffer, buffer, positive number");
 
     ARG_TO_UCHAR_BUFFER(buffer_1);  // VOID
     ARG_TO_UCHAR_BUFFER(buffer_2);  // VOID
@@ -92,7 +92,7 @@ NAPI_METHOD(hex2bin) {
 NAPI_METHOD(crypto_verify_16) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers");
+    ARGS(2, "arguments must be two buffers");
     ARG_TO_UCHAR_BUFFER_LEN(string1, crypto_verify_16_BYTES);
     ARG_TO_UCHAR_BUFFER_LEN(string2, crypto_verify_16_BYTES);
 
@@ -104,7 +104,7 @@ NAPI_METHOD(crypto_verify_16) {
 NAPI_METHOD(crypto_verify_32) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers");
+    ARGS(2, "arguments must be two buffers");
     ARG_TO_UCHAR_BUFFER_LEN(string1, crypto_verify_32_BYTES);
     ARG_TO_UCHAR_BUFFER_LEN(string2, crypto_verify_32_BYTES);
 
@@ -116,7 +116,7 @@ NAPI_METHOD(crypto_verify_32) {
 NAPI_METHOD(crypto_verify_64) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers");
+    ARGS(2, "arguments must be two buffers");
     ARG_TO_UCHAR_BUFFER_LEN(string1, crypto_verify_64_BYTES);
     ARG_TO_UCHAR_BUFFER_LEN(string2, crypto_verify_64_BYTES);
 
@@ -131,7 +131,7 @@ NAPI_METHOD(crypto_verify_64) {
 NAPI_METHOD(increment) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
     ARG_TO_UCHAR_BUFFER(buffer);
     
     sodium_increment(buffer, buffer_size);
@@ -145,7 +145,7 @@ NAPI_METHOD(increment) {
 NAPI_METHOD(compare) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers");
+    ARGS(2, "arguments must be two buffers");
     ARG_TO_UCHAR_BUFFER(buffer_1);
     ARG_TO_UCHAR_BUFFER(buffer_2);
 
@@ -164,7 +164,7 @@ NAPI_METHOD(compare) {
 NAPI_METHOD(add) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers");
+    ARGS(2, "arguments must be two buffers");
     ARG_TO_UCHAR_BUFFER(buffer_1);
     ARG_TO_UCHAR_BUFFER(buffer_2);
 
@@ -182,7 +182,7 @@ NAPI_METHOD(add) {
 NAPI_METHOD(is_zero) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
     ARG_TO_UCHAR_BUFFER(buffer_1);
 
     return 

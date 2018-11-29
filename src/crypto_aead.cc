@@ -161,7 +161,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_beforenm) {
     // Napi::Env env = info.Env();
     Napi::Env env = info.Env();
 
-    ARGS(1,"arguments key must be a buffer");
+    ARGS(1, "arguments key must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_aead_aes256gcm_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(ctxt, crypto_aead_aes256gcm_statebytes());
@@ -198,7 +198,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_beforenm) {
 NAPI_METHOD(crypto_aead_aes256gcm_encrypt_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, additional data, nonce, and key must be buffers");
+    ARGS(4, "arguments message, additional data, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(m);
     ARG_TO_UCHAR_BUFFER_OR_NULL(ad);
     ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_aes256gcm_NPUBBYTES);
@@ -238,7 +238,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_encrypt_afternm) {
 NAPI_METHOD(crypto_aead_aes256gcm_decrypt_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers");
+    ARGS(4, "arguments chiper text, additional data, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(c);
     if( c_size < crypto_aead_aes256gcm_ABYTES ) {
         THROW_ERROR("argument cipher text must be at least crypto_aead_aes256gcm_ABYTES bytes long");
@@ -312,7 +312,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_decrypt_afternm) {
 NAPI_METHOD(crypto_aead_aes256gcm_encrypt_detached_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, additional data, nonce, and key must be buffers");
+    ARGS(4, "arguments message, additional data, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(m);
     ARG_TO_UCHAR_BUFFER_OR_NULL(ad);
     ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_aes256gcm_NPUBBYTES);
@@ -358,7 +358,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_encrypt_detached_afternm) {
 NAPI_METHOD(crypto_aead_aes256gcm_decrypt_detached_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers");
+    ARGS(4, "arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(c);
     ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_aead_aes256gcm_ABYTES);
     ARG_TO_UCHAR_BUFFER_OR_NULL(ad);

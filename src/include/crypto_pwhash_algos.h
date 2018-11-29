@@ -11,7 +11,7 @@
 #define CRYPTO_PWHASH_DEF(ALGO) \
     NAPI_METHOD(crypto_pwhash_ ## ALGO) { \
         Napi::Env env = info.Env(); \
-        ARGS(5,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit"); \
+        ARGS(5, "arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit"); \
         ARG_TO_NUMBER(outLen); \
         ARG_TO_BUFFER_TYPE(passwd, char); \
         ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_ ## ALGO ## _SALTBYTES); \
@@ -35,7 +35,7 @@
 #define CRYPTO_PWHASH_DEF_EXT(ALGO) \
     NAPI_METHOD(crypto_pwhash_ ## ALGO) { \
         Napi::Env env = info.Env(); \
-        ARGS(6,"arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit"); \
+        ARGS(6, "arguments must be: output buffer, password buffer, salt buffer, oLimit, memLimit"); \
         ARG_TO_NUMBER(outLen); \
         ARG_TO_BUFFER_TYPE(passwd, char); \
         ARG_TO_UCHAR_BUFFER_LEN(salt, crypto_pwhash_ ## ALGO ## _SALTBYTES); \
@@ -56,7 +56,7 @@
 #define CRYPTO_PWHASH_DEF_STR(ALGO) \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _str) { \
         Napi::Env env = info.Env(); \
-        ARGS(3,"arguments must be: password buffer, oLimit, memLimit"); \
+        ARGS(3, "arguments must be: password buffer, oLimit, memLimit"); \
         ARG_TO_BUFFER_TYPE(passwd, char); \
         ARG_TO_NUMBER(oppLimit); \
         ARG_TO_NUMBER(memLimit); \
@@ -68,7 +68,7 @@
     } \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _str_verify) { \
         Napi::Env env = info.Env(); \
-        ARGS(2,"arguments must be: pwhash string, password"); \
+        ARGS(2, "arguments must be: pwhash string, password"); \
         ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_ ## ALGO ## _STRBYTES); \
         ARG_TO_BUFFER_TYPE(passwd, char); \
         if (crypto_pwhash_ ## ALGO ## _str_verify((char*)hash, passwd, passwd_size) == 0) { \
@@ -78,7 +78,7 @@
     } \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _str_needs_rehash) { \
         Napi::Env env = info.Env(); \
-        ARGS(2,"arguments must be: pwhash hash, oLimit, memLimit"); \
+        ARGS(2, "arguments must be: pwhash hash, oLimit, memLimit"); \
         ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_ ## ALGO ## _STRBYTES); \
         ARG_TO_NUMBER(oppLimit); \
         ARG_TO_NUMBER(memLimit); \
@@ -106,7 +106,7 @@
 #define CRYPTO_PWHASH_DEF_LL(ALGO) \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _ll) { \
         Napi::Env env = info.Env(); \
-        ARGS(6,"arguments must be: password buffer, salt buffer, N, r, p, output buffer"); \
+        ARGS(6, "arguments must be: password buffer, salt buffer, N, r, p, output buffer"); \
         ARG_TO_BUFFER_TYPE(passwd, uint8_t); \
         ARG_TO_BUFFER_TYPE(salt, uint8_t); \
         ARG_TO_NUMBER(N); \

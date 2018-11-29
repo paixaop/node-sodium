@@ -22,7 +22,7 @@
 NAPI_METHOD(crypto_generichash_blake2b) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments must be: hash size, message, key");
+    ARGS(3, "arguments must be: hash size, message, key");
     ARG_TO_NUMBER(out_size);
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER_OR_NULL(key);
@@ -55,7 +55,7 @@ int crypto_generichash_blake2b_init(crypto_generichash_blake2b_state *state,
 NAPI_METHOD(crypto_generichash_blake2b_init) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be: key buffer, output size");
+    ARGS(2, "arguments must be: key buffer, output size");
     ARG_TO_UCHAR_BUFFER_OR_NULL(key);
     ARG_TO_NUMBER(out_size);
 
@@ -85,7 +85,7 @@ int crypto_generichash_blake2b_update(crypto_generichash_blake2b_state *state,
 NAPI_METHOD(crypto_generichash_blake2b_update) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be: state buffer, message buffer");
+    ARGS(2, "arguments must be: state buffer, message buffer");
 
     ARG_TO_UCHAR_BUFFER_LEN(state, crypto_generichash_blake2b_statebytes());
     ARG_TO_UCHAR_BUFFER(message);
@@ -103,7 +103,7 @@ int crypto_generichash_blake2b_final(crypto_generichash_blake2b_state *state,
 NAPI_METHOD(crypto_generichash_blake2b_final) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be: state buffer, output size");
+    ARGS(2, "arguments must be: state buffer, output size");
     ARG_TO_UCHAR_BUFFER(state);
     ARG_TO_NUMBER(out_size);
 
@@ -136,7 +136,7 @@ NAPI_METHOD(crypto_generichash_blake2b_final) {
 NAPI_METHOD(crypto_generichash_blake2b_salt_personal) {
     Napi::Env env = info.Env();
 
-    ARGS(5,"arguments must five buffers: output, message, key, salt, personal");
+    ARGS(5, "arguments must five buffers: output, message, key, salt, personal");
     ARG_TO_UCHAR_BUFFER(out);
     ARG_TO_UCHAR_BUFFER(in);
     ARG_TO_UCHAR_BUFFER(key);

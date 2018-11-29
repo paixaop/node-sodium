@@ -16,7 +16,7 @@
 NAPI_METHOD(crypto_hash_sha256) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument message must be a buffer");
+    ARGS(1, "argument message must be a buffer");
     ARG_TO_UCHAR_BUFFER(msg);
 
     NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
@@ -53,7 +53,7 @@ NAPI_METHOD(crypto_hash_sha256_init) {
 NAPI_METHOD(crypto_hash_sha256_update) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be two buffers: hash state, message part");
+    ARGS(2, "arguments must be two buffers: hash state, message part");
     ARG_TO_UCHAR_BUFFER_LEN(state, crypto_hash_sha256_statebytes()); // VOID
     ARG_TO_UCHAR_BUFFER(msg);
     
@@ -73,7 +73,7 @@ NAPI_METHOD_FROM_INT(crypto_hash_sha256_statebytes)
 NAPI_METHOD(crypto_hash_sha256_final) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"arguments must be a hash state buffer");
+    ARGS(1, "arguments must be a hash state buffer");
     ARG_TO_UCHAR_BUFFER(state);  // VOID
     NEW_BUFFER_AND_PTR(hash, crypto_hash_sha256_BYTES);
 

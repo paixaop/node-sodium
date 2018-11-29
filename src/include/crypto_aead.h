@@ -33,7 +33,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
 #define CRYPTO_AEAD_DEF(ALGO) \
     NAPI_METHOD(crypto_aead_ ## ALGO ## _encrypt ) { \
         Napi::Env env = info.Env(); \
-        ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
+        ARGS(4, "arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
@@ -48,7 +48,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
     } \
     NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt) { \
         Napi::Env env = info.Env(); \
-        ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers"); \
+        ARGS(4, "arguments chiper text, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         if( c_size < crypto_aead_ ## ALGO ## _ABYTES ) { \
             THROW_ERROR("argument cipher text must be at least crypto_aead_ " #ALGO "_ABYTES bytes long"); \
@@ -96,7 +96,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
 #define CRYPTO_AEAD_DETACHED_DEF(ALGO) \
     NAPI_METHOD(crypto_aead_ ## ALGO ## _encrypt_detached) { \
         Napi::Env env = info.Env(); \
-        ARGS(4,"arguments message, additional data, nonce, and key must be buffers"); \
+        ARGS(4, "arguments message, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(m); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
@@ -114,7 +114,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
     }\
     NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt_detached) { \
         Napi::Env env = info.Env(); \
-        ARGS(4,"arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers"); \
+        ARGS(4, "arguments cipher message, mac, additional data, nsec, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         ARG_TO_UCHAR_BUFFER(mac); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \

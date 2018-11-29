@@ -37,7 +37,7 @@
 NAPI_METHOD(crypto_secretbox) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARGS(3, "arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
@@ -97,7 +97,7 @@ NAPI_METHOD(crypto_secretbox) {
 NAPI_METHOD(crypto_secretbox_open) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments cipherText, nonce, and key must be buffers");
+    ARGS(3, "arguments cipherText, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
@@ -158,7 +158,7 @@ NAPI_METHOD(crypto_secretbox_open) {
 NAPI_METHOD(crypto_secretbox_easy) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARGS(3, "arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
@@ -202,7 +202,7 @@ NAPI_METHOD(crypto_secretbox_easy) {
 NAPI_METHOD(crypto_secretbox_open_easy) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARGS(3, "arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_KEYBYTES);
@@ -227,7 +227,7 @@ int crypto_secretbox_detached(unsigned char *c,
 NAPI_METHOD(crypto_secretbox_detached) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments mac, message, nonce, and key must be buffers");
+    ARGS(4, "arguments mac, message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);
@@ -253,7 +253,7 @@ int crypto_secretbox_open_detached(unsigned char *m,
 NAPI_METHOD(crypto_secretbox_open_detached) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments encrypted message, mac, nonce, and key must be buffers");
+    ARGS(4, "arguments encrypted message, mac, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(c);
     ARG_TO_UCHAR_BUFFER_LEN(mac, crypto_secretbox_MACBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_NONCEBYTES);

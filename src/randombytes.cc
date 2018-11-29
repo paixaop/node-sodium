@@ -16,7 +16,7 @@
 NAPI_METHOD(randombytes_buf) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
 
     ARG_TO_UCHAR_BUFFER(buffer);
     randombytes_buf(buffer, buffer_size);
@@ -51,7 +51,7 @@ NAPI_METHOD(randombytes_random) {
 NAPI_METHOD(randombytes_uniform) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument size must be a positive number");
+    ARGS(1, "argument size must be a positive number");
     ARG_TO_NUMBER(upper_bound);
 
     // uint32_t randombytes_uniform(const uint32_t upper_bound)
@@ -70,7 +70,7 @@ NAPI_METHOD(randombytes_keygen) {
 NAPI_METHOD(randombytes_buf_deterministic) {
     Napi::Env env = info.Env();
     
-    ARGS(2,"arguments buf and seed must be buffers");
+    ARGS(2, "arguments buf and seed must be buffers");
     ARG_TO_UCHAR_BUFFER(buffer);
     ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
     randombytes_buf_deterministic(buffer, buffer_size, seed);

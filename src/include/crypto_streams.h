@@ -11,7 +11,7 @@
 #define CRYPTO_STREAM_DEF(ALGO) \
     NAPI_METHOD(crypto_stream_##ALGO) { \
         Napi::Env env = info.Env(); \
-        ARGS(3,"argument length must be a positive number, arguments nonce, and key must be buffers"); \
+        ARGS(3, "argument length must be a positive number, arguments nonce, and key must be buffers"); \
         ARG_TO_NUMBER(slen); \
         ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_ ## ALGO ## _KEYBYTES); \
@@ -23,7 +23,7 @@
     } \
     NAPI_METHOD(crypto_stream_ ## ALGO ## _xor) { \
         Napi::Env env = info.Env(); \
-        ARGS(3,"arguments message, nonce, and key must be buffers"); \
+        ARGS(3, "arguments message, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(message); \
         ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_stream_ ## ALGO ## _KEYBYTES); \
@@ -39,7 +39,7 @@
 #define CRYPTO_STREAM_DEF_IC(ALGO) \
     NAPI_METHOD(crypto_stream_ ## ALGO ## _xor_ic) { \
         Napi::Env env = info.Env(); \
-        ARGS(4,"arguments message, nonce, and key must be buffers"); \
+        ARGS(4, "arguments message, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(message); \
         ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_stream_ ## ALGO ## _NONCEBYTES); \
         ARG_TO_NUMBER(ic); \

@@ -10,7 +10,7 @@
 NAPI_METHOD(crypto_secretbox_xsalsa20poly1305) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce, and key must be buffers");
+    ARGS(3, "arguments message, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_xsalsa20poly1305_KEYBYTES);
@@ -39,7 +39,7 @@ NAPI_METHOD(crypto_secretbox_xsalsa20poly1305) {
 NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments cipherText, nonce, and key must be buffers");
+    ARGS(3, "arguments cipherText, nonce, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(cipher_text);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_secretbox_xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_secretbox_xsalsa20poly1305_KEYBYTES);

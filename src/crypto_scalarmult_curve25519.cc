@@ -13,7 +13,7 @@
 NAPI_METHOD(crypto_scalarmult_curve25519_base) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument must be a buffer");
+    ARGS(1, "argument must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_curve25519_SCALARBYTES);
     
     NEW_BUFFER_AND_PTR(q, crypto_scalarmult_curve25519_BYTES);
@@ -33,7 +33,7 @@ NAPI_METHOD(crypto_scalarmult_curve25519_base) {
 NAPI_METHOD(crypto_scalarmult_curve25519) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be buffers");
+    ARGS(2, "arguments must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(n, crypto_scalarmult_curve25519_SCALARBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(p, crypto_scalarmult_curve25519_BYTES);
 

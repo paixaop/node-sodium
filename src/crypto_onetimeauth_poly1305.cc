@@ -23,7 +23,7 @@
 NAPI_METHOD(crypto_onetimeauth_poly1305) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments message, and key must be buffers");
+    ARGS(2, "arguments message, and key must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
 
@@ -52,7 +52,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305) {
 NAPI_METHOD(crypto_onetimeauth_poly1305_verify) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments token, message, and key must be buffers");
+    ARGS(3, "arguments token, message, and key must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(token, crypto_onetimeauth_poly1305_BYTES);
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
@@ -72,7 +72,7 @@ int crypto_onetimeauth_poly1305_init(crypto_onetimeauth_poly1305_state *state,
 NAPI_METHOD(crypto_onetimeauth_poly1305_init) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument key must be a buffer");
+    ARGS(1, "argument key must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
 
     NEW_BUFFER_AND_PTR(state, sizeof(crypto_onetimeauth_poly1305_state));
@@ -92,7 +92,7 @@ int crypto_onetimeauth_poly1305_update(crypto_onetimeauth_poly1305_state *state,
 NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments must be: state buffer, message buffer");
+    ARGS(2, "arguments must be: state buffer, message buffer");
 
     ARG_TO_UCHAR_BUFFER_LEN(state, crypto_onetimeauth_poly1305_statebytes());
     ARG_TO_UCHAR_BUFFER(message);
@@ -110,7 +110,7 @@ int crypto_onetimeauth_poly1305_final(crypto_onetimeauth_poly1305_state *state,
 NAPI_METHOD(crypto_onetimeauth_poly1305_final) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"arguments must be: state buffer");
+    ARGS(1, "arguments must be: state buffer");
     ARG_TO_UCHAR_BUFFER(state); // VOID
 
     NEW_BUFFER_AND_PTR(out, crypto_onetimeauth_poly1305_BYTES);

@@ -74,7 +74,7 @@ NAPI_METHOD(crypto_sign_ed25519_sk_to_curve25519) {
 NAPI_METHOD(crypto_sign_ed25519) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments message, and secretKey must be buffers");
+    ARGS(2, "arguments message, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_sign_ed25519_SECRETKEYBYTES);
 
@@ -96,7 +96,7 @@ NAPI_METHOD(crypto_sign_ed25519) {
 NAPI_METHOD(crypto_sign_ed25519_open) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments signedMessage and verificationKey must be buffers");
+    ARGS(2, "arguments signedMessage and verificationKey must be buffers");
     ARG_TO_UCHAR_BUFFER(signedMessage);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_sign_ed25519_PUBLICKEYBYTES);
 
@@ -122,7 +122,7 @@ NAPI_METHOD(crypto_sign_ed25519_open) {
 NAPI_METHOD(crypto_sign_ed25519_detached) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments message, and secretKey must be buffers");
+    ARGS(2, "arguments message, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_sign_ed25519_SECRETKEYBYTES);
 
@@ -145,7 +145,7 @@ NAPI_METHOD(crypto_sign_ed25519_detached) {
 NAPI_METHOD(crypto_sign_ed25519_verify_detached) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments signedMessage and verificationKey must be buffers");
+    ARGS(2, "arguments signedMessage and verificationKey must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(signature, crypto_sign_ed25519_BYTES);
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_sign_ed25519_PUBLICKEYBYTES);
@@ -182,7 +182,7 @@ NAPI_METHOD(crypto_sign_ed25519_keypair) {
 NAPI_METHOD(crypto_sign_ed25519_seed_keypair) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"the argument seed must be a buffer");
+    ARGS(1, "the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sd, crypto_sign_ed25519_SEEDBYTES);
 
     NEW_BUFFER_AND_PTR(vk, crypto_sign_ed25519_PUBLICKEYBYTES);
@@ -206,7 +206,7 @@ NAPI_METHOD(crypto_sign_ed25519_seed_keypair) {
 NAPI_METHOD(crypto_sign_ed25519_sk_to_seed) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"the argument seed must be a buffer");
+    ARGS(1, "the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_sign_ed25519_SECRETKEYBYTES);
 
     NEW_BUFFER_AND_PTR(seed, crypto_sign_ed25519_SEEDBYTES);
@@ -224,7 +224,7 @@ NAPI_METHOD(crypto_sign_ed25519_sk_to_seed) {
 NAPI_METHOD(crypto_sign_ed25519_sk_to_pk) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"the argument seed must be a buffer");
+    ARGS(1, "the argument seed must be a buffer");
     ARG_TO_UCHAR_BUFFER_LEN(sk, crypto_sign_ed25519_SECRETKEYBYTES);
 
     NEW_BUFFER_AND_PTR(pk, crypto_sign_ed25519_PUBLICKEYBYTES);

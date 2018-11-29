@@ -16,7 +16,7 @@
 NAPI_METHOD(crypto_hash) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument message must be a buffer");
+    ARGS(1, "argument message must be a buffer");
     ARG_TO_UCHAR_BUFFER(msg);
 
     NEW_BUFFER_AND_PTR(hash, crypto_hash_BYTES);

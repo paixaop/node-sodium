@@ -39,7 +39,7 @@
 NAPI_METHOD(crypto_box) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments message, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
@@ -96,7 +96,7 @@ NAPI_METHOD(crypto_box) {
 NAPI_METHOD(crypto_box_easy) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments message, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
@@ -185,7 +185,7 @@ NAPI_METHOD(crypto_box_keypair) {
 NAPI_METHOD(crypto_box_open) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments cipherText, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(cipherText);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
@@ -251,7 +251,7 @@ NAPI_METHOD(crypto_box_open) {
 NAPI_METHOD(crypto_box_open_easy) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments cipherText, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(cipherText);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
@@ -291,7 +291,7 @@ NAPI_METHOD(crypto_box_open_easy) {
 NAPI_METHOD(crypto_box_beforenm) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments publicKey, and secretKey must be buffers");
+    ARGS(2, "arguments publicKey, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_SECRETKEYBYTES);
 
@@ -328,7 +328,7 @@ NAPI_METHOD(crypto_box_beforenm) {
 NAPI_METHOD(crypto_box_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce and k must be buffers");
+    ARGS(3, "arguments message, nonce and k must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);
@@ -384,7 +384,7 @@ NAPI_METHOD(crypto_box_afternm) {
 NAPI_METHOD(crypto_box_open_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments cipherText, nonce, k");
+    ARGS(3, "arguments cipherText, nonce, k");
     ARG_TO_UCHAR_BUFFER(cipherText);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_BEFORENMBYTES);

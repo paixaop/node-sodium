@@ -32,7 +32,7 @@
 NAPI_METHOD(crypto_shorthash_siphash24) {
     Napi::Env env = info.Env();
 
-    ARGS(1,"argument message must be a buffer");
+    ARGS(1, "argument message must be a buffer");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_shorthash_siphash24_KEYBYTES);
 

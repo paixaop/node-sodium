@@ -10,7 +10,7 @@
 NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments message, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments message, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES);
@@ -58,7 +58,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_keypair) {
 NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open) {
     Napi::Env env = info.Env();
 
-    ARGS(4,"arguments cipherText, nonce, publicKey and secretKey must be buffers");
+    ARGS(4, "arguments cipherText, nonce, publicKey and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER(cipherText);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES);
@@ -96,7 +96,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open) {
 NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_beforenm) {
     Napi::Env env = info.Env();
 
-    ARGS(2,"arguments publicKey, and secretKey must be buffers");
+    ARGS(2, "arguments publicKey, and secretKey must be buffers");
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(secretKey, crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES);
 
@@ -113,7 +113,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_beforenm) {
 NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments message, nonce and k must be buffers");
+    ARGS(3, "arguments message, nonce and k must be buffers");
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES);
@@ -142,7 +142,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_afternm) {
 NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open_afternm) {
     Napi::Env env = info.Env();
 
-    ARGS(3,"arguments cipherText, nonce, k");
+    ARGS(3, "arguments cipherText, nonce, k");
     ARG_TO_UCHAR_BUFFER(cipherText);
     ARG_TO_UCHAR_BUFFER_LEN(nonce, crypto_box_curve25519xsalsa20poly1305_NONCEBYTES);
     ARG_TO_UCHAR_BUFFER_LEN(k, crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES);

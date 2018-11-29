@@ -11,7 +11,7 @@
 #define CRYPTO_CORE_DEF(ALGO) \
     NAPI_METHOD(crypto_core_##ALGO) { \
         Napi::Env env = info.Env(); \
-        ARGS(3,"arguments are: input buffer, key buffer, c constant buffer"); \
+        ARGS(3, "arguments are: input buffer, key buffer, c constant buffer"); \
         ARG_TO_UCHAR_BUFFER_LEN(in, crypto_core_ ## ALGO ## _INPUTBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(key, crypto_core_ ## ALGO ## _KEYBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(c, crypto_core_ ## ALGO ## _CONSTBYTES); \
