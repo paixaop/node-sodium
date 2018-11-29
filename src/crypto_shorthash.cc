@@ -41,7 +41,7 @@ NAPI_METHOD(crypto_shorthash) {
     if( crypto_shorthash(hash_ptr, message, message_size, key) == 0 ) {
         return hash;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 

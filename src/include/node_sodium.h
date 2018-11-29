@@ -172,14 +172,19 @@
         return buffer; \
     }
 
+#define NAPI_FALSE  Napi::Boolean::New(env, false)
+#define NAPI_TRUE   Napi::Boolean::New(env, true)
+#define NAPI_NULL   env.Null()
+
 #define THROW_IF_ERR(ERR) \
     if ( (ERR) != 0 ) { \
         Napi::Error::New(env, "libsodium call failed").ThrowAsJavaScriptException(); \
-        return env.Undefined(); \
+        return NAPI_NULL; \
     }
 
 #define THROW_ERROR(msg) \
     Napi::Error::New(env, (msg)).ThrowAsJavaScriptException(); \
-    return env.Null(); \
+    return NAPI_NULL; \
+
 
 #endif

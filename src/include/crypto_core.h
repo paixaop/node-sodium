@@ -19,7 +19,7 @@
         if (crypto_core_ ## ALGO (out_ptr, in, key, c) == 0) { \
             return out; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _constbytes); \
     NAPI_METHOD_FROM_INT(crypto_core_ ## ALGO ## _inputbytes); \

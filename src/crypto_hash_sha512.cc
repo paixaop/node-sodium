@@ -25,7 +25,7 @@ NAPI_METHOD(crypto_hash_sha512) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -40,7 +40,7 @@ NAPI_METHOD(crypto_hash_sha512_init) {
         return state;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /* int crypto_hash_sha512_update(crypto_hash_sha512_state *state,
@@ -58,9 +58,9 @@ NAPI_METHOD(crypto_hash_sha512_update) {
     ARG_TO_UCHAR_BUFFER(msg);
 
     if( crypto_hash_sha512_update((crypto_hash_sha512_state*)state, msg, msg_size) == 0 ) {
-            return Napi::Boolean::New(env, true);
+            return NAPI_TRUE;
     }
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /* int crypto_hash_sha512_final(crypto_hash_sha512_state *state,
@@ -78,7 +78,7 @@ NAPI_METHOD(crypto_hash_sha512_final) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD_FROM_INT(crypto_hash_sha512_bytes)

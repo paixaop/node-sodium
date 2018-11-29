@@ -21,7 +21,7 @@ NAPI_METHOD(crypto_scalarmult_curve25519_base) {
     if (crypto_scalarmult_curve25519_base(q_ptr, n) == 0) {
         return q;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -42,7 +42,7 @@ NAPI_METHOD(crypto_scalarmult_curve25519) {
     if (crypto_scalarmult_curve25519(q_ptr, n, p) == 0) {
         return q;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 

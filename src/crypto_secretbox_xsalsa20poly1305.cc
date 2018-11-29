@@ -33,7 +33,7 @@ NAPI_METHOD(crypto_secretbox_xsalsa20poly1305) {
         return ctxt;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
@@ -68,7 +68,7 @@ NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 

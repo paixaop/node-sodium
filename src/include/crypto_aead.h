@@ -44,7 +44,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _encrypt (c_ptr, &clen, m, m_size, ad, ad_size, NULL, npub, k) == 0 ) { \
             return c; \
         } \
-        return env.Undefined(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt) { \
         Napi::Env env = info.Env(); \
@@ -61,7 +61,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _decrypt (m_ptr, &mlen, NULL, c, c_size, ad, ad_size, npub, k) == 0 ) { \
             return m; \
         } \
-        return env.Undefined(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_aead_ ## ALGO ## _keygen ) { \
         NEW_BUFFER_AND_PTR(buffer, crypto_aead_ ## ALGO ## _KEYBYTES); \
@@ -110,7 +110,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
             result.Set(Napi::String::New(env, "mac"), mac); \
             return result; \
         } \
-        return env.Undefined(); \
+        return NAPI_NULL; \
     }\
     NAPI_METHOD(crypto_aead_ ## ALGO ## _decrypt_detached) { \
         Napi::Env env = info.Env(); \
@@ -127,7 +127,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         if( crypto_aead_ ## ALGO ## _decrypt_detached (m_ptr, NULL, c, c_size, mac, ad, ad_size, npub, k) == 0 ) { \
             return m; \
         } \
-        return env.Undefined(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _abytes); \
     NAPI_METHOD_FROM_INT(crypto_aead_ ## ALGO ## _keybytes); \

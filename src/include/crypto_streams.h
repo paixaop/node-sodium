@@ -19,7 +19,7 @@
         if (crypto_stream_ ## ALGO (stream_ptr, slen, nonce, key) == 0) { \
             return stream; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_stream_ ## ALGO ## _xor) { \
         Napi::Env env = info.Env(); \
@@ -31,7 +31,7 @@
         if (crypto_stream_ ## ALGO ## _xor(ctxt_ptr, message, message_size, nonce, key) == 0) { \
             return ctxt; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD_FROM_INT(crypto_stream_ ## ALGO ## _keybytes); \
     NAPI_METHOD_FROM_INT(crypto_stream_ ## ALGO ## _noncebytes)
@@ -48,7 +48,7 @@
         if (crypto_stream_ ## ALGO ## _xor_ic(ctxt_ptr, message, message_size, nonce, ic, key) == 0) { \
             return ctxt; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } 
 
 

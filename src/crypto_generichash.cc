@@ -39,7 +39,7 @@ NAPI_METHOD(crypto_generichash) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -70,7 +70,7 @@ NAPI_METHOD(crypto_generichash_init) {
         return state;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 
@@ -91,9 +91,9 @@ NAPI_METHOD(crypto_generichash_update) {
     ARG_TO_UCHAR_BUFFER(message);
 
     if (crypto_generichash_update((crypto_generichash_state *)state, message, message_size) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /*
@@ -114,7 +114,7 @@ NAPI_METHOD(crypto_generichash_final) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD_FROM_STRING(crypto_generichash_primitive)

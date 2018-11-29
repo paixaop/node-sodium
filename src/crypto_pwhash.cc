@@ -40,7 +40,7 @@ NAPI_METHOD(crypto_pwhash) {
     if (crypto_pwhash(out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
         return out;
     }
-    return env.Null();
+    return NAPI_NULL;
 }
 
 
@@ -69,7 +69,7 @@ NAPI_METHOD(crypto_pwhash_str) {
         return out;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -89,10 +89,10 @@ NAPI_METHOD(crypto_pwhash_str_verify) {
     ARG_TO_BUFFER_TYPE(passwd, char);
 
     if (crypto_pwhash_str_verify((char*)hash, passwd, passwd_size) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
 
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 NAPI_METHOD(crypto_pwhash_str_needs_rehash) {
@@ -104,9 +104,9 @@ NAPI_METHOD(crypto_pwhash_str_needs_rehash) {
     ARG_TO_NUMBER(memLimit);
     
     if (crypto_pwhash_str_needs_rehash((char*)hash, oppLimit, memLimit) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /*
@@ -130,7 +130,7 @@ NAPI_METHOD(crypto_pwhash_str_alg) {
         return out;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD_FROM_INT(crypto_pwhash_bytes_max)

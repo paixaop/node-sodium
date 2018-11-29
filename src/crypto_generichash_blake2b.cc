@@ -39,7 +39,7 @@ NAPI_METHOD(crypto_generichash_blake2b) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -70,7 +70,7 @@ NAPI_METHOD(crypto_generichash_blake2b_init) {
         return state;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 
@@ -91,9 +91,9 @@ NAPI_METHOD(crypto_generichash_blake2b_update) {
     ARG_TO_UCHAR_BUFFER(message);
 
     if (crypto_generichash_blake2b_update((crypto_generichash_blake2b_state *)state, message, message_size) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /*
@@ -115,7 +115,7 @@ NAPI_METHOD(crypto_generichash_blake2b_final) {
         return hash;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -148,10 +148,10 @@ NAPI_METHOD(crypto_generichash_blake2b_salt_personal) {
 
     sodium_memzero(out, out_size);
     if (crypto_generichash_blake2b_salt_personal(out, out_size, in, in_size, key, key_size, salt, personal) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
 
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 NAPI_METHOD_FROM_INT(crypto_generichash_blake2b_bytes)

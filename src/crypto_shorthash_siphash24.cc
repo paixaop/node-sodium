@@ -42,7 +42,7 @@ NAPI_METHOD(crypto_shorthash_siphash24) {
         return hash;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**

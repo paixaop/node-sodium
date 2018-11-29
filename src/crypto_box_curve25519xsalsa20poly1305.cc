@@ -33,7 +33,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305) {
     if (crypto_box_curve25519xsalsa20poly1305(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
         return ctxt;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -51,7 +51,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_keypair) {
 
         return result;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -89,7 +89,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -104,7 +104,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_beforenm) {
 
     if( crypto_box_curve25519xsalsa20poly1305_beforenm(k_ptr, publicKey, secretKey) != 0) {
       Napi::Error::New(env, "crypto_box_curve25519xsalsa20poly1305_beforenm failed").ThrowAsJavaScriptException();
-      return env.Null();
+      return NAPI_NULL;
     }
 
     return k;
@@ -135,7 +135,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_afternm) {
     if (crypto_box_curve25519xsalsa20poly1305_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
         return ctxt;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -171,7 +171,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open_afternm) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 

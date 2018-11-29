@@ -18,7 +18,7 @@
         if( crypto_auth_ ## ALGO (token_ptr, msg, msg_size, key) == 0 ) { \
             return token; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     }\
     NAPI_METHOD(crypto_auth_ ## ALGO ## _verify) { \
          Napi::Env env = info.Env(); \
@@ -38,7 +38,7 @@
         if( crypto_auth_ ## ALGO ## _init((crypto_auth_ ## ALGO ## _state*) state_ptr, key, key_size) == 0 ) { \
             return state; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_auth_ ## ALGO ## _update) { \
          Napi::Env env = info.Env(); \
@@ -46,9 +46,9 @@
         ARG_TO_UCHAR_BUFFER_LEN(state, crypto_auth_ ## ALGO ## _statebytes()); /* VOID */\
         ARG_TO_UCHAR_BUFFER_OR_NULL(msg); \
         if( crypto_auth_ ## ALGO ## _update((crypto_auth_ ## ALGO ## _state*)state, msg, msg_size) == 0 ) { \
-            return Napi::Boolean::New(env, true);  \
+            return NAPI_TRUE;  \
         } \
-        return Napi::Boolean::New(env, false);  \
+        return NAPI_FALSE;  \
     } \
     NAPI_METHOD(crypto_auth_ ## ALGO ## _final) { \
         Napi::Env env = info.Env(); \
@@ -58,7 +58,7 @@
         if( crypto_auth_ ## ALGO ## _final((crypto_auth_ ## ALGO ## _state*)state, token_ptr) == 0 ) { \
             return token; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_auth_ ## ALGO ## _statebytes) { \
         Napi::Env env = info.Env(); \

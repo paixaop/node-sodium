@@ -33,7 +33,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305) {
         return token;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -81,7 +81,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_init) {
         return state;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -98,9 +98,9 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     ARG_TO_UCHAR_BUFFER(message);
 
     if( crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state*)state, message, message_size) == 0 ) {
-            return Napi::Boolean::New(env, true);
+            return NAPI_TRUE;
     }
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /*
@@ -119,7 +119,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_final) {
         return out;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD_FROM_INT(crypto_onetimeauth_poly1305_bytes)

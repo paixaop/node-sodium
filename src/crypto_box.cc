@@ -63,7 +63,7 @@ NAPI_METHOD(crypto_box) {
         return ctxt;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -109,7 +109,7 @@ NAPI_METHOD(crypto_box_easy) {
         return ctxt;
     } 
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 
@@ -150,7 +150,7 @@ NAPI_METHOD(crypto_box_keypair) {
         return result;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -218,7 +218,7 @@ NAPI_METHOD(crypto_box_open) {
         return plain_text;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -269,7 +269,7 @@ NAPI_METHOD(crypto_box_open_easy) {
         return msg;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -302,7 +302,7 @@ NAPI_METHOD(crypto_box_beforenm) {
         return k;
     }
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -351,7 +351,7 @@ NAPI_METHOD(crypto_box_afternm) {
         return ctxt;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -414,7 +414,7 @@ NAPI_METHOD(crypto_box_open_afternm) {
         return plain_text;
     }
         
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -445,7 +445,7 @@ NAPI_METHOD(crypto_box_detached) {
         return result;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -474,7 +474,7 @@ NAPI_METHOD(crypto_box_open_detached) {
         return m;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -494,7 +494,7 @@ NAPI_METHOD(crypto_box_seal) {
         return c;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -516,7 +516,7 @@ NAPI_METHOD(crypto_box_seal_open) {
         return m;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -541,7 +541,7 @@ NAPI_METHOD(crypto_box_seed_keypair) {
         return result;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -568,7 +568,7 @@ NAPI_METHOD(crypto_box_detached_afternm) {
         return result;
     }
     
-    return env.Null();   
+    return NAPI_NULL;   
 }
 
 /*
@@ -593,7 +593,7 @@ NAPI_METHOD(crypto_box_open_detached_afternm) {
         return message;
     }
     
-    return env.Null();   
+    return NAPI_NULL;   
 }
 
 /*
@@ -616,7 +616,7 @@ NAPI_METHOD(crypto_box_easy_afternm) {
         return ctxt;
     }
     
-    return env.Null();   
+    return NAPI_NULL;   
 }
 
 /*
@@ -643,7 +643,7 @@ NAPI_METHOD(crypto_box_open_easy_afternm) {
         return message;
     }
     
-    return env.Null();   
+    return NAPI_NULL;   
 }
 
 NAPI_METHOD_FROM_INT(crypto_box_noncebytes)

@@ -29,7 +29,7 @@
         if (crypto_pwhash_ ## ALGO (out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit) == 0) { \
             return out; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     }
 
 #define CRYPTO_PWHASH_DEF_EXT(ALGO) \
@@ -49,7 +49,7 @@
         if (crypto_pwhash_ ## ALGO (out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) { \
             return out; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     }
 
 
@@ -64,7 +64,7 @@
         if( crypto_pwhash_ ## ALGO ## _str ((char*)out_ptr, passwd, passwd_size, oppLimit, memLimit) == 0 ) { \
             return out; \
         } \
-        return env.Null(); \
+        return NAPI_NULL; \
     } \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _str_verify) { \
         Napi::Env env = info.Env(); \
@@ -72,9 +72,9 @@
         ARG_TO_UCHAR_BUFFER_LEN(hash, crypto_pwhash_ ## ALGO ## _STRBYTES); \
         ARG_TO_BUFFER_TYPE(passwd, char); \
         if (crypto_pwhash_ ## ALGO ## _str_verify((char*)hash, passwd, passwd_size) == 0) { \
-            return Napi::Boolean::New(env, true); \
+            return NAPI_TRUE; \
         } \
-        return Napi::Boolean::New(env, false); \
+        return NAPI_FALSE; \
     } \
     NAPI_METHOD(crypto_pwhash_ ## ALGO ## _str_needs_rehash) { \
         Napi::Env env = info.Env(); \
@@ -83,9 +83,9 @@
         ARG_TO_NUMBER(oppLimit); \
         ARG_TO_NUMBER(memLimit); \
         if (crypto_pwhash_ ## ALGO ## _str_needs_rehash((char*)hash, oppLimit, memLimit) == 0) { \
-            return Napi::Boolean::New(env, true); \
+            return NAPI_TRUE; \
         } \
-        return Napi::Boolean::New(env, false); \
+        return NAPI_FALSE; \
     } \
     NAPI_METHOD_FROM_INT(crypto_pwhash_ ## ALGO ## _bytes_max) \
     NAPI_METHOD_FROM_INT(crypto_pwhash_ ## ALGO ## _bytes_min) \
@@ -114,9 +114,9 @@
         ARG_TO_NUMBER(p); \
         ARG_TO_BUFFER_TYPE(out, uint8_t); \
         if (crypto_pwhash_ ## ALGO ## _ll(passwd, passwd_size, salt, salt_size, N, r, p, out, out_size) == 0) { \
-            return Napi::Boolean::New(env, true); \
+            return NAPI_TRUE; \
         } \
-        return Napi::Boolean::New(env, false); \
+        return NAPI_FALSE; \
     }
 
     

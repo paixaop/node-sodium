@@ -58,7 +58,7 @@ describe("libsodium_aead_xchacha20poly1305_ietf", function () {
             var plainText = sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
                 cipherTextSodium, null, nonce, firstKey);
 
-            assert.equal(typeof plainText, 'undefined');
+            assert(plainText === null);
             cipherTextSodium[i] ^= (i + 1);
         }
     });

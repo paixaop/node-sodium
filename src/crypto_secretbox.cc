@@ -60,7 +60,7 @@ NAPI_METHOD(crypto_secretbox) {
         return ctxt;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -126,7 +126,7 @@ NAPI_METHOD(crypto_secretbox_open) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -169,7 +169,7 @@ NAPI_METHOD(crypto_secretbox_easy) {
         return c;
     } 
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -213,7 +213,7 @@ NAPI_METHOD(crypto_secretbox_open_easy) {
         return c;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -239,7 +239,7 @@ NAPI_METHOD(crypto_secretbox_detached) {
         return c;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /*
@@ -265,7 +265,7 @@ NAPI_METHOD(crypto_secretbox_open_detached) {
         return m;
     }
     
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**

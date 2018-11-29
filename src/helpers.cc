@@ -36,7 +36,7 @@ NAPI_METHOD(memzero) {
     ARG_TO_UCHAR_BUFFER(buffer);  // VOID
     
     sodium_memzero(buffer, buffer_size);
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -70,7 +70,7 @@ NAPI_METHOD(bin2hex) {
     Napi::Env env = info.Env();
 
     Napi::Error::New(env, "use node's native Buffer.toString()").ThrowAsJavaScriptException();
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /* int sodium_hex2bin(unsigned char * const bin, const size_t bin_maxlen,
@@ -86,7 +86,7 @@ NAPI_METHOD(hex2bin) {
     ARG_TO_STRING(ignore);
     ARG_TO_UCA*/
     Napi::Error::New(env, "use node's native Buffer.toString()").ThrowAsJavaScriptException();
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD(crypto_verify_16) {
@@ -136,7 +136,7 @@ NAPI_METHOD(increment) {
     
     sodium_increment(buffer, buffer_size);
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**
@@ -151,7 +151,7 @@ NAPI_METHOD(compare) {
 
     if( buffer_1_size != buffer_2_size ) {
         Napi::Error::New(env, "buffers need to be the same size").ThrowAsJavaScriptException();
-        return env.Null();
+        return NAPI_NULL;
     }
 
     return 
@@ -170,10 +170,10 @@ NAPI_METHOD(add) {
 
     if( buffer_1_size != buffer_2_size ) {
         Napi::Error::New(env, "buffers need to be the same size").ThrowAsJavaScriptException();
-        return env.Null();
+        return NAPI_NULL;
     }
     sodium_add(buffer_1, buffer_2, buffer_1_size);
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**

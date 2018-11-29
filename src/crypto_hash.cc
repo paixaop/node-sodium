@@ -24,7 +24,7 @@ NAPI_METHOD(crypto_hash) {
     if( crypto_hash(hash_ptr, msg, msg_size) == 0 ) {
         return hash;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 

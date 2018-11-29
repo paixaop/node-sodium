@@ -31,7 +31,7 @@ NAPI_METHOD(crypto_sign_ed25519_pk_to_curve25519) {
 
     if( crypto_sign_ed25519_pk_to_curve25519(curve25519_pk_ptr, ed25519_pk) != 0) {
       Napi::Error::New(env, "crypto_sign_ed25519_pk_to_curve25519 conversion failed").ThrowAsJavaScriptException();
-      return env.Null();
+      return NAPI_NULL;
     }
 
     return curve25519_pk;
@@ -61,7 +61,7 @@ NAPI_METHOD(crypto_sign_ed25519_sk_to_curve25519) {
 
     if( crypto_sign_ed25519_sk_to_curve25519(curve25519_sk_ptr, ed25519_sk) != 0) {
       Napi::Error::New(env, "crypto_sign_ed25519_sk_to_curve25519 conversion failed").ThrowAsJavaScriptException();
-      return env.Null();
+      return NAPI_NULL;
     }
     
     return curve25519_sk;
@@ -86,7 +86,7 @@ NAPI_METHOD(crypto_sign_ed25519) {
         return sig;
     }
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /* int crypto_sign_ed25519_open(unsigned char *m, unsigned long long *mlen_p,
@@ -110,7 +110,7 @@ NAPI_METHOD(crypto_sign_ed25519_open) {
         return m;
     } 
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /* int crypto_sign_ed25519_detached(unsigned char *sig,
@@ -134,7 +134,7 @@ NAPI_METHOD(crypto_sign_ed25519_detached) {
         return sig;
     }
         
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /* int crypto_sign_ed25519_verify_detached(const unsigned char *sig,
@@ -151,10 +151,10 @@ NAPI_METHOD(crypto_sign_ed25519_verify_detached) {
     ARG_TO_UCHAR_BUFFER_LEN(publicKey, crypto_sign_ed25519_PUBLICKEYBYTES);
 
     if (crypto_sign_ed25519_verify_detached(signature, message, message_size, publicKey) == 0) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
     
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 /* int crypto_sign_ed25519_keypair(unsigned char *pk, unsigned char *sk);
@@ -173,7 +173,7 @@ NAPI_METHOD(crypto_sign_ed25519_keypair) {
         return result;
     }
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /* crypto_sign_ed25519_seed_keypair(unsigned char *pk, unsigned char *sk,
@@ -197,7 +197,7 @@ NAPI_METHOD(crypto_sign_ed25519_seed_keypair) {
         return result;
     }
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /* int crypto_sign_ed25519_sk_to_seed(unsigned char *seed,
@@ -215,7 +215,7 @@ NAPI_METHOD(crypto_sign_ed25519_sk_to_seed) {
         return seed;
     }
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 
@@ -233,7 +233,7 @@ NAPI_METHOD(crypto_sign_ed25519_sk_to_pk) {
         return pk;
     }
     
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 

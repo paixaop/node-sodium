@@ -21,7 +21,7 @@ NAPI_METHOD(randombytes_buf) {
     ARG_TO_UCHAR_BUFFER(buffer);
     randombytes_buf(buffer, buffer_size);
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 // void randombytes_stir()
@@ -29,7 +29,7 @@ NAPI_METHOD(randombytes_stir) {
     Napi::Env env = info.Env();
     randombytes_stir();
 
-    return env.Null();
+    return NAPI_NULL;
 }
 
 NAPI_METHOD(randombytes_close) {
@@ -74,7 +74,7 @@ NAPI_METHOD(randombytes_buf_deterministic) {
     ARG_TO_UCHAR_BUFFER(buffer);
     ARG_TO_UCHAR_BUFFER_LEN(seed, randombytes_SEEDBYTES);
     randombytes_buf_deterministic(buffer, buffer_size, seed);
-    return env.Null();
+    return NAPI_NULL;
 }
 
 /**

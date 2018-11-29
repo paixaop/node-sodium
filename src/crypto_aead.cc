@@ -131,10 +131,10 @@ NAPI_METHOD(crypto_aead_aes256gcm_is_available) {
     Napi::Env env = info.Env();
 
     if( crypto_aead_aes256gcm_is_available() == 1 ) {
-        return Napi::Boolean::New(env, true);
+        return NAPI_TRUE;
     }
 
-    return Napi::Boolean::New(env, false);
+    return NAPI_FALSE;
 }
 
 
@@ -170,7 +170,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_beforenm) {
         return ctxt;
     }
 
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /**
@@ -211,7 +211,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_encrypt_afternm) {
     if( crypto_aead_aes256gcm_encrypt_afternm (c_ptr, &clen, m, m_size, ad, ad_size, NULL, npub, (crypto_aead_aes256gcm_state*)ctx) == 0 ) {
         return c;
     }
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /**
@@ -254,7 +254,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_decrypt_afternm) {
         return m;
     }
 
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /**
@@ -328,7 +328,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_encrypt_detached_afternm) {
         return result;
     }
 
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /**
@@ -371,7 +371,7 @@ NAPI_METHOD(crypto_aead_aes256gcm_decrypt_detached_afternm) {
         return m;
     }
 
-    return env.Undefined();
+    return NAPI_NULL;
 }
 
 /**

@@ -62,7 +62,7 @@ NAPI_METHOD(crypto_box) {
     if (crypto_box(ctxt_ptr, msg_ptr, message_size, nonce, publicKey, secretKey) == 0) {
         return ctxt;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -107,7 +107,7 @@ NAPI_METHOD(crypto_box_easy) {
     if (crypto_box_easy(ctxt_ptr, message, message_size, nonce, publicKey, secretKey) == 0) {
         return ctxt;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -148,7 +148,7 @@ NAPI_METHOD(crypto_box_keypair) {
 
         return result;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -216,7 +216,7 @@ NAPI_METHOD(crypto_box_open) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -267,7 +267,7 @@ NAPI_METHOD(crypto_box_open_easy) {
     if( crypto_box_open_easy(msg_ptr, cipherText, cipherText_size, nonce, publicKey, secretKey) == 0) {
         return msg;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -299,7 +299,7 @@ NAPI_METHOD(crypto_box_beforenm) {
 
     if( crypto_box_beforenm(k_ptr, publicKey, secretKey) != 0) {
       Napi::Error::New(env, "crypto_box_beforenm failed").ThrowAsJavaScriptException();
-      return env.Null();
+      return NAPI_NULL;
     }
 
     return k;
@@ -350,7 +350,7 @@ NAPI_METHOD(crypto_box_afternm) {
     if (crypto_box_afternm(ctxt_ptr, msg_ptr, message_size, nonce, k) == 0) {
         return ctxt;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
@@ -413,7 +413,7 @@ NAPI_METHOD(crypto_box_open_afternm) {
 
         return plain_text;
     } else {
-        return env.Null();
+        return NAPI_NULL;
     }
 }
 
