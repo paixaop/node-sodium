@@ -25,21 +25,15 @@
 #define SODIUM_STATIC
 
 // Check if a function argument is a node Buffer. If not throw V8 exception
-#define ARG_IS_BUFFER(i,msg) \
+#define ARG_IS_BUFFER(i, MSG) \
     if (!info[i].IsBuffer()) { \
-        std::ostringstream oss; \
-        oss << "argument " << msg << " must be a buffer"; \
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR("argument " #MSG " must be a buffer"); \
     }
 
-#define ARG_IS_BUFFER_OR_NULL(i,msg) \
+#define ARG_IS_BUFFER_OR_NULL(i, MSG) \
     if (!info[i].IsBuffer()) { \
         if( !info[i].IsNull() ) { \
-            std::ostringstream oss; \
-            oss << "argument " << msg << " must be a buffer"; \
-            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-            return env.Null(); \
+            THROW_ERROR("argument " #MSG " must be a buffer"); \
         } \
     }
 
@@ -72,10 +66,7 @@
 #define GET_ARG_AS_LEN(i, NAME, MAXLEN, TYPE) \
     GET_ARG_AS(i, NAME, TYPE); \
     if( NAME ## _size != MAXLEN ) { \
-        std::ostringstream oss; \
-        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long, but got " << NAME ## _size ; \
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR("argument " #NAME " must be " #MAXLEN " bytes long, but got a different value"); \
     }
 
 #define GET_ARG_AS_NUMBER(i, NAME) \
@@ -83,8 +74,7 @@
     if (info[i].IsNumber()) { \
         NAME = info[i].As<Napi::Number>().Uint32Value(); \
     } else { \
-        Napi::Error::New(env, "argument size must be a number").ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR("argument " #NAME " must be a number"); \
     }
 
 #define GET_ARG_AS_STRING(i, NAME) \
@@ -92,8 +82,7 @@
     if (info[i].IsString()) { \
         NAME = info[i].ToString(); \
     } else { \
-        Napi::Error::New(env, "argument must be a string").ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR("argument " #NAME " must be a string"); \
     }
 
 #define ARG_TO_NUMBER(NAME)                         GET_ARG_AS_NUMBER(_arg, NAME); _arg++
@@ -109,28 +98,19 @@
 #define ARG_TO_UCHAR_BUFFER_LEN_OR_NULL(NAME, MAXLEN) \
     GET_ARG_AS_OR_NULL(_arg, NAME, unsigned char); \
     if( NAME ## _size != 0 && NAME ## _size != MAXLEN ) { \
-        std::ostringstream oss; \
-        oss << "argument " << #NAME << " must be " << MAXLEN << " bytes long or NULL" ; \
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR(#NAME " argument " #NAME " must be " #MAXLEN " bytes long or NULL"); \
     } \
     _arg++
 
 
 #define CHECK_MAX_SIZE(NAME, MAX_SIZE)  \
     if( NAME > MAX_SIZE ) {     \
-        std::ostringstream oss; \
-        oss << #NAME << " size cannot be bigger than " << MAX_SIZE << " bytes";  \
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR(#NAME " length cannot be bigger than " #MAX_SIZE " bytes"); \
     }
 
 #define CHECK_MIN_SIZE(NAME, MIN_SIZE)  \
     if( NAME < MIN_SIZE ) {     \
-        std::ostringstream oss; \
-        oss << #NAME << " size cannot be smaller than " << MIN_SIZE << " bytes";  \
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-        return env.Null(); \
+        THROW_ERROR(#NAME " length cannot be smaller than " #MIN_SIZE " bytes"); \
     }
 
 #define CHECK_SIZE(NAME, MIN_SIZE, MAX_SIZE) \
@@ -139,9 +119,8 @@
 
 #define ARGS(n, message) \
     int _arg = 0;        \
-    if (info.Length() < (n)) {               \
-        Napi::Error::New(env, message).ThrowAsJavaScriptException(); \
-        return env.Null();     \
+    if (info.Length() < (n)) { \
+        THROW_ERROR(message); \
     }
 
 #define EXPORT_INT(NAME) \
@@ -198,7 +177,7 @@
         Napi::Error::New(env, "libsodium call failed").ThrowAsJavaScriptException(); \
         return env.Undefined(); \
     }
-    
+
 #define THROW_ERROR(msg) \
     Napi::Error::New(env, (msg)).ThrowAsJavaScriptException(); \
     return env.Null(); \
