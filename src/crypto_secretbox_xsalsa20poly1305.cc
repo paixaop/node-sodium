@@ -48,10 +48,7 @@ NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
 
     // API requires that the first crypto_secretbox_xsalsa20poly1305_ZEROBYTES of msg be 0 so lets check
     if (cipher_text_size < crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "argument cipherText must have at least " << crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("argument cipherText must have at least crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES bytes");
     }
 
     unsigned int i;
@@ -60,10 +57,7 @@ NAPI_METHOD(crypto_secretbox_xsalsa20poly1305_open) {
     }
 
     if (i < crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "the first " << crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("the first crypto_secretbox_xsalsa20poly1305_BOXZEROBYTES bytes of argument cipherText must be 0");
     }
 
     if (crypto_secretbox_xsalsa20poly1305_open(message_ptr, cipher_text, cipher_text_size, nonce, key) == 0) {

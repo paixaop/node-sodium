@@ -44,7 +44,6 @@ void register_crypto_pwhash_algos(Napi::Env env, Napi::Object exports) {
     EXPORT_INT(crypto_pwhash_argon2id_OPSLIMIT_MODERATE);
     EXPORT_INT(crypto_pwhash_argon2id_MEMLIMIT_MODERATE);
 
-
     METHOD_AND_PROPS(scryptsalsa208sha256);
     EXPORT(crypto_pwhash_scryptsalsa208sha256_ll);
 

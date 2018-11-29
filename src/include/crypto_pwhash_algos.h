@@ -18,15 +18,12 @@
         ARG_TO_NUMBER(oppLimit); \
         ARG_TO_NUMBER(memLimit); \
         if( outLen <= 0 ) { \
-            std::ostringstream oss; \
-            oss << "output buffer length must be bigger than 0."; \
-            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-            return env.Null(); \
+            THROW_ERROR("output buffer length must be bigger than 0."); \
         } \
         if( passwd_size < crypto_pwhash_ ## ALGO ## _PASSWD_MIN ||  \
             passwd_size > crypto_pwhash_ ## ALGO ## _PASSWD_MAX ) {  \
             THROW_ERROR("password length should be at least sodium.crypto_pwhash_ ## ALGO ## _PASSWD_MIN " \
-                        "and at most sodium.crypto_pwhash_ ## ALGO ## _PASSWD_MAX.") \
+                        "and at most sodium.crypto_pwhash_ ## ALGO ## _PASSWD_MAX."); \
         } \
         NEW_BUFFER_AND_PTR(out, outLen); \
         if (crypto_pwhash_ ## ALGO (out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit) == 0) { \
@@ -46,10 +43,7 @@
         ARG_TO_NUMBER(memLimit); \
         ARG_TO_NUMBER(alg); \
         if( outLen <= 0 ) { \
-            std::ostringstream oss; \
-            oss << "output buffer length must be bigger than 0."; \
-            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-            return env.Null(); \
+            THROW_ERROR("output buffer length must be bigger than 0."); \
         } \
         NEW_BUFFER_AND_PTR(out, outLen); \
         if (crypto_pwhash_ ## ALGO (out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) { \

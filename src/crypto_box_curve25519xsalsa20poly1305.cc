@@ -66,10 +66,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open) {
 
     // API requires that the first crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES of msg be 0 so lets check
     if (cipherText_size < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "argument cipherText must have a length of at least " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("argument cipher text must be at least crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES bytes long");
     }
 
     unsigned int i;
@@ -79,10 +76,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open) {
     }
 
     if (i < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "the first " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("the first crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES bytes of argument cipherText must be 0");
     }
 
     NEW_BUFFER_AND_PTR(msg, cipherText_size);
@@ -155,10 +149,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open_afternm) {
 
     // API requires that the first crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES of msg be 0 so lets check
     if (cipherText_size < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "argument cipherText must have a length of at least " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("argument cipherText must have a length of at least crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES bytes");
     }
 
     unsigned int i;
@@ -167,10 +158,7 @@ NAPI_METHOD(crypto_box_curve25519xsalsa20poly1305_open_afternm) {
     }
 
     if (i < crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES) {
-        std::ostringstream oss;
-        oss << "the first " << crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES << " bytes of argument cipherText must be 0";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("the first crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES bytes of argument cipherText must be 0");
     }
 
     NEW_BUFFER_AND_PTR(msg, cipherText_size);

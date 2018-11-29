@@ -51,10 +51,7 @@ int crypto_aead_aes256gcm_decrypt(unsigned char *m,
         ARGS(4,"arguments chiper text, additional data, nonce, and key must be buffers"); \
         ARG_TO_UCHAR_BUFFER(c); \
         if( c_size < crypto_aead_ ## ALGO ## _ABYTES ) { \
-            std::ostringstream oss; \
-            oss << "argument cipher text must be at least " <<  crypto_aead_ ## ALGO ## _ABYTES << " bytes long" ; \
-            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-            return env.Null(); \
+            THROW_ERROR("argument cipher text must be at least crypto_aead_ " #ALGO "_ABYTES bytes long"); \
         } \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
@@ -122,10 +119,7 @@ int crypto_aead_aes256gcm_decrypt_detached(unsigned char *m,
         ARG_TO_UCHAR_BUFFER(mac); \
         ARG_TO_UCHAR_BUFFER_OR_NULL(ad); \
         if( mac_size > crypto_aead_ ## ALGO ## _ABYTES ) { \
-            std::ostringstream oss; \
-            oss << "argument mac cannot be longer than " <<  crypto_aead_ ## ALGO ## _ABYTES << " bytes" ; \
-            Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException(); \
-            return env.Null(); \
+            THROW_ERROR("argument mac cannot be longer than crypto_aead_" #ALGO "_ABYTES bytes"); \
         }\
         ARG_TO_UCHAR_BUFFER_LEN(npub, crypto_aead_ ## ALGO ## _NPUBBYTES); \
         ARG_TO_UCHAR_BUFFER_LEN(k, crypto_aead_ ## ALGO ## _KEYBYTES); \

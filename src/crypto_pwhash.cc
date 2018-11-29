@@ -34,10 +34,7 @@ NAPI_METHOD(crypto_pwhash) {
     ARG_TO_NUMBER(memLimit);
     ARG_TO_NUMBER(alg);
     if( outLen <= 0 ) {
-        std::ostringstream oss;
-        oss << "output buffer length must be bigger than 0.";
-        Napi::Error::New(env, oss.str().c_str()).ThrowAsJavaScriptException();
-        return env.Null();
+        THROW_ERROR("output buffer length must be bigger than 0.");
     }
     NEW_BUFFER_AND_PTR(out, outLen);
     if (crypto_pwhash(out_ptr, outLen, passwd, passwd_size, salt, oppLimit, memLimit, alg) == 0) {
