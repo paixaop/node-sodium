@@ -56,10 +56,11 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_verify) {
     ARG_TO_UCHAR_BUFFER_LEN(token, crypto_onetimeauth_poly1305_BYTES);
     ARG_TO_UCHAR_BUFFER(message);
     ARG_TO_UCHAR_BUFFER_LEN(key, crypto_onetimeauth_poly1305_KEYBYTES);
-
-    return 
-        Napi::Number::New(env, crypto_onetimeauth_poly1305_verify(token, message, message_size, key))
-    ;
+ 
+    if( crypto_onetimeauth_poly1305_verify(token, message, message_size, key) == 0) {
+        return NAPI_TRUE;
+    }
+    return NAPI_FALSE;
 }
 
 /*
@@ -98,7 +99,7 @@ NAPI_METHOD(crypto_onetimeauth_poly1305_update) {
     ARG_TO_UCHAR_BUFFER(message);
 
     if( crypto_onetimeauth_poly1305_update((crypto_onetimeauth_poly1305_state*)state, message, message_size) == 0 ) {
-            return NAPI_TRUE;
+        return NAPI_TRUE;
     }
     return NAPI_FALSE;
 }
