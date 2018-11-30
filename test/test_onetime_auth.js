@@ -14,7 +14,7 @@ describe("Auth", function () {
         var auth = new Auth();
         var token = auth.generate("This is a test", 'utf8');
 
-        assert.ok(auth.validate(token, "This is a test", 'utf8'));
+        assert(auth.validate(token, "This is a test", 'utf8'));
         done();
     });
 
@@ -33,7 +33,7 @@ describe("Auth", function () {
         token[1] = 99;
         token[2] = 99;
 
-        assert.ok(!auth.validate(token, "This is a test", 'utf8'));
+        assert(!auth.validate(token, "This is a test", 'utf8'));
         done();
     });
 

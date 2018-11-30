@@ -13,7 +13,7 @@ describe('OneTimeAuth', function() {
         var key = crypto.randomBytes(sodium.crypto_auth_KEYBYTES);
         var token = sodium.crypto_onetimeauth(buf, key);
         var r = sodium.crypto_onetimeauth_verify(token, buf, key);
-        assert.equal(r, 0);
+        assert(r);
         done();
     });
 });
