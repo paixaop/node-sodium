@@ -309,7 +309,7 @@ function errorSetMSVSVersion() {
 }
 
 function errorInvalidMSVSVersion() {
-    console.log('Invalid msvs_version ' + msvsVersion + '\n');
+    console.log('Invalid msvs_version ' + process.env.npm_config_msvs_version + '\n');
     console.log('Please set your Microsoft Visual Studio version before you run npm install');
     console.log('Example for Visual Studio 2015:\n');
     console.log('    For you user only:\n');
