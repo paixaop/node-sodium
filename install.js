@@ -6,7 +6,9 @@
  * @License MIT
  */
 
+var urlparser = require('url')
 var https = require('https');
+var HttpsProxyAgent = require('https-proxy-agent');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
@@ -140,13 +142,22 @@ function download(url, dest, cb) {
         cb(null);
     }
     var file = fs.createWriteStream(dest);
-    var request = https.get(url, function(response) {
+
+    var proxyServer = process.env.http_proxy ||
+                      process.env.HTTP_PROXY ||
+                      process.env.https_proxy ||
+                      process.env.HTTPS_PROXY;
+    var agent = new HttpsProxyAgent(proxyServer);
+    var options = urlparser.parse(url)
+    options.agent = agent
+
+    var request = https.get(options, function(response) {
         response.pipe(file);
         file.on('finish', function() {
             file.close(cb); // close() is async, call cb after close completes.
         });
     }).on('error', function(err) { // Handle errors
-        fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        fs.unlinkSync(dest);
         if (cb) cb(err);
     });
 }
@@ -178,6 +189,7 @@ function downloadAll(files, baseURL, basePath, next) {
     console.log('Download: ' + url);
     download(url, path, function(err) {
         if (err) {
+          console.log(err);
             throw err;
         }
         downloadAll(files, baseURL, basePath, next);
