@@ -14,7 +14,7 @@
     "mdextract": "^1.0.0",
     "mocha": ">=5.2.0",
     "mocha-istanbul": "^0.3.0",
-    "node-gyp": "^3.8.0"
+    "node-gyp": "^6.1.0"
   },
   "scripts": {
     "test": "make test",
