@@ -135,17 +135,17 @@ function exists(path) {
 }
 
 function download(url, dest, cb) {
-    if(exists(dest)) {
+    if (exists(dest)) {
         console.log('File ' + dest + ' alredy exists, run make clean if you want to download it again.');
         cb(null);
     }
     var file = fs.createWriteStream(dest);
-    var request = https.get(url, function(response) {
+    var request = https.get(url, function (response) {
         response.pipe(file);
-        file.on('finish', function() {
+        file.on('finish', function () {
             file.close(cb); // close() is async, call cb after close completes.
         });
-    }).on('error', function(err) { // Handle errors
+    }).on('error', function (err) { // Handle errors
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
         if (cb) cb(err);
     });
@@ -176,7 +176,7 @@ function downloadAll(files, baseURL, basePath, next) {
     var url = baseURL + '/' + file;
     var path = basePath + '/' + file;
     console.log('Download: ' + url);
-    download(url, path, function(err) {
+    download(url, path, function (err) {
         if (err) {
             throw err;
         }
@@ -188,14 +188,14 @@ function copyFile(source, target, cb) {
     var cbCalled = false;
 
     var rd = fs.createReadStream(source);
-    rd.on("error", function(err) {
+    rd.on("error", function (err) {
         done(err);
     });
     var wr = fs.createWriteStream(target);
-    wr.on("error", function(err) {
+    wr.on("error", function (err) {
         done(err);
     });
-    wr.on("close", function(ex) {
+    wr.on("close", function (ex) {
         done();
     });
     rd.pipe(wr);
@@ -217,7 +217,7 @@ function copyFiles(files, next) {
 
     var from = 'deps/build/lib/' + file;
     var to = 'build/Release/' + file;
-    copyFile(from, to, function(err) {
+    copyFile(from, to, function (err) {
         if (err) {
             throw err;
         }
@@ -228,13 +228,13 @@ function copyFiles(files, next) {
 
 function gypConfigure(next) {
     var gyp = exec('node-gyp configure');
-    gyp.stdout.on('data', function(data) {
+    gyp.stdout.on('data', function (data) {
         process.stdout.write(data.toString());
     });
-    gyp.stderr.on('data', function(data) {
+    gyp.stderr.on('data', function (data) {
         process.stdout.write(data.toString());
     });
-    gyp.on('close', function(code) {
+    gyp.on('close', function (code) {
         console.log('Done.');
         next();
     });
@@ -260,15 +260,15 @@ function doDownloads(next) {
     // Added libsodium_version to package.json to support multiple binary versions of
     // libsodium
     var package = require('./package.json');
-    if( package.libsodium_version ) {
+    if (package.libsodium_version) {
         baseURL += '/' + package.libsodium_version;
     }
 
     var libURL = baseURL + '/' + arch + '/Release/' + ver + '/dynamic';
     files = libFiles.slice(0); // clone array
-    downloadAll(files, libURL, 'deps/build/lib', function() {
+    downloadAll(files, libURL, 'deps/build/lib', function () {
         console.log('Libs for version ' + ver + ' downloaded.');
-        downloadAll(includeFiles, baseURL, 'deps/build', function() {
+        downloadAll(includeFiles, baseURL, 'deps/build', function () {
             console.log('Include files downloaded.');
             next();
         });
@@ -282,13 +282,13 @@ function run(cmdLine, expectedExitCode, next) {
         expectedExitCode = 0;
     }
 
-    child.stdout.on('data', function(data) {
+    child.stdout.on('data', function (data) {
         process.stdout.write(data.toString());
     });
-    child.stderr.on('data', function(data) {
+    child.stderr.on('data', function (data) {
         process.stdout.write(data.toString());
     });
-    child.on('exit', function(code) {
+    child.on('exit', function (code) {
         if (code !== expectedExitCode) {
             throw new Error(cmdLine + ' exited with code ' + code);
         }
@@ -356,16 +356,16 @@ if (os.platform() !== 'win32') {
         createFullPath("deps/build/include/sodium");
         createFullPath("deps/build/lib");
         createFullPath("build/Release");
-        doDownloads(function() {
+        doDownloads(function () {
             console.log('Prebuild steps completed. Binary libsodium distribution installed in ./deps/build');
             process.exit(0);
         });
     } else {
         console.log('Install Mode');
-        run('node-gyp rebuild', 0, function() {
+        run('node-gyp rebuild', 0, function () {
             console.log('Copy lib files to Release folder');
             files = libFiles.slice(0); // clone array
-            copyFiles(files, function() {
+            copyFiles(files, function () {
                 console.log('Done copying files.');
                 process.exit(0);
             });
