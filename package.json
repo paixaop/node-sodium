@@ -7,14 +7,14 @@
   "main": "index.js",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "node-addon-api": "*"
+    "node-addon-api": "^4.1.0"
   },
   "devDependencies": {
-    "istanbul": ">=0.4.5",
+    "istanbul": "^0.4.5",
     "mdextract": "^1.0.0",
-    "mocha": ">=5.2.0",
+    "mocha": "^9.1.1",
     "mocha-istanbul": "^0.3.0",
-    "node-gyp": "^3.8.0"
+    "node-gyp": "^8.2.0"
   },
   "scripts": {
     "test": "make test",
