@@ -1,6 +1,6 @@
 {
   "name": "sodium",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "libsodium_version": "1.0.16",
   "author": "Pedro Paixao <paixaop@gmail.com>",
   "license": "MIT",
