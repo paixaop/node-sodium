@@ -102,21 +102,20 @@ build-test:
 		--globals setImmediate,clearImmediate | grep ^[^o]
 
 instrument: clean
-	$(BINDIR)/istanbul instrument --output lib-cov --no-compact \
-		--variable global.__coverage__ lib
-
+	$(BINDIR)/nyc instrument --compact=false lib lib-cov
 
 test-cov: clean instrument
 	@echo Run make test for simple tests with no coverage reports
-	@COVERAGE=1 NODE_ENV=test $(BINDIR)/mocha \
-		-R mocha-istanbul \
-		--globals setImmediate,clearImmediate
-	@$(BINDIR)/istanbul report
+	@COVERAGE=1 NODE_ENV=test $(BINDIR)/nyc \
+		--instrument=false --reporter=html \
+		make test
+	@$(BINDIR)/nyc report
 	@rm -rf lib-cov
 	@echo
 	@echo Open html-report/index.html file in your browser
 
 clean:
+	-rm -fr .nyc_output
 	-rm -fr lib-cov
 	-rm -fr covershot
 	-rm -fr html-report
