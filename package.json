@@ -17,6 +17,7 @@
   },
   "scripts": {
     "test": "make test",
+    "coverage": "make test-cov",
     "preinstall": "node install.js --preinstall",
     "install": "node install.js --install"
   },
