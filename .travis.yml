@@ -1,29 +1,35 @@
-sudo: false
+os: linux
+dist: bionic
 language: node_js
 node_js:
-  - "6.9.1"
-  - "8.11.4"
-  - "9.2.0"
-  - "10.13.0"
-  - "11.1.0"
+  - "6.17.1"
+  - "8.17.0"
+  - "10.24.1"
+  - "12.22.7"
+  - "14.18.1"
+  - "16.13.0"
+  - "17.1.0"
 
 matrix:
   include:
     - os: linux
     - os: osx
-      osx_image: xcode9.1
+      node_js:
+        - "16.13.0"
       env: 
         - CXX=g++
 
 env:
-  - CXX=g++-4.8
+  - CXX=g++-6
+    PYTHON=3.6
 
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+      - g++-6
+      - python3.6
 
 before_install:
   - export JOBS=max
