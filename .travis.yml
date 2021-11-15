@@ -2,9 +2,6 @@ os: linux
 dist: bionic
 language: node_js
 node_js:
-  - "6.17.1"
-  - "8.17.0"
-  - "10.24.1"
   - "12.22.7"
   - "14.18.1"
   - "16.13.0"
