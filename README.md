@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/paixaop/node-sodium.png)](http://travis-ci.org/paixaop/node-sodium)
+![Build Status](https://github.com/paixaop/node-sodium/actions/workflows/main.yml/badge.svg)
 
 # node-sodium
 
