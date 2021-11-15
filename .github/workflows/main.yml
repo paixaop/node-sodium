@@ -22,9 +22,9 @@ jobs:
       with:
         python-version: '3.9'
         architecture: 'x64'
-    - name: osx deps
+    - name: macos deps
       if: matrix.os == 'macos-latest'
-      run: brew install libtool autoconf automake
+      run: brew install automake
     - name: setup msbuild
       if: matrix.os == 'windows-latest'
       uses: microsoft/setup-msbuild@v1.1
