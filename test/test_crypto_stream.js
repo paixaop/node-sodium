@@ -129,7 +129,7 @@ describe("crypto_stream verify parameters", function () {
     and automatically truncates/floors numbers when
     setting a buffer length
     */
-    it('bad param 1 number', function(done) {
+    it('bad param 1 number (Node <14)', function(done) {
         var callback = function() {
             var r = sodium.crypto_stream(len, nonce, key);
         };
