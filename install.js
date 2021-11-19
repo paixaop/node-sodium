@@ -157,9 +157,7 @@ function getPlatformToolsVersion() {
         2012: 'v110',
         2013: 'v120',
         2015: 'v140',
-        2017: 'v141',
-        2019: 'v141', // v142
-        2022: 'v141'  // v143
+        2017: 'v141'
     }
 
     checkMSVSVersion();
