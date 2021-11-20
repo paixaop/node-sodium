@@ -304,7 +304,8 @@ function errorSetMSVSVersion() {
     console.log('        npm config set msvs_version 2015\n');
     console.log('    Global:\n');
     console.log('        npm config set msvs_version 2015 --global\n');
-    console.log('Supported values are 2010, 2012, 2013, 2015, 2017, 2019, 2022\n');
+    console.log('Supported values are 2010, 2012, 2013, 2015, 2017\n');
+    console.log('Later versions will resolve to the latest supported version');
     process.exit(1);
 }
 
@@ -316,7 +317,8 @@ function errorInvalidMSVSVersion() {
     console.log('        npm config set msvs_version 2015\n');
     console.log('    Global:\n');
     console.log('        npm config set msvs_version 2015 --global\n');
-    console.log('Supported values are 2010, 2012, 2013, 2015, 2017, 2019, 2022\n');
+    console.log('Supported values are 2010, 2012, 2013, 2015, 2017\n');
+    console.log('Later versions will resolve to the latest supported version');
     process.exit(1);
 }
 
