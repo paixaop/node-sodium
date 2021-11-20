@@ -160,8 +160,7 @@ function getPlatformToolsVersion() {
         2017: 'v141'
     }
 
-    checkMSVSVersion();
-    var ver = platformTools[process.env.npm_config_msvs_version];
+    var ver = platformTools[resolveMSVSVersion()];
     if (!ver) {
         throw new Error('Please set msvs_version');
     }
@@ -321,14 +320,16 @@ function errorInvalidMSVSVersion() {
     process.exit(1);
 }
 
-function checkMSVSVersion() {
+function resolveMSVSVersion() {
     if (!process.env.npm_config_msvs_version) {
         errorSetMSVSVersion();
     }
     console.log('MS Version: ' + process.env.npm_config_msvs_version);
-    if (process.env.npm_config_msvs_version.search(/^2010|2012|2013|2015|2017|2019|2022$/)) {
+    var parsed = Math.min(parseInt(process.env.npm_config_msvs_version), 2017).toString();
+    if (parsed.search(/^2010|2012|2013|2015|2017$/)) {
         errorInvalidMSVSVersion();
     }
+    return parsed;
 }
 
 function isPreInstallMode() {
@@ -351,7 +352,7 @@ if (os.platform() !== 'win32') {
         run('make nodesodium');
     }
 } else {
-    checkMSVSVersion();
+    resolveMSVSVersion();
     if (isPreInstallMode()) {
         console.log('Preinstall Mode');
         createFullPath("deps/build/include/sodium");
