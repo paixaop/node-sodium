@@ -119,7 +119,7 @@ Example set `msvs_version` for all users:
 
     npm config set msvs_version 2015 --global
 
-At the moment only 2010, 2012, 2013 and 2015 versions are supported.
+At the moment only 2010, 2012, 2013, 2015, and 2017 versions are supported. However, later versions will resolve to the latest supported version due to [binary compatibility](https://docs.microsoft.com/en-us/cpp/porting/binary-compat-2015-2017)
 
 Now run
 
