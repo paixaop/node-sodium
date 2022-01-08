@@ -138,7 +138,7 @@ describe("crypto_stream verify parameters", function () {
             assert.throws(callback);
         }
         else {
-            this.timeout(10000); // Buffer length will be long
+            this.timeout(30000); // Buffer length will be long
             callback();
         }
         done();
