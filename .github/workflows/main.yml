@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
         node: [12.22.10, 14.19.0, 16.14.0, 17.4.0]
     runs-on: ${{ matrix.os }}
     steps:
@@ -27,12 +27,12 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: brew install automake
     - name: setup msbuild
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2019'
       uses: microsoft/setup-msbuild@v1.1
       with:
         msbuild-architecture: x64
     - name: configure npm
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2019'
       run: npm config set msvs_version 2019
     - name: install
       run: npm ci
