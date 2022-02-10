@@ -26,11 +26,6 @@ jobs:
     - name: macos deps
       if: matrix.os == 'macos-latest'
       run: brew install automake
-    - name: setup msbuild
-      if: matrix.os == 'windows-2019'
-      uses: microsoft/setup-msbuild@v1.1
-      with:
-        msbuild-architecture: x64
     - name: configure npm
       if: matrix.os == 'windows-2019'
       run: npm config set msvs_version 2019
