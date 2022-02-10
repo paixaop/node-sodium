@@ -7,11 +7,11 @@
   "main": "index.js",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "node-addon-api": "^4.2.0"
+    "node-addon-api": "^4.3.0"
   },
   "devDependencies": {
     "mdextract": "^1.0.0",
-    "mocha": "^9.1.3",
+    "mocha": "^9.2.0",
     "node-gyp": "^8.4.1",
     "nyc": "^15.1.0",
     "semver": "^7.3.5"
