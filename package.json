@@ -7,7 +7,7 @@
   "main": "index.js",
   "description": "Lib Sodium port for node.js",
   "dependencies": {
-    "node-addon-api": "*"
+    "node-addon-api": "1.7.2"
   },
   "devDependencies": {
     "istanbul": ">=0.4.5",
