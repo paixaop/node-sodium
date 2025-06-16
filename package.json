@@ -1,0 +1,38 @@
+{
+  "name": "sodium",
+  "version": "3.0.2",
+  "libsodium_version": "1.0.16",
+  "author": "Pedro Paixao <paixaop@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "description": "Lib Sodium port for node.js",
+  "dependencies": {
+    "node-addon-api": "*"
+  },
+  "devDependencies": {
+    "istanbul": ">=0.4.5",
+    "mdextract": "^1.0.0",
+    "mocha": ">=5.2.0",
+    "mocha-istanbul": "^0.3.0",
+    "node-gyp": "^3.8.0"
+  },
+  "scripts": {
+    "test": "make test",
+    "preinstall": "node install.js --preinstall",
+    "install": "node install.js --install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paixaop/node-sodium"
+  },
+  "keywords": [
+    "encryption",
+    "ed25519",
+    "curve25519",
+    "NaCl",
+    "libsodium",
+    "crypto",
+    "unique",
+    "stamp"
+  ]
+}
